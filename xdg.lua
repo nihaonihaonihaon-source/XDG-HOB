@@ -2,6 +2,7 @@ local UserInputService = game:GetService("UserInputService")
 local RunService = game:GetService("RunService")
 local Players = game:GetService("Players")
 local ContextActionService = game:GetService("ContextActionService")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local player = Players.LocalPlayer
 local character = player.Character or player.CharacterAdded:Wait()
@@ -46,6 +47,7 @@ local UI = {
 local screenGui = Instance.new("ScreenGui")
 screenGui.Parent = player.PlayerGui
 screenGui.Name = "XDG-HUB"
+screenGui.IgnoreGuiInset = true
 
 local function clearUI()
     for _, child in ipairs(screenGui:GetChildren()) do
@@ -147,4 +149,237 @@ function UI:draw()
         end
         return
     end
-    local currentW = self.isExpanded and 
+    local currentW = self.isExpanded and self.w or self.minW
+    local currentH = self.isExpanded and self.h or self.minH
+    local mainFrame = createFrame(self.x, self.y, currentW, currentH, 0, 0, 0, 0.8)
+    local titleFrame = createFrame(self.x, self.y, currentW, self.titleHeight, 30, 30, 30, 1)
+    local r, g, b = hsl2rgb(self.rainbowHue, 0.8, 0.5)
+    createText("XDG-HUB", self.x + currentW - 80, self.y + 5, 16, r, g, b, 1)
+    local toggleText = self.isExpanded and "—" or "+"
+    createText(toggleText, self.x + 10, self.y + 8, 18, 255, 255, 255, 1)
+    createText("×", self.x + currentW - 30, self.y + 8, 18, 255, 80, 80, 1)
+    if self.isExpanded then
+        local tabW = currentW / #self.tabs
+        for i, tab in ipairs(self.tabs) do
+            local tabX = self.x + (i - 1) * tabW
+            local cr, cg, cb = self.currentTab == tab and 60, 60, 60 or 40, 40, 40
+            local tabFrame = createFrame(tabX, self.y + self.titleHeight, tabW, self.tabHeight, cr, cg, cb, 1)
+            createText(tab, tabX + tabW/2, self.y + self.titleHeight + 5, 14, 255, 255, 255, 1)
+        end
+        local contentY = self.y + self.titleHeight + self.tabHeight
+        if self.currentTab == "速度区" then
+            createText("飞行功能", self.x + 20, contentY + 20, 16, 255, 255, 255, 1)
+            local flyButton = createFrame(self.x + 20, contentY + 50, 100, 30, self.flyEnabled and 0, 200, 0 or 200, 0, 0, 0.8)
+            createText(self.flyEnabled and "飞行[开启]" or "飞行[关闭]", self.x + 30, contentY + 55, 14, 255, 255, 255, 1)
+        else
+            createText("该分类暂未添加功能", self.x + 20, contentY + 20, 16, 180, 180, 180, 1)
+        end
+    end
+    if self.flyUIOpen then
+        self:drawFlyUI()
+    end
+end
+
+function UI:drawFlyUI()
+    local f = self.flyUI
+    local mainFrame = createFrame(f.x, f.y, f.w, f.h, 20, 20, 20, 0.9)
+    local dragFrame = createFrame(f.x, f.y, 40, f.h, 40, 40, 40, 1)
+    createText("⬆️⬅️➡️⬇️", f.x + 5, f.y + 20, 14, 255, 255, 255, 1)
+    local closeFrame = createFrame(f.x + f.w - 30, f.y, 30, 30, 150, 0, 0, 0.8)
+    createText("×", f.x + f.w - 22, f.y + 5, 16, 255, 255, 255, 1)
+    local toggleFrame = createFrame(f.x + 40, f.y, 60, 30, self.flyEnabled and 0, 180, 0 or 180, 0, 0, 0.8)
+    createText(self.flyEnabled and "开" or "关", f.x + 70, f.y + 5, 14, 255, 255, 255, 1)
+    local minusFrame = createFrame(f.x + 40, f.y + 35, 20, f.speedBarHeight + 4, 200, 0, 0, 1)
+    createText("-", f.x + 50, f.y + 35, 14, 255, 255, 255, 1)
+    local speedBg = createFrame(f.x + 60, f.y + 37, f.speedBarWidth, f.speedBarHeight, 60, 60, 60, 1)
+    local speedFillW = (self.flySpeed - self.flyMinSpeed) / (self.flyMaxSpeed - self.flyMinSpeed) * f.speedBarWidth
+    local speedFill = createFrame(f.x + 60, f.y + 37, math.max(0, speedFillW), f.speedBarHeight, 0, 150, 255, 1)
+    local plusFrame = createFrame(f.x + 60 + f.speedBarWidth, f.y + 35, 20, f.speedBarHeight + 4, 0, 200, 0, 1)
+    createText("+", f.x + 70 + f.speedBarWidth, f.y + 35, 14, 255, 255, 255, 1)
+    createText("速度: " .. self.flySpeed, f.x + 80, f.y + 55, 12, 255, 255, 255, 1)
+end
+
+function UI:mousePressed(x, y, button)
+    if button ~= 1 then return end
+    if x >= self.triggerX and x <= self.triggerX + self.triggerW and y >= self.triggerY and y <= self.triggerY + self.triggerH then
+        self.isOpen = not self.isOpen
+        self:draw()
+        return
+    end
+    if self.flyUIOpen then
+        local f = self.flyUI
+        if x >= f.x and x <= f.x + 40 and y >= f.y and y <= f.y + f.h then
+            self.flyUI.drag.active = true
+            self.flyUI.drag.x = x - f.x
+            self.flyUI.drag.y = y - f.y
+            self:draw()
+            return
+        end
+        if x >= f.x + f.w - 30 and x <= f.x + f.w and y >= f.y and y <= f.y + 30 then
+            self.flyUIOpen = false
+            self:draw()
+            return
+        end
+        if x >= f.x + 40 and x <= f.x + 100 and y >= f.y and y <= f.y + 30 then
+            self.flyEnabled = not self.flyEnabled
+            self.flyUIOpen = self.flyEnabled
+            self:draw()
+            return
+        end
+        if x >= f.x + 40 and x <= f.x + 60 and y >= f.y + 35 and y <= f.y + 45 then
+            self.flySpeed = math.clamp(self.flySpeed - self.flyStep, self.flyMinSpeed, self.flyMaxSpeed)
+            self:draw()
+            return
+        end
+        if x >= f.x + 60 + f.speedBarWidth and x <= f.x + 80 + f.speedBarWidth and y >= f.y + 35 and y <= f.y + 45 then
+            self.flySpeed = math.clamp(self.flySpeed + self.flyStep, self.flyMinSpeed, self.flyMaxSpeed)
+            self:draw()
+            return
+        end
+        if x >= f.x + 60 and x <= f.x + 60 + f.speedBarWidth and y >= f.y + 37 and y <= f.y + 47 then
+            local newSpeed = math.clamp((x - (f.x + 60)) / f.speedBarWidth * (self.flyMaxSpeed - self.flyMinSpeed) + self.flyMinSpeed, self.flyMinSpeed, self.flyMaxSpeed)
+            self.flySpeed = math.floor(newSpeed)
+            self:draw()
+            return
+        end
+    end
+    if not self.isOpen then return end
+    local currentW = self.isExpanded and self.w or self.minW
+    local currentH = self.isExpanded and self.h or self.minH
+    if x >= self.x + currentW - 30 and x <= self.x + currentW and y >= self.y and y <= self.y + self.titleHeight then
+        self.isOpen = false
+        self:draw()
+        return
+    end
+    if x >= self.x + 5 and x <= self.x + 25 and y >= self.y and y <= self.y + self.titleHeight then
+        self.isExpanded = not self.isExpanded
+        self:draw()
+        return
+    end
+    if x >= self.x and x <= self.x + currentW and y >= self.y and y <= self.y + self.titleHeight then
+        self.drag.active = true
+        self.drag.x = x - self.x
+        self.drag.y = y - self.y
+        self:draw()
+        return
+    end
+    if self.isExpanded then
+        local tabW = currentW / #self.tabs
+        for i, tab in ipairs(self.tabs) do
+            local tabX = self.x + (i - 1) * tabW
+            if x >= tabX and x <= tabX + tabW and y >= self.y + self.titleHeight and y <= self.y + self.titleHeight + self.tabHeight then
+                self.currentTab = tab
+                self:draw()
+                return
+            end
+        end
+        local contentY = self.y + self.titleHeight + self.tabHeight
+        if self.currentTab == "速度区" and x >= self.x + 20 and x <= self.x + 120 and y >= contentY + 50 and y <= contentY + 80 then
+            self.flyEnabled = not self.flyEnabled
+            self.flyUIOpen = self.flyEnabled
+            self:draw()
+            return
+        end
+    end
+end
+
+function UI:mouseMoved(x, y)
+    if self.drag.active then
+        self.x = x - self.drag.x
+        self.y = y - self.drag.y
+        self:draw()
+    end
+    if self.flyUI.drag.active then
+        self.flyUI.x = x - self.flyUI.drag.x
+        self.flyUI.y = y - self.flyUI.drag.y
+        self:draw()
+    end
+end
+
+function UI:mouseReleased(x, y, button)
+    if button == 1 then
+        self.drag.active = false
+        self.flyUI.drag.active = false
+        self.touchState.active = false
+    end
+end
+
+local function onMove(actionName, inputState, inputObject)
+    if not UI.flyEnabled then return end
+    if inputState == Enum.UserInputState.Change then
+        local x = inputObject.Position.X
+        local z = inputObject.Position.Y
+        UI.moveDirection = Vector3.new(x, 0, z)
+    else
+        UI.moveDirection = Vector3.new(0, 0, 0)
+    end
+end
+
+ContextActionService:BindAction("Move", onMove, false, Enum.PlayerActions.Move)
+
+UserInputService.TouchStarted:Connect(function(input, gameProcessed)
+    if gameProcessed or not UI.flyEnabled then return end
+    UI.touchState.active = true
+    UI.touchState.startY = input.Position.Y
+    UI.touchState.currentY = input.Position.Y
+end)
+
+UserInputService.TouchMoved:Connect(function(input, gameProcessed)
+    if gameProcessed or not UI.flyEnabled or not UI.touchState.active then return end
+    UI.touchState.currentY = input.Position.Y
+end)
+
+UserInputService.TouchEnded:Connect(function(input, gameProcessed)
+    if not UI.touchState.active then return end
+    UI.touchState.active = false
+    UI.touchState.startY = 0
+    UI.touchState.currentY = 0
+end)
+
+UserInputService.InputBegan:Connect(function(input, gameProcessed)
+    if gameProcessed then return end
+    if input.UserInputType == Enum.UserInputType.MouseButton1 then
+        UI:mousePressed(input.Position.X, input.Position.Y, 1)
+    end
+end)
+
+UserInputService.InputEnded:Connect(function(input, gameProcessed)
+    if gameProcessed then return end
+    if input.UserInputType == Enum.UserInputType.MouseButton1 then
+        UI:mouseReleased(input.Position.X, input.Position.Y, 1)
+    end
+end)
+
+UserInputService.MouseMoved:Connect(function(x, y)
+    UI:mouseMoved(x, y)
+end)
+
+character.HumanoidRootPart.Changed:Connect(function(property)
+    if property == "Parent" then
+        humanoidRootPart = character:FindFirstChild("HumanoidRootPart")
+    end
+end)
+
+player.CharacterAdded:Connect(function(newChar)
+    character = newChar
+    humanoid = newChar:WaitForChild("Humanoid")
+    humanoidRootPart = newChar:WaitForChild("HumanoidRootPart")
+end)
+
+Players.PlayerAdded:Connect(function(newPlayer)
+    newPlayer.CharacterAdded:Wait()
+    local cloneGui = screenGui:Clone()
+    cloneGui.Parent = newPlayer.PlayerGui
+end)
+
+for _, existingPlayer in ipairs(Players:GetPlayers()) do
+    if existingPlayer ~= player then
+        local cloneGui = screenGui:Clone()
+        cloneGui.Parent = existingPlayer.PlayerGui
+    end
+end
+
+RunService.RenderStepped:Connect(function(deltaTime)
+    UI:update(deltaTime)
+    UI:draw()
+end)
