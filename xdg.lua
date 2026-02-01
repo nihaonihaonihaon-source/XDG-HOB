@@ -1,1 +1,539 @@
-local UIS=game:GetService("UserInputService")local RS=game:GetService("RunService")local P=game:GetService("Players")local CAS=game:GetService("ContextActionService")local plr=P.LocalPlayer local char=plr.Character or plr.CharacterAdded:Wait()local hrp=char:WaitForChild("HumanoidRootPart")local hum=char:WaitForChild("Humanoid")local UI={isOpen=false,isExpanded=true,x=200,y=100,w=500,h=300,minW=200,minH=60,drag={active=false,x=0,y=0},rainbowHue=0,titleHeight=30,tabHeight=35,triggerX=50,triggerY=50,triggerW=120,triggerH=30,currentTab="速度区",tabs={"速度区","搞笑区","其他脚本区","实用区"},flyEnabled=false,flyUIOpen=false,flySpeed=50,flyMinSpeed=10,flyMaxSpeed=200,flyStep=10,flyUI={x=600,y=300,w=220,h=80,drag={active=false,x=0,y=0},speedBarWidth=100,speedBarHeight=10},moveDirection=Vector3.new(0,0,0),touchState={active=false,startY=0,currentY=0}}local sg=Instance.new("ScreenGui")sg.Parent=plr.PlayerGui sg.Name="HUB"sg.IgnoreGuiInset=true sg.ZIndexBehavior=Enum.ZIndexBehavior.Sibling local function clearUI()for _,v in ipairs(sg:GetChildren())do v:Destroy()end end local function hsl2rgb(h,s,l)h=h/360 local r,g,b if s==0 then r,g,b=l,l,l else local function hue2rgb(p,q,t)if t<0 then t=t+1 end if t>1 then t=t-1 end if t<1/6 then return p+(q-p)*6*t end if t<1/2 then return q end if t<2/3 then return p+(q-p)*(2/3-t)*6 end return p end local q=l<0.5 and l*(1+s)or l+s-l*s local p=2*l-q r=hue2rgb(p,q,h+1/3)g=hue2rgb(p,q,h)b=hue2rgb(p,q,h-1/3)end return math.floor(r*255),math.floor(g*255),math.floor(b*255)end local function createFrame(x,y,w,h,r,g,b,a,parent)local f=Instance.new("Frame")f.Parent=parent or sg f.Position=UDim2.new(0,x,0,y)f.Size=UDim2.new(0,w,0,h)f.BackgroundColor3=Color3.fromRGB(r,g,b)f.BackgroundTransparency=1-a f.BorderSizePixel=0 f.ZIndex=2 return f end local function createText(t,x,y,s,r,g,b,a,parent)local l=Instance.new("TextLabel")l.Parent=parent or sg l.Position=UDim2.new(0,x,0,y)l.Size=UDim2.new(0,#t*s+10,0,s+4)l.Text=t l.TextColor3=Color3.fromRGB(r,g,b)l.TextTransparency=1-a l.BackgroundTransparency=1 l.Font=Enum.Font.SourceSansBold l.TextSize=s l.TextXAlignment=Enum.TextXAlignment.Center l.TextYAlignment=Enum.TextYAlignment.Center l.ZIndex=3 return l end function UI:update(dt)if self.isOpen then self.rainbowHue=(self.rainbowHue+dt*80)%360 end if self.flyEnabled and hrp and hum and hum.Health>0 then hum:SetStateEnabled(Enum.HumanoidStateType.FallingDown,false)hum:SetStateEnabled(Enum.HumanoidStateType.Jumping,false)hum:SetStateEnabled(Enum.HumanoidStateType.FreeFall,false)hum.GravityScale=0 hum.WalkSpeed=0 local md=self.moveDirection local yd=0 if self.touchState.active then local dy=self.touchState.currentY-self.touchState.startY yd=dy<-20 and 1 or dy>20 and -1 or 0 end local dir=Vector3.new(md.X,yd,md.Z)if dir.Magnitude>0 then dir=dir.Unit end hrp.Velocity=dir*self.flySpeed else if hum then hum.GravityScale=1 hum.WalkSpeed=16 hum:SetStateEnabled(Enum.HumanoidStateType.FallingDown,true)hum:SetStateEnabled(Enum.HumanoidStateType.Jumping,true)hum:SetStateEnabled(Enum.HumanoidStateType.FreeFall,true)end self.moveDirection=Vector3.new(0,0,0)end end function UI:draw()clearUI()local tf=createFrame(self.triggerX,self.triggerY,self.triggerW,self.triggerH,70,70,70,1)createText("HUB",self.triggerX+60,self.triggerY+8,16,255,255,255,1)if not self.isOpen then if self.flyUIOpen then self:drawFlyUI()end return end local cw=self.isExpanded and self.w or self.minW local ch=self.isExpanded and self.h or self.minH local mf=createFrame(self.x,self.y,cw,ch,0,0,0,0.8)local tf=createFrame(self.x,self.y,cw,self.titleHeight,30,30,30,1)local r,g,b=hsl2rgb(self.rainbowHue,0.8,0.5)createText("HUB",self.x+cw-80,self.y+8,16,r,g,b,1)local tt=self.isExpanded and "—"or"+"createText(tt,self.x+15,self.y+8,18,255,255,255,1)createText("×",self.x+cw-25,self.y+8,18,255,80,80,1)if self.isExpanded then local tw=cw/#self.tabs for i,t in ipairs(self.tabs)do local tx=self.x+(i-1)*tw local cr,cg,cb=self.currentTab==t and 60,60,60 or 40,40,40 local tf=createFrame(tx,self.y+self.titleHeight,tw,self.tabHeight,cr,cg,cb,1)createText(t,tx+tw/2,self.y+self.titleHeight+10,14,255,255,255,1)end local cy=self.y+self.titleHeight+self.tabHeight if self.currentTab=="速度区"then createText("飞行",self.x+20,cy+20,16,255,255,255,1)local fb=createFrame(self.x+20,cy+50,100,30,self.flyEnabled and 0,200,0 or 200,0,0,0.8)createText(self.flyEnabled and "开"or"关",self.x+70,cy+65,14,255,255,255,1)else createText("未解锁",self.x+20,cy+20,16,180,180,180,1)end end if self.flyUIOpen then self:drawFlyUI()end end function UI:drawFlyUI()local f=self.flyUI local mf=createFrame(f.x,f.y,f.w,f.h,20,20,20,0.9)local df=createFrame(f.x,f.y,40,f.h,40,40,40,1)createText("⬆️⬅️➡️⬇️",f.x+20,f.y+25,14,255,255,255,1)local cf=createFrame(f.x+f.w-30,f.y,30,30,150,0,0,0.8)createText("×",f.x+f.w-15,f.y+8,16,255,255,255,1)local tf=createFrame(f.x+40,f.y,60,30,self.flyEnabled and 0,200,0 or 180,0,0,0.8)createText(self.flyEnabled and "开"or"关",f.x+70,f.y+8,14,255,255,255,1)local mf=createFrame(f.x+40,f.y+35,20,f.speedBarHeight+4,200,0,0,1)createText("-",f.x+50,f.y+38,14,255,255,255,1)local sb=createFrame(f.x+60,f.y+37,f.speedBarWidth,f.speedBarHeight,60,60,60,1)local sw=(self.flySpeed-self.flyMinSpeed)/(self.flyMaxSpeed-self.flyMinSpeed)*f.speedBarWidth local sf=createFrame(f.x+60,f.y+37,math.max(0,sw),f.speedBarHeight,0,150,255,1)local pf=createFrame(f.x+60+f.speedBarWidth,f.y+35,20,f.speedBarHeight+4,0,200,0,1)createText("+",f.x+70+f.speedBarWidth,f.y+38,14,255,255,255,1)createText(tostring(self.flySpeed),f.x+90,f.y+58,12,255,255,255,1)end function UI:mousePressed(x,y,b)if b~=1 then return end if x>=self.triggerX and x<=self.triggerX+self.triggerW and y>=self.triggerY and y<=self.triggerY+self.triggerH then self.isOpen=not self.isOpen self:draw()return end if self.flyUIOpen then local f=self.flyUI if x>=f.x and x<=f.x+40 and y>=f.y and y<=f.y+f.h then self.flyUI.drag.active=true self.flyUI.drag.x=x-f.x self.flyUI.drag.y=y-f.y self:draw()return end if x>=f.x+f.w-30 and x<=f.x+f.w and y>=f.y and y<=f.y+30 then self.flyUIOpen=false self:draw()return end if x>=f.x+40 and x<=f.x+100 and y>=f.y and y<=f.y+30 then self.flyEnabled=not self.flyEnabled self.flyUIOpen=self.flyEnabled self:draw()return end if x>=f.x+40 and x<=f.x+60 and y>=f.y+35 and y<=f.y+45 then self.flySpeed=math.clamp(self.flySpeed-self.flyStep,self.flyMinSpeed,self.flyMaxSpeed)self:draw()return end if x>=f.x+60+f.speedBarWidth and x<=f.x+80+f.speedBarWidth and y>=f.y+35 and y<=f.y+45 then self.flySpeed=math.clamp(self.flySpeed+self.flyStep,self.flyMinSpeed,self.flyMaxSpeed)self:draw()return end if x>=f.x+60 and x<=f.x+60+f.speedBarWidth and y>=f.y+37 and y<=f.y+47 then local s=math.clamp((x-(f.x+60))/f.speedBarWidth*(self.flyMaxSpeed-self.flyMinSpeed)+self.flyMinSpeed,self.flyMinSpeed,self.flyMaxSpeed)self.flySpeed=math.floor(s)self:draw()return end end if not self.isOpen then return end local cw=self.isExpanded and self.w or self.minW local ch=self.isExpanded and self.h or self.minH if x>=self.x+cw-30 and x<=self.x+cw and y>=self.y and y<=self.y+self.titleHeight then self.isOpen=false self:draw()return end if x>=self.x+5 and x<=self.x+25 and y>=self.y and y<=self.y+self.titleHeight then self.isExpanded=not self.isExpanded self:draw()return end if x>=self.x and x<=self.x+cw and y>=self.y and y<=self.y+self.titleHeight then self.drag.active=true self.drag.x=x-self.x self.drag.y=y-self.y self:draw()return end if self.isExpanded then local tw=cw/#self.tabs for i,t in ipairs(self.tabs)do local tx=self.x+(i-1)*tw if x>=tx and x<=tx+tw and y>=self.y+self.titleHeight and y<=self.y+self.titleHeight+self.tabHeight then self.currentTab=t self:draw()return end end local cy=self.y+self.titleHeight+self.tabHeight if self.currentTab=="速度区"and x>=self.x+20 and x<=self.x+120 and y>=cy+50 and y<=cy+80 then self.flyEnabled=not self.flyEnabled self.flyUIOpen=self.flyEnabled self:draw()return end end end function UI:mouseMoved(x,y)if self.drag.active then self.x=x-self.drag.x self.y=y-self.drag.y self:draw()end if self.flyUI.drag.active then self.flyUI.x=x-self.flyUI.drag.x self.flyUI.y=y-self.flyUI.drag.y self:draw()end end function UI:mouseReleased(x,y,b)if b==1 then self.drag.active=false self.flyUI.drag.active=false self.touchState.active=false end end local function onMove(n,s,o)if not UI.flyEnabled then return end if s==Enum.UserInputState.Change then local x=o.Position.X local z=o.Position.Y UI.moveDirection=Vector3.new(x,0,z)else UI.moveDirection=Vector3.new(0,0,0)end end CAS:BindAction("Move",onMove,false,Enum.PlayerActions.Move)UIS.TouchStarted:Connect(function(i,g)if g or not UI.flyEnabled then return end UI.touchState.active=true UI.touchState.startY=i.Position.Y UI.touchState.currentY=i.Position.Y end)UIS.TouchMoved:Connect(function(i,g)if g or not UI.flyEnabled or not UI.touchState.active then return end UI.touchState.currentY=i.Position.Y end)UIS.TouchEnded:Connect(function(i,g)if not UI.touchState.active then return end UI.touchState.active=false UI.touchState.startY=0 UI.touchState.currentY=0 end)UIS.InputBegan:Connect(function(i,g)if g then return end if i.UserInputType==Enum.UserInputType.MouseButton1 or i.UserInputType==Enum.UserInputType.Touch then local p=i.Position UI:mousePressed(p.X,p.Y,1)end end)UIS.InputEnded:Connect(function(i,g)if g then return end if i.UserInputType==Enum.UserInputType.MouseButton1 or i.UserInputType==Enum.UserInputType.Touch then local p=i.Position UI:mouseReleased(p.X,p.Y,1)end end)UIS.MouseMoved:Connect(function(x,y)UI:mouseMoved(x,y)end)UIS.TouchMoved:Connect(function(i,g)if g then return end local p=i.Position UI:mouseMoved(p.X,p.Y)end)char.HumanoidRootPart.Changed:Connect(function(p)if p=="Parent"then hrp=char:FindFirstChild("HumanoidRootPart")end end)plr.CharacterAdded:Connect(function(c)char=c hum=c:WaitForChild("Humanoid")hrp=c:WaitForChild("HumanoidRootPart")end)RS.RenderStepped:Connect(function(dt)UI:update(dt)UI:draw()end)
+local UIS = game:GetService("UserInputService")
+local RS = game:GetService("RunService")
+local P = game:GetService("Players")
+local CAS = game:GetService("ContextActionService")
+local Workspace = game:GetService("Workspace")
+
+local CONFIG = {
+    FlySpeedMin = 10,
+    FlySpeedMax = 200,
+    FlySpeedStep = 10,
+    DeadZone = 0.12,
+    PanelX = 200,
+    PanelY = 100,
+    HubX = 50,
+    HubY = 50,
+    HubWidth = 120,
+    HubHeight = 30,
+    CASPriority = 255,
+    TargetScriptURL = "https://pastebin.com/raw/U27yQRxS"
+}
+
+local plr = P.LocalPlayer
+local char = plr.Character or plr.CharacterAdded:Wait()
+local hum = char:WaitForChild("Humanoid")
+local hrp = char:WaitForChild("HumanoidRootPart")
+local camera = Workspace.CurrentCamera
+
+local State = {
+    FlyEnabled = false,
+    PanelOpen = false,
+    PanelExpanded = true,
+    FlyUIOpen = false,
+    FlySpeed = 50,
+    IsLoading = false,
+    LoadSuccess = false,
+    NeedRedraw = true,
+    IsDraggingHub = false,
+    DragOffset = Vector2.new(0, 0),
+    HubPos = Vector2.new(CONFIG.HubX, CONFIG.HubY)
+}
+
+local sg = Instance.new("ScreenGui")
+sg.Name = "CustomLoadScript"
+sg.Parent = plr.PlayerGui
+sg.IgnoreGuiInset = true
+sg.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+sg.AncestryChanged:Connect(function()
+    if not sg:IsDescendantOf(plr.PlayerGui) then
+        sg.Parent = plr.PlayerGui
+    end
+end)
+
+local function isAllValid()
+    plr = plr or P.LocalPlayer
+    char = char or plr.Character
+    hum = hum or (char and char:FindFirstChildOfClass("Humanoid"))
+    hrp = hrp or (char and char:FindFirstChild("HumanoidRootPart"))
+    camera = camera or Workspace.CurrentCamera
+    return plr and char and hum and hrp and camera and hum.Health > 0
+end
+
+local function resetAllState()
+    State.FlyEnabled = false
+    State.IsLoading = false
+    State.LoadSuccess = false
+    State.FlyUIOpen = false
+    State.NeedRedraw = true
+    if isAllValid() then
+        hum.GravityScale = 1
+        hum.WalkSpeed = 16
+        hum.JumpPower = 50
+        hum.PlatformStand = false
+        local states = {Enum.HumanoidStateType.FallingDown, Enum.HumanoidStateType.Jumping, Enum.HumanoidStateType.FreeFall}
+        for _, state in ipairs(states) do
+            hum:SetStateEnabled(state, true)
+        end
+    end
+end
+
+local function createFrame(x, y, w, h, r, g, b, a)
+    local f = Instance.new("Frame")
+    f.Parent = sg
+    f.Position = UDim2.new(0, x, 0, y)
+    f.Size = UDim2.new(0, w, 0, h)
+    f.BackgroundColor3 = Color3.fromRGB(r, g, b)
+    f.BackgroundTransparency = 1 - math.clamp(a, 0, 1)
+    f.BorderSizePixel = 0
+    f.ZIndex = 2
+    return f
+end
+
+local function createText(t, x, y, s, r, g, b, a)
+    local l = Instance.new("TextLabel")
+    l.Parent = sg
+    l.Position = UDim2.new(0, x, 0, y)
+    l.Size = UDim2.new(0, s * #t + 10, 0, s + 4)
+    l.Text = t
+    l.TextColor3 = Color3.fromRGB(r, g, b)
+    l.TextTransparency = 1 - math.clamp(a, 0, 1)
+    l.BackgroundTransparency = 1
+    l.Font = Enum.Font.SourceSansBold
+    l.TextSize = s
+    l.TextXAlignment = Enum.TextXAlignment.Center
+    l.TextYAlignment = Enum.TextYAlignment.Center
+    l.ZIndex = 3
+    return l
+end
+
+local function hsl2rgb(h, s, l)
+    h = h / 360
+    local function hue2rgb(p, q, t)
+        t = t < 0 and t + 1 or t > 1 and t - 1 or t
+        return t < 1/6 and p + (q - p) * 6 * t or t < 1/2 and q or t < 2/3 and p + (q - p) * (2/3 - t) * 6 or p
+    end
+    local r, g, b = (s == 0) and l or (local q = l < 0.5 and l*(1+s) or l+s-l*s; local p=2*l-q; hue2rgb(p,q,h+1/3), hue2rgb(p,q,h), hue2rgb(p,q,h-1/3))
+    return math.floor(r*255), math.floor(g*255), math.floor(b*255)
+end
+
+local function loadTargetScript()
+    if State.IsLoading then return end
+    State.IsLoading = true
+    State.LoadSuccess = false
+    State.NeedRedraw = true
+
+    task.spawn(function()
+        local success, err = pcall(function()
+            loadstring(game:HttpGet(CONFIG.TargetScriptURL))()
+        end)
+        State.IsLoading = false
+        State.LoadSuccess = success
+        State.NeedRedraw = true
+
+        if not success then
+            local errText = createText("❌ 脚本加载失败："..tostring(err), 200, 60, 12, 255, 0, 0, 1)
+            task.wait(3)
+            if errText and errText.Parent then errText:Destroy() end
+        end
+    end)
+end
+
+local rainbowHue = 0
+local function drawFlyUI()
+    local x, y = 600, 300
+    createFrame(x, y, 220, 80, 20, 20, 20, 0.9)
+    createFrame(x + 190, y, 30, 30, 150, 0, 0, 0.8)
+    createText("×", x + 205, y + 8, 16, 255, 255, 255, 1)
+    local flyColor = State.FlyEnabled and {0,200,0} or {180,0,0}
+    createFrame(x + 40, y, 60, 30, flyColor[1], flyColor[2], flyColor[3], 0.8)
+    createText(State.FlyEnabled and "开" or "关", x + 70, y + 8, 14, 255, 255, 255, 1)
+    createText("速度："..State.FlySpeed, x + 140, y + 38, 12, 255, 255, 255, 1)
+    createFrame(x + 180, y + 35, 20, 20, 0, 150, 0, 0.8)
+    createText("+", x + 190, y + 40, 14, 255, 255, 255, 1)
+    createFrame(x + 200, y + 35, 20, 20, 150, 0, 0, 0.8)
+    createText("-", x + 210, y + 40, 14, 255, 255, 255, 1)
+end
+
+local function drawUI()
+    for _, v in ipairs(sg:GetChildren()) do v:Destroy() end
+
+    local hubX, hubY = State.HubPos.X, State.HubPos.Y
+    createFrame(hubX, hubY, CONFIG.HubWidth, CONFIG.HubHeight, 70, 70, 70, 1)
+    createText("HUB", hubX + CONFIG.HubWidth/2, hubY + 8, 16, 255, 255, 255, 1)
+
+    if State.IsLoading then
+        createText("⏳ 脚本加载中...", 200, 20, 14, 255, 200, 0, 1)
+    elseif State.LoadSuccess then
+        createText("✅ 脚本加载成功！", 200, 20, 14, 0, 255, 0, 1)
+    elseif State.FlyEnabled and not State.IsLoading then
+        createText("⚠️  请等待加载完成", 200, 20, 14, 255, 100, 0, 1)
+    end
+
+    if not State.PanelOpen then
+        if State.FlyUIOpen then drawFlyUI() end
+        return
+    end
+
+    local cw = State.PanelExpanded and 500 or 200
+    local ch = State.PanelExpanded and 300 or 60
+    createFrame(CONFIG.PanelX, CONFIG.PanelY, cw, ch, 0, 0, 0, 0.85)
+    local r, g, b = hsl2rgb(rainbowHue, 0.8, 0.5)
+    createFrame(CONFIG.PanelX, CONFIG.PanelY, cw, 30, 30, 30, 30, 1)
+    createText("定制版 | 加载目标脚本", CONFIG.PanelX + cw/2, CONFIG.PanelY + 8, 16, r, g, b, 1)
+    createText(State.PanelExpanded and "—" or "+", CONFIG.PanelX + 15, CONFIG.PanelY + 8, 18, 255, 255, 255, 1)
+    createText("×", CONFIG.PanelX + cw - 25, CONFIG.PanelY + 8, 18, 255, 80, 80, 1)
+
+    if State.PanelExpanded then
+        local tabs = {"速度区", "搞笑区", "其他", "实用"}
+        local tw = cw / #tabs
+        for i, tab in ipairs(tabs) do
+            local tx = CONFIG.PanelX + (i-1)*tw
+            createFrame(tx, CONFIG.PanelY + 30, tw, 35, 40, 40, 40, 1)
+            createText(tab, tx + tw/2, CONFIG.PanelY + 30 + 10, 14, 255, 255, 255, 1)
+        end
+
+        local cy = CONFIG.PanelY + 65
+        createText("加载目标脚本", CONFIG.PanelX + 20, cy + 20, 16, 255, 255, 255, 1)
+        local flyColor = State.FlyEnabled and {0,200,0} or {200,0,0}
+        createFrame(CONFIG.PanelX + 20, cy + 50, 100, 30, flyColor[1], flyColor[2], flyColor[3], 0.8)
+        createText(State.FlyEnabled and "已开启" or "开启加载", CONFIG.PanelX + 70, cy + 65, 14, 255, 255, 255, 1)
+
+        createText("✅ 点击开启 → 自动加载目标脚本", CONFIG.PanelX + 200, cy + 20, 1lua
+local UIS = game:GetService("UserInputService")
+local RS = game:GetService("RunService")
+local P = game:GetService("Players")
+local CAS = game:GetService("ContextActionService")
+local Workspace = game:GetService("Workspace")
+
+local CONFIG = {
+    FlySpeedMin = 10,
+    FlySpeedMax = 200,
+    FlySpeedStep = 10,
+    DeadZone = 0.12,
+    PanelX = 200,
+    PanelY = 100,
+    HubX = 50,
+    HubY = 50,
+    HubWidth = 120,
+    HubHeight = 30,
+    CASPriority = 255,
+    TargetScriptURL = "https://pastebin.com/raw/U27yQRxS"
+}
+
+local plr = P.LocalPlayer
+local char = plr.Character or plr.CharacterAdded:Wait()
+local hum = char:WaitForChild("Humanoid")
+local hrp = char:WaitForChild("HumanoidRootPart")
+local camera = Workspace.CurrentCamera
+
+local State = {
+    FlyEnabled = false,
+    PanelOpen = false,
+    PanelExpanded = true,
+    FlyUIOpen = false,
+    FlySpeed = 50,
+    IsLoading = false,
+    LoadSuccess = false,
+    NeedRedraw = true,
+    IsDraggingHub = false,
+    DragOffset = Vector2.new(0, 0),
+    HubPos = Vector2.new(CONFIG.HubX, CONFIG.HubY)
+}
+
+local sg = Instance.new("ScreenGui")
+sg.Name = "CustomLoadScript"
+sg.Parent = plr.PlayerGui
+sg.IgnoreGuiInset = true
+sg.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+sg.AncestryChanged:Connect(function()
+    if not sg:IsDescendantOf(plr.PlayerGui) then
+        sg.Parent = plr.PlayerGui
+    end
+end)
+
+local function isAllValid()
+    plr = plr or P.LocalPlayer
+    char = char or plr.Character
+    hum = hum or (char and char:FindFirstChildOfClass("Humanoid"))
+    hrp = hrp or (char and char:FindFirstChild("HumanoidRootPart"))
+    camera = camera or Workspace.CurrentCamera
+    return plr and char and hum and hrp and camera and hum.Health > 0
+end
+
+local function resetAllState()
+    State.FlyEnabled = false
+    State.IsLoading = false
+    State.LoadSuccess = false
+    State.FlyUIOpen = false
+    State.NeedRedraw = true
+    if isAllValid() then
+        hum.GravityScale = 1
+        hum.WalkSpeed = 16
+        hum.JumpPower = 50
+        hum.PlatformStand = false
+        local states = {Enum.HumanoidStateType.FallingDown, Enum.HumanoidStateType.Jumping, Enum.HumanoidStateType.FreeFall}
+        for _, state in ipairs(states) do
+            hum:SetStateEnabled(state, true)
+        end
+    end
+end
+
+local function createFrame(x, y, w, h, r, g, b, a)
+    local f = Instance.new("Frame")
+    f.Parent = sg
+    f.Position = UDim2.new(0, x, 0, y)
+    f.Size = UDim2.new(0, w, 0, h)
+    f.BackgroundColor3 = Color3.fromRGB(r, g, b)
+    f.BackgroundTransparency = 1 - math.clamp(a, 0, 1)
+    f.BorderSizePixel = 0
+    f.ZIndex = 2
+    return f
+end
+
+local function createText(t, x, y, s, r, g, b, a)
+    local l = Instance.new("TextLabel")
+    l.Parent = sg
+    l.Position = UDim2.new(0, x, 0, y)
+    l.Size = UDim2.new(0, s * #t + 10, 0, s + 4)
+    l.Text = t
+    l.TextColor3 = Color3.fromRGB(r, g, b)
+    l.TextTransparency = 1 - math.clamp(a, 0, 1)
+    l.BackgroundTransparency = 1
+    l.Font = Enum.Font.SourceSansBold
+    l.TextSize = s
+    l.TextXAlignment = Enum.TextXAlignment.Center
+    l.TextYAlignment = Enum.TextYAlignment.Center
+    l.ZIndex = 3
+    return l
+end
+
+local function hsl2rgb(h, s, l)
+    h = h / 360
+    local function hue2rgb(p, q, t)
+        t = t < 0 and t + 1 or t > 1 and t - 1 or t
+        return t < 1/6 and p + (q - p) * 6 * t or t < 1/2 and q or t < 2/3 and p + (q - p) * (2/3 - t) * 6 or p
+    end
+    local r, g, b = (s == 0) and l or (local q = l < 0.5 and l*(1+s) or l+s-l*s; local p=2*l-q; hue2rgb(p,q,h+1/3), hue2rgb(p,q,h), hue2rgb(p,q,h-1/3))
+    return math.floor(r*255), math.floor(g*255), math.floor(b*255)
+end
+
+local function loadTargetScript()
+    if State.IsLoading then return end
+    State.IsLoading = true
+    State.LoadSuccess = false
+    State.NeedRedraw = true
+
+    task.spawn(function()
+        local success, err = pcall(function()
+            loadstring(game:HttpGet(CONFIG.TargetScriptURL))()
+        end)
+        State.IsLoading = false
+        State.LoadSuccess = success
+        State.NeedRedraw = true
+
+        if not success then
+            local errText = createText("❌ 脚本加载失败："..tostring(err), 200, 60, 12, 255, 0, 0, 1)
+            task.wait(3)
+            if errText and errText.Parent then errText:Destroy() end
+        end
+    end)
+end
+
+local rainbowHue = 0
+local function drawFlyUI()
+    local x, y = 600, 300
+    createFrame(x, y, 220, 80, 20, 20, 20, 0.9)
+    createFrame(x + 190, y, 30, 30, 150, 0, 0, 0.8)
+    createText("×", x + 205, y + 8, 16, 255, 255, 255, 1)
+    local flyColor = State.FlyEnabled and {0,200,0} or {180,0,0}
+    createFrame(x + 40, y, 60, 30, flyColor[1], flyColor[2], flyColor[3], 0.8)
+    createText(State.FlyEnabled and "开" or "关", x + 70, y + 8, 14, 255, 255, 255, 1)
+    createText("速度："..State.FlySpeed, x + 140, y + 38, 12, 255, 255, 255, 1)
+    createFrame(x + 180, y + 35, 20, 20, 0, 150, 0, 0.8)
+    createText("+", x + 190, y + 40, 14, 255, 255, 255, 1)
+    createFrame(x + 200, y + 35, 20, 20, 150, 0, 0, 0.8)
+    createText("-", x + 210, y + 40, 14, 255, 255, 255, 1)
+end
+
+local function drawUI()
+    for _, v in ipairs(sg:GetChildren()) do v:Destroy() end
+
+    local hubX, hubY = State.HubPos.X, State.HubPos.Y
+    createFrame(hubX, hubY, CONFIG.HubWidth, CONFIG.HubHeight, 70, 70, 70, 1)
+    createText("HUB", hubX + CONFIG.HubWidth/2, hubY + 8, 16, 255, 255, 255, 1)
+
+    if State.IsLoading then
+        createText("⏳ 脚本加载中...", 200, 20, 14, 255, 200, 0, 1)
+    elseif State.LoadSuccess then
+        createText("✅ 脚本加载成功！", 200, 20, 14, 0, 255, 0, 1)
+    elseif State.FlyEnabled and not State.IsLoading then
+        createText("⚠️  请等待加载完成", 200, 20, 14, 255, 100, 0, 1)
+    end
+
+    if not State.PanelOpen then
+        if State.FlyUIOpen then drawFlyUI() end
+        return
+    end
+
+    local cw = State.PanelExpanded and 500 or 200
+    local ch = State.PanelExpanded and 300 or 60
+    createFrame(CONFIG.PanelX, CONFIG.PanelY, cw, ch, 0, 0, 0, 0.85)
+    local r, g, b = hsl2rgb(rainbowHue, 0.8, 0.5)
+    createFrame(CONFIG.PanelX, CONFIG.PanelY, cw, 30, 30, 30, 30, 1)
+    createText("定制版 | 加载目标脚本", CONFIG.PanelX + cw/2, CONFIG.PanelY + 8, 16, r, g, b, 1)
+    createText(State.PanelExpanded and "—" or "+", CONFIG.PanelX + 15, CONFIG.PanelY + 8, 18, 255, 255, 255, 1)
+    createText("×", CONFIG.PanelX + cw - 25, CONFIG.PanelY + 8, 18, 255, 80, 80, 1)
+
+    if State.PanelExpanded then
+        local tabs = {"速度区", "搞笑区", "其他", "实用"}
+        local tw = cw / #tabs
+        for i, tab in ipairs(tabs) do
+            local tx = CONFIG.PanelX + (i-1)*tw
+            createFrame(tx, CONFIG.PanelY + 30, tw, 35, 40, 40, 40, 1)
+            createText(tab, tx + tw/2, CONFIG.PanelY + 30 + 10, 14, 255, 255, 255, 1)
+        end
+
+        local cy = CONFIG.PanelY + 65
+        createText("加载目标脚本", CONFIG.PanelX + 20, cy + 20, 16, 255, 255, 255, 1)
+        local flyColor = State.FlyEnabled and {0,200,0} or {200,0,0}
+        createFrame(CONFIG.PanelX + 20, cy + 50, 100, 30, flyColor[1], flyColor[2], flyColor[3], 0.8)
+        createText(State.FlyEnabled and "已开启" or "开启加载", CONFIG.PanelX + 70, cy + 65, 14, 255, 255, 255, 1)
+
+        createText("✅ 点击开启 → 自动加载目标脚本", CONFIG.PanelX + 200, cy + 20, 12, 255, 255, 255, 1)
+        createText("✅ 加载状态实时显示在顶部", CONFIG.PanelX + 200, cy + 45, 12, 255, 255, 255, 1)
+        createText("✅ 点击关闭 → 重置所有状态", CONFIG.PanelX + 200, cy + 70, 12, 255, 255, 255, 1)
+    end
+
+    if State.FlyUIOpen then drawFlyUI() end
+end
+
+local function bindInput()
+    UIS.InputBegan:Connect(function(input, gameProcessed)
+        if gameProcessed then return end
+        local inputType = input.UserInputType
+        if inputType ~= Enum.UserInputType.MouseButton1 and inputType ~= Enum.UserInputType.Touch then return end
+
+        local x, y = input.Position.X, input.Position.Y
+        local hubX, hubY = State.HubPos.X, State.HubPos.Y
+        if x >= hubX and x <= hubX + CONFIG.HubWidth and y >= hubY and y <= hubY + CONFIG.HubHeight then
+            State.IsDraggingHub = true
+            State.DragOffset = Vector2.new(x - hubX, y - hubY)
+            return
+        end
+
+        if inputType == Enum.UserInputType.MouseButton1 then
+            if not State.IsDraggingHub and x >= hubX and x <= hubX + CONFIG.HubWidth and y >= hubY and y <= hubY + CONFIG.HubHeight then
+                State.PanelOpen = not State.PanelOpen
+                State.NeedRedraw = true
+                return
+            end
+
+            if State.PanelOpen then
+                local cw = State.PanelExpanded and 500 or 200
+                if x >= CONFIG.PanelX+5 and x <= CONFIG.PanelX+25 and y >= CONFIG.PanelY+5 and y <= CONFIG.PanelY+25 then
+                    State.PanelExpanded = not State.PanelExpanded
+                    State.NeedRedraw = true
+                    return
+                end
+                if x >= CONFIG.PanelX+cw-25 and x <= CONFIG.PanelX+cw-5 and y >= CONFIG.PanelY+5 and y <= CONFIG.PanelY+25 then
+                    State.PanelOpen = false
+                    State.NeedRedraw = true
+                    return
+                end
+                if State.PanelExpanded then
+                    local cy = CONFIG.PanelY + 65
+                    if x >= CONFIG.PanelX+20 and x <= CONFIG.PanelX+120 and y >= cy+50 and y <= cy+80 then
+                        State.FlyEnabled = not State.FlyEnabled
+                        State.FlyUIOpen = State.FlyEnabled
+                        if State.FlyEnabled then
+                            loadTargetScript()
+                        else
+                            resetAllState()
+                        end
+                        State.NeedRedraw = true
+                        return
+                    end
+                end
+            end
+
+            if State.FlyUIOpen then
+                local fx, fy = 600, 300
+                if x >= fx+190 and x <= fx+220 and y >= fy and y <= fy+30 then
+                    State.FlyUIOpen = false
+                    State.NeedRedraw = true
+                    return
+                end
+                if x >= fx+40 and x <= fx+100 and y >= fy and y <= fy+30 then
+                    State.FlyEnabled = not State.FlyEnabled
+                    if State.FlyEnabled then loadTargetScript() else resetAllState() end
+                    State.NeedRedraw = true
+                    return
+                end
+                if x >= fx+180 and x <= fx+200 and y >= fy+35 and y <= fy+55 then
+                    State.FlySpeed = math.min(CONFIG.FlySpeedMax, State.FlySpeed + CONFIG.FlySpeedStep)
+                    State.NeedRedraw = true
+                    return
+                end
+                if x >= fx+200 and x <= fx+220 and y >= fy+35 and y <= fy+55 then
+                    State.FlySpeed = math.max(CONFIG.FlySpeedMin, State.FlySpeed - CONFIG.FlySpeedStep)
+                    State.NeedRedraw = true
+                    return
+                end
+            end
+        end
+    end)
+
+    UIS.InputChanged:Connect(function(input, gameProcessed)
+        if gameProcessed or not State.IsDraggingHub then return end
+        local inputType = input.UserInputType
+        if inputType ~= Enum.UserInputType.MouseMovement and inputType ~= Enum.UserInputType.Touch then return end
+
+        local x, y = input.Position.X, input.Position.Y
+        local newHubX = x - State.DragOffset.X
+        local newHubY = y - State.DragOffset.Y
+        newHubX = math.clamp(newHubX, 0, UIS.ViewSizeX - CONFIG.HubWidth)
+        newHubY = math.clamp(newHubY, 0, UIS.ViewSizeY - CONFIG.HubHeight)
+        State.HubPos = Vector2.new(newHubX, newHubY)
+        State.NeedRedraw = true
+    end)
+
+    UIS.InputEnded:Connect(function(input, gameProcessed)
+        if gameProcessed then return end
+        local inputType = input.UserInputType
+        if inputType == Enum.UserInputType.MouseButton1 or inputType == Enum.UserInputType.Touch then
+            State.IsDraggingHub = false
+        end
+    end)
+end
+
+plr.CharacterAdded:Connect(function(newChar)
+    char = newChar
+    hum = newChar:WaitForChild("Humanoid")
+    hrp = newChar:WaitForChild("HumanoidRootPart")
+    resetAllState()
+    State.NeedRedraw = true
+end)
+
+hum.Died:Connect(resetAllState)
+
+RS.RenderStepped:Connect(function(dt)
+    if State.PanelOpen then
+        rainbowHue = (rainbowHue + dt * 80) % 360
+    end
+    if State.NeedRedraw then
+        drawUI()
+        State.NeedRedraw = false
+    end
+end)
+
+bindInput()
+resetAllState()
+drawUI()
+
+pcall(function()
+    game:GetService("RunService").Heartbeat:Connect(function()
+        if not sg:IsDescendantOf(plr.PlayerGui) then
+            sg.Parent = plr.PlayerGui
+        end
+    end)
+end)
