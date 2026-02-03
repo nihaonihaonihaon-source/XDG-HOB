@@ -56,7 +56,7 @@ TextLabel.BackgroundColor3 = Color3.fromRGB(242, 60, 255)
 TextLabel.Position = UDim2.new(0.469327301, 0, 0, 0)
 TextLabel.Size = UDim2.new(0, 100, 0, 28)
 TextLabel.Font = Enum.Font.SourceSans
-TextLabel.Text = "飞行脚本"
+TextLabel.Text = "XDG-HOB专属反检测飞行脚本"
 TextLabel.TextColor3 = Color3.fromRGB(0, 0, 0)
 TextLabel.TextScaled = true
 TextLabel.TextSize = 14.000
@@ -136,13 +136,20 @@ local hum = chr and chr:FindFirstChildWhichIsA("Humanoid")
 nowe = false
 
 game:GetService("StarterGui"):SetCore("SendNotification", { 
-        Title = "飞行GUI V3";
-        Text = "By me_ozone and Quandale The Dinglish XII#3550";
-        Icon = "rbxthumb://type=Asset&id=5107182114&w=150&h=150"})
-Duration = 5;
+        Title = "欢迎使用XDG-HOB";
+        Duration = 2})
 
-Frame.Active = true -- main = gui
+Frame.Active = true
 Frame.Draggable = true
+
+local function createSecureInstance(className, properties)
+    local obj = Instance.new(className)
+    for prop, value in pairs(properties) do
+        obj[prop] = value
+    end
+    obj.Name = tostring(math.random(100000,999999))
+    return obj
+end
 
 onof.MouseButton1Down:connect(function()
 
@@ -168,13 +175,10 @@ onof.MouseButton1Down:connect(function()
         else 
                 nowe = true
 
-
-
                 for i = 1, speeds do
                         spawn(function()
 
                                 local hb = game:GetService("RunService").Heartbeat        
-
 
                                 tpwalking = true
                                 local chr = game.Players.LocalPlayer.Character
@@ -212,12 +216,7 @@ onof.MouseButton1Down:connect(function()
                 speaker.Character.Humanoid:ChangeState(Enum.HumanoidStateType.Swimming)
         end
 
-
-
-
         if game:GetService("Players").LocalPlayer.Character:FindFirstChildOfClass("Humanoid").RigType == Enum.HumanoidRigType.R6 then
-
-
 
                 local plr = game.Players.LocalPlayer
                 local torso = plr.Character.Torso
@@ -228,14 +227,17 @@ onof.MouseButton1Down:connect(function()
                 local maxspeed = 50
                 local speed = 0
 
-
-                local bg = Instance.new("BodyGyro", torso)
-                bg.P = 9e4
-                bg.maxTorque = Vector3.new(9e9, 9e9, 9e9)
-                bg.cframe = torso.CFrame
-                local bv = Instance.new("BodyVelocity", torso)
-                bv.velocity = Vector3.new(0,0.1,0)
-                bv.maxForce = Vector3.new(9e9, 9e9, 9e9)
+                local bg = createSecureInstance("BodyGyro", {
+                    P = 9e4,
+                    maxTorque = Vector3.new(9e9, 9e9, 9e9),
+                    cframe = torso.CFrame,
+                    Parent = torso
+                })
+                local bv = createSecureInstance("BodyVelocity", {
+                    velocity = Vector3.new(0,0.1,0),
+                    maxForce = Vector3.new(9e9, 9e9, 9e9),
+                    Parent = torso
+                })
                 if nowe == true then
                         plr.Character.Humanoid.PlatformStand = true
                 end
@@ -261,7 +263,6 @@ onof.MouseButton1Down:connect(function()
                         else
                                 bv.velocity = Vector3.new(0,0,0)
                         end
-                        --        game.Players.LocalPlayer.Character.Animate.Disabled = true
                         bg.cframe = game.Workspace.CurrentCamera.CoordinateFrame * CFrame.Angles(-math.rad((ctrl.f+ctrl.b)*50*speed/maxspeed),0,0)
                 end
                 ctrl = {f = 0, b = 0, l = 0, r = 0}
@@ -273,9 +274,6 @@ onof.MouseButton1Down:connect(function()
                 game.Players.LocalPlayer.Character.Animate.Disabled = false
                 tpwalking = false
 
-
-
-
         else
                 local plr = game.Players.LocalPlayer
                 local UpperTorso = plr.Character.UpperTorso
@@ -286,14 +284,17 @@ onof.MouseButton1Down:connect(function()
                 local maxspeed = 50
                 local speed = 0
 
-
-                local bg = Instance.new("BodyGyro", UpperTorso)
-                bg.P = 9e4
-                bg.maxTorque = Vector3.new(9e9, 9e9, 9e9)
-                bg.cframe = UpperTorso.CFrame
-                local bv = Instance.new("BodyVelocity", UpperTorso)
-                bv.velocity = Vector3.new(0,0.1,0)
-                bv.maxForce = Vector3.new(9e9, 9e9, 9e9)
+                local bg = createSecureInstance("BodyGyro", {
+                    P = 9e4,
+                    maxTorque = Vector3.new(9e9, 9e9, 9e9),
+                    cframe = UpperTorso.CFrame,
+                    Parent = UpperTorso
+                })
+                local bv = createSecureInstance("BodyVelocity", {
+                    velocity = Vector3.new(0,0.1,0),
+                    maxForce = Vector3.new(9e9, 9e9, 9e9),
+                    Parent = UpperTorso
+                })
                 if nowe == true then
                         plr.Character.Humanoid.PlatformStand = true
                 end
@@ -331,14 +332,7 @@ onof.MouseButton1Down:connect(function()
                 game.Players.LocalPlayer.Character.Animate.Disabled = false
                 tpwalking = false
 
-
-
         end
-
-
-
-
-
 end)
 
 local tis
@@ -377,28 +371,20 @@ down.MouseLeave:connect(function()
         end
 end)
 
-
 game:GetService("Players").LocalPlayer.CharacterAdded:Connect(function(char)
         wait(0.7)
         game.Players.LocalPlayer.Character.Humanoid.PlatformStand = false
         game.Players.LocalPlayer.Character.Animate.Disabled = false
-
 end)
-
 
 plus.MouseButton1Down:connect(function()
         speeds = speeds + 1
         speed.Text = speeds
         if nowe == true then
-
-
                 tpwalking = false
                 for i = 1, speeds do
                         spawn(function()
-
                                 local hb = game:GetService("RunService").Heartbeat        
-
-
                                 tpwalking = true
                                 local chr = game.Players.LocalPlayer.Character
                                 local hum = chr and chr:FindFirstChildWhichIsA("Humanoid")
@@ -407,7 +393,6 @@ plus.MouseButton1Down:connect(function()
                                                 chr:TranslateBy(hum.MoveDirection)
                                         end
                                 end
-
                         end)
                 end
         end
@@ -424,10 +409,7 @@ mine.MouseButton1Down:connect(function()
                         tpwalking = false
                         for i = 1, speeds do
                                 spawn(function()
-
                                         local hb = game:GetService("RunService").Heartbeat        
-
-
                                         tpwalking = true
                                         local chr = game.Players.LocalPlayer.Character
                                         local hum = chr and chr:FindFirstChildWhichIsA("Humanoid")
@@ -436,7 +418,6 @@ mine.MouseButton1Down:connect(function()
                                                         chr:TranslateBy(hum.MoveDirection)
                                                 end
                                         end
-
                                 end)
                         end
                 end
@@ -472,3 +453,27 @@ mini2.MouseButton1Click:Connect(function()
         main.Frame.BackgroundTransparency = 0 
         closebutton.Position =  UDim2.new(0, 0, -1, 27)
 end)
+
+local function applyAntiCheatBypass()
+    local character = game.Players.LocalPlayer.Character
+    if character then
+        for _, v in ipairs(character:GetDescendants()) do
+            if v:IsA("BasePart") then
+                v.CanCollide = false
+                v.Massless = true
+            end
+        end
+        local humanoid = character:FindFirstChildOfClass("Humanoid")
+        if humanoid then
+            humanoid:SetStateEnabled(Enum.HumanoidStateType.FallingDown, false)
+            humanoid:SetStateEnabled(Enum.HumanoidStateType.Ragdoll, false)
+        end
+    end
+end
+
+game.Players.LocalPlayer.CharacterAdded:Connect(function()
+    wait(0.5)
+    applyAntiCheatBypass()
+end)
+
+applyAntiCheatBypass()
