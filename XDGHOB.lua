@@ -230,7 +230,7 @@ local function createSampleText()
         scrollContainer.BackgroundTransparency = 1
         scrollContainer.ScrollBarThickness = 6
         scrollContainer.ScrollBarImageColor3 = Color3.fromRGB(100, 100, 110)
-        scrollContainer.CanvasSize = UDim2.new(0, 0, 0, 200)
+        scrollContainer.CanvasSize = UDim2.new(0, 0, 0, 250)
         scrollContainer.Parent = contentFrame
         
         local utilityLayout = Instance.new("UIListLayout")
@@ -250,40 +250,39 @@ local function createSampleText()
         antiDetectFlightBtn.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
         antiDetectFlightBtn.AutoButtonColor = false
         
-        local btnStroke = Instance.new("UIStroke")
-        btnStroke.Thickness = 2
-        btnStroke.Color = Color3.fromRGB(80, 80, 90)
-        btnStroke.Transparency = 0.3
-        btnStroke.Parent = antiDetectFlightBtn
+        local btnStroke1 = Instance.new("UIStroke")
+        btnStroke1.Thickness = 2
+        btnStroke1.Color = Color3.fromRGB(80, 80, 90)
+        btnStroke1.Transparency = 0.3
+        btnStroke1.Parent = antiDetectFlightBtn
         
-        local btnCorner = Instance.new("UICorner")
-        btnCorner.CornerRadius = UDim.new(0, 8)
-        btnCorner.Parent = antiDetectFlightBtn
+        local btnCorner1 = Instance.new("UICorner")
+        btnCorner1.CornerRadius = UDim.new(0, 8)
+        btnCorner1.Parent = antiDetectFlightBtn
         
-        local originalColor = Color3.fromRGB(60, 60, 70)
-        local highlightColor = Color3.fromRGB(80, 160, 255)
-        local isHighlighted = false
+        local originalColor1 = Color3.fromRGB(60, 60, 70)
+        local isHighlighted1 = false
         
         antiDetectFlightBtn.MouseEnter:Connect(function()
-            if not isHighlighted then
+            if not isHighlighted1 then
                 antiDetectFlightBtn.BackgroundColor3 = Color3.fromRGB(70, 70, 80)
-                btnStroke.Color = Color3.fromRGB(90, 90, 100)
+                btnStroke1.Color = Color3.fromRGB(90, 90, 100)
             end
         end)
         
         antiDetectFlightBtn.MouseLeave:Connect(function()
-            if not isHighlighted then
-                antiDetectFlightBtn.BackgroundColor3 = originalColor
-                btnStroke.Color = Color3.fromRGB(80, 80, 90)
+            if not isHighlighted1 then
+                antiDetectFlightBtn.BackgroundColor3 = originalColor1
+                btnStroke1.Color = Color3.fromRGB(80, 80, 90)
             end
         end)
         
         antiDetectFlightBtn.MouseButton1Click:Connect(function()
-            isHighlighted = not isHighlighted
+            isHighlighted1 = not isHighlighted1
             
-            if isHighlighted then
-                antiDetectFlightBtn.BackgroundColor3 = highlightColor
-                btnStroke.Color = Color3.fromRGB(120, 200, 255)
+            if isHighlighted1 then
+                antiDetectFlightBtn.BackgroundColor3 = Color3.fromRGB(80, 160, 255)
+                btnStroke1.Color = Color3.fromRGB(120, 200, 255)
                 antiDetectFlightBtn.Text = "防检测飞行 ✓"
                 
                 local success, result = pcall(function()
@@ -307,14 +306,14 @@ local function createSampleText()
                     })
                     warn("加载飞行脚本失败:", result)
                     
-                    isHighlighted = false
-                    antiDetectFlightBtn.BackgroundColor3 = originalColor
-                    btnStroke.Color = Color3.fromRGB(80, 80, 90)
+                    isHighlighted1 = false
+                    antiDetectFlightBtn.BackgroundColor3 = originalColor1
+                    btnStroke1.Color = Color3.fromRGB(80, 80, 90)
                     antiDetectFlightBtn.Text = "防检测飞行"
                 end
             else
-                antiDetectFlightBtn.BackgroundColor3 = originalColor
-                btnStroke.Color = Color3.fromRGB(80, 80, 90)
+                antiDetectFlightBtn.BackgroundColor3 = originalColor1
+                btnStroke1.Color = Color3.fromRGB(80, 80, 90)
                 antiDetectFlightBtn.Text = "防检测飞行"
                 
                 StarterGui:SetCore("SendNotification", {
@@ -327,6 +326,96 @@ local function createSampleText()
         end)
         
         antiDetectFlightBtn.Parent = scrollContainer
+        
+        local antiDetectWallBtn = Instance.new("TextButton")
+        antiDetectWallBtn.Name = "AntiDetectWall"
+        antiDetectWallBtn.Size = UDim2.new(0.9, 0, 0, 40)
+        antiDetectWallBtn.Text = "防检测穿墙"
+        antiDetectWallBtn.BackgroundColor3 = Color3.fromRGB(60, 60, 70)
+        antiDetectWallBtn.TextColor3 = Color3.new(1, 1, 1)
+        antiDetectWallBtn.Font = Enum.Font.GothamSemibold
+        antiDetectWallBtn.TextSize = 15
+        antiDetectWallBtn.TextStrokeTransparency = 0.5
+        antiDetectWallBtn.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
+        antiDetectWallBtn.AutoButtonColor = false
+        
+        local btnStroke2 = Instance.new("UIStroke")
+        btnStroke2.Thickness = 2
+        btnStroke2.Color = Color3.fromRGB(80, 80, 90)
+        btnStroke2.Transparency = 0.3
+        btnStroke2.Parent = antiDetectWallBtn
+        
+        local btnCorner2 = Instance.new("UICorner")
+        btnCorner2.CornerRadius = UDim.new(0, 8)
+        btnCorner2.Parent = antiDetectWallBtn
+        
+        local originalColor2 = Color3.fromRGB(60, 60, 70)
+        local isHighlighted2 = false
+        
+        antiDetectWallBtn.MouseEnter:Connect(function()
+            if not isHighlighted2 then
+                antiDetectWallBtn.BackgroundColor3 = Color3.fromRGB(70, 70, 80)
+                btnStroke2.Color = Color3.fromRGB(90, 90, 100)
+            end
+        end)
+        
+        antiDetectWallBtn.MouseLeave:Connect(function()
+            if not isHighlighted2 then
+                antiDetectWallBtn.BackgroundColor3 = originalColor2
+                btnStroke2.Color = Color3.fromRGB(80, 80, 90)
+            end
+        end)
+        
+        antiDetectWallBtn.MouseButton1Click:Connect(function()
+            isHighlighted2 = not isHighlighted2
+            
+            if isHighlighted2 then
+                antiDetectWallBtn.BackgroundColor3 = Color3.fromRGB(80, 160, 255)
+                btnStroke2.Color = Color3.fromRGB(120, 200, 255)
+                antiDetectWallBtn.Text = "防检测穿墙 ✓"
+                
+                local success, result = pcall(function()
+                    loadstring(game:HttpGet("https://raw.githubusercontent.com/nihaonihaonihaon-source/XDG-HOB/main/穿墙.lua"))()
+                end)
+                
+                if success then
+                    StarterGui:SetCore("SendNotification", {
+                        Title = "XDG-HOB",
+                        Text = "防检测穿墙已启用",
+                        Duration = 3,
+                        Icon = "rbxassetid://4483345998"
+                    })
+                    print("防检测穿墙脚本加载成功")
+                else
+                    StarterGui:SetCore("SendNotification", {
+                        Title = "错误",
+                        Text = "加载穿墙脚本失败",
+                        Duration = 5,
+                        Icon = "rbxassetid://4483345998"
+                    })
+                    warn("加载穿墙脚本失败:", result)
+                    
+                    isHighlighted2 = false
+                    antiDetectWallBtn.BackgroundColor3 = originalColor2
+                    btnStroke2.Color = Color3.fromRGB(80, 80, 90)
+                    antiDetectWallBtn.Text = "防检测穿墙"
+                end
+            else
+                antiDetectWallBtn.BackgroundColor3 = originalColor2
+                btnStroke2.Color = Color3.fromRGB(80, 80, 90)
+                antiDetectWallBtn.Text = "防检测穿墙"
+                
+                StarterGui:SetCore("SendNotification", {
+                    Title = "XDG-HOB",
+                    Text = "防检测穿墙已禁用",
+                    Duration = 3,
+                    Icon = "rbxassetid://4483345998"
+                })
+            end
+        end)
+        
+        antiDetectWallBtn.Parent = scrollContainer
+        
     elseif selectedCategory == 2 then
         local sample = Instance.new("TextLabel")
         sample.Size = UDim2.new(1, 0, 1, 0)
