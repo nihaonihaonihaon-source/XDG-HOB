@@ -1,4 +1,9 @@
-local ScreenGui = Instance.new("ScreenGui")
+local response = syn.request({
+    Url = "https://luraph.com/api/v1/obfuscate",
+    Method = "POST",
+    Headers = {["Content-Type"] = "application/json"},
+    Body = game:GetService("HttpService"):JSONEncode({
+        script = "local ScreenGui = Instance.new("ScreenGui")
 ScreenGui.Name = "XDGHOBGUI"
 ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 ScreenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
@@ -101,4 +106,10 @@ end)
 ScriptButton.MouseButton1Click:Connect(function()
     ScreenGui.Enabled = false
     loadstring(game:HttpGet("https://raw.githubusercontent.com/nihaonihaonihaon-source/XDG-HOB/main/key.lua"))()
-end)
+end)",
+        options = {
+            ["MutateStrings"] = true,
+            ["Virtualization"] = true
+        }
+    })
+})
