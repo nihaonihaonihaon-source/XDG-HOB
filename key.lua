@@ -5,7 +5,7 @@ screenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
 local correctKeys = {
     "HOBJKssdxfgddgfyd",
     "HOBq1472580369",
-    "123"
+    "HOBjiahao947"
 }
 
 local attempts = 0
