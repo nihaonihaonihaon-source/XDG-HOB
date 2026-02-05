@@ -8,6 +8,40 @@ StarterGui:SetCore("SendNotification", {Title = "XDG-HOB", Text = "欢迎使用X
 print("欢迎使用XDG-HOB")
 task.wait(0.5)
 
+local function detectExecutor()
+    local executors = {
+        ["Synapse X"] = function() return tostring(identifyexecutor or gethui):find("Synapse") end,
+        ["Script-Ware"] = function() return tostring(getexecutorname):find("Script") end,
+        ["Krnl"] = function() return tostring(KRNL_LOADED):find("true") end,
+        ["Fluxus"] = function() return tostring(get_hui):find("Fluxus") end,
+        ["Comet"] = function() return tostring(comet):find("table") end,
+        ["Oxygen U"] = function() return tostring(Oxygen):find("table") end,
+        ["Delta"] = function() return tostring(delta):find("table") end
+    }
+    
+    for name, checkFunc in pairs(executors) do
+        local success, result = pcall(checkFunc)
+        if success and result then
+            return name
+        end
+    end
+    
+    return "未知注入器"
+end
+
+local executorName = detectExecutor()
+
+local function getBeijingTime()
+    local timeData = os.date("!*t")
+    local beijingOffset = 8 * 3600
+    local totalSeconds = os.time(timeData) + beijingOffset
+    
+    local beijingTime = os.date("*t", totalSeconds)
+    return string.format("%04d年%02d月%02d日 %02d:%02d:%02d", 
+        beijingTime.year, beijingTime.month, beijingTime.day,
+        beijingTime.hour, beijingTime.min, beijingTime.sec)
+end
+
 local sg = Instance.new("ScreenGui")
 sg.Name = "XDGHOB_UI"
 sg.ResetOnSpawn = false
@@ -949,15 +983,245 @@ local function createInfoContainer()
     container.Visible = false
     container.Parent = contentFrame
     
-    local label = Instance.new("TextLabel")
-    label.Size = UDim2.new(1, 0, 1, 0)
-    label.Position = UDim2.new(0, 0, 0, 0)
-    label.BackgroundTransparency = 1
-    label.Text = "信息区内容"
-    label.TextColor3 = Color3.fromRGB(200, 200, 210)
-    label.Font = Enum.Font.Gotham
-    label.TextSize = 16
-    label.Parent = container
+    local scrollFrame = Instance.new("ScrollingFrame")
+    scrollFrame.Name = "InfoScroll"
+    scrollFrame.Size = UDim2.new(1, -20, 1, -20)
+    scrollFrame.Position = UDim2.new(0, 10, 0, 10)
+    scrollFrame.BackgroundTransparency = 1
+    scrollFrame.ScrollBarThickness = 6
+    scrollFrame.ScrollBarImageColor3 = Color3.fromRGB(100, 100, 110)
+    scrollFrame.CanvasSize = UDim2.new(0, 0, 0, 350)
+    scrollFrame.Parent = container
+    
+    local infoLayout = Instance.new("UIListLayout")
+    infoLayout.Parent = scrollFrame
+    infoLayout.Padding = UDim.new(0, 15)
+    infoLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+    
+    local timeFrame = Instance.new("Frame")
+    timeFrame.Name = "TimeFrame"
+    timeFrame.Size = UDim2.new(0.9, 0, 0, 50)
+    timeFrame.BackgroundColor3 = Color3.fromRGB(60, 60, 70)
+    timeFrame.BackgroundTransparency = 0.1
+    
+    local timeCorner = Instance.new("UICorner")
+    timeCorner.CornerRadius = UDim.new(0, 8)
+    timeCorner.Parent = timeFrame
+    
+    local timeStroke = Instance.new("UIStroke")
+    timeStroke.Thickness = 2
+    timeStroke.Color = Color3.fromRGB(80, 160, 255)
+    timeStroke.Transparency = 0.2
+    timeStroke.Parent = timeFrame
+    
+    local timeIcon = Instance.new("ImageLabel")
+    timeIcon.Name = "TimeIcon"
+    timeIcon.Size = UDim2.new(0, 32, 0, 32)
+    timeIcon.Position = UDim2.new(0, 10, 0.5, -16)
+    timeIcon.BackgroundTransparency = 1
+    timeIcon.Image = "rbxassetid://3926305904"
+    timeIcon.ImageRectSize = Vector2.new(64, 64)
+    timeIcon.ImageRectOffset = Vector2.new(0, 576)
+    timeIcon.Parent = timeFrame
+    
+    local timeLabel = Instance.new("TextLabel")
+    timeLabel.Name = "BeijingTime"
+    timeLabel.Size = UDim2.new(1, -50, 1, 0)
+    timeLabel.Position = UDim2.new(0, 50, 0, 0)
+    timeLabel.BackgroundTransparency = 1
+    timeLabel.TextColor3 = Color3.fromRGB(220, 220, 230)
+    timeLabel.Font = Enum.Font.GothamSemibold
+    timeLabel.TextSize = 14
+    timeLabel.TextStrokeTransparency = 0.7
+    timeLabel.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
+    timeLabel.Parent = timeFrame
+    
+    local titleLabel1 = Instance.new("TextLabel")
+    titleLabel1.Name = "TimeTitle"
+    titleLabel1.Size = UDim2.new(1, -50, 0, 20)
+    titleLabel1.Position = UDim2.new(0, 50, 0, 2)
+    titleLabel1.BackgroundTransparency = 1
+    titleLabel1.Text = "北京时间"
+    titleLabel1.TextColor3 = Color3.fromRGB(180, 200, 255)
+    titleLabel1.Font = Enum.Font.GothamBold
+    titleLabel1.TextSize = 12
+    titleLabel1.TextXAlignment = Enum.TextXAlignment.Left
+    titleLabel1.Parent = timeFrame
+    
+    timeFrame.Parent = scrollFrame
+    
+    local playerFrame = Instance.new("Frame")
+    playerFrame.Name = "PlayerFrame"
+    playerFrame.Size = UDim2.new(0.9, 0, 0, 50)
+    playerFrame.BackgroundColor3 = Color3.fromRGB(60, 60, 70)
+    playerFrame.BackgroundTransparency = 0.1
+    
+    local playerCorner = Instance.new("UICorner")
+    playerCorner.CornerRadius = UDim.new(0, 8)
+    playerCorner.Parent = playerFrame
+    
+    local playerStroke = Instance.new("UIStroke")
+    playerStroke.Thickness = 2
+    playerStroke.Color = Color3.fromRGB(80, 160, 255)
+    playerStroke.Transparency = 0.2
+    playerStroke.Parent = playerFrame
+    
+    local playerIcon = Instance.new("ImageLabel")
+    playerIcon.Name = "PlayerIcon"
+    playerIcon.Size = UDim2.new(0, 32, 0, 32)
+    playerIcon.Position = UDim2.new(0, 10, 0.5, -16)
+    playerIcon.BackgroundTransparency = 1
+    playerIcon.Image = "rbxassetid://3926305904"
+    playerIcon.ImageRectSize = Vector2.new(64, 64)
+    playerIcon.ImageRectOffset = Vector2.new(128, 256)
+    playerIcon.Parent = playerFrame
+    
+    local playerLabel = Instance.new("TextLabel")
+    playerLabel.Name = "PlayerName"
+    playerLabel.Size = UDim2.new(1, -50, 1, 0)
+    playerLabel.Position = UDim2.new(0, 50, 0, 0)
+    playerLabel.BackgroundTransparency = 1
+    playerLabel.Text = player.Name
+    playerLabel.TextColor3 = Color3.fromRGB(220, 220, 230)
+    playerLabel.Font = Enum.Font.GothamSemibold
+    playerLabel.TextSize = 14
+    playerLabel.TextStrokeTransparency = 0.7
+    playerLabel.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
+    playerLabel.Parent = playerFrame
+    
+    local titleLabel2 = Instance.new("TextLabel")
+    titleLabel2.Name = "PlayerTitle"
+    titleLabel2.Size = UDim2.new(1, -50, 0, 20)
+    titleLabel2.Position = UDim2.new(0, 50, 0, 2)
+    titleLabel2.BackgroundTransparency = 1
+    titleLabel2.Text = "角色名称"
+    titleLabel2.TextColor3 = Color3.fromRGB(180, 200, 255)
+    titleLabel2.Font = Enum.Font.GothamBold
+    titleLabel2.TextSize = 12
+    titleLabel2.TextXAlignment = Enum.TextXAlignment.Left
+    titleLabel2.Parent = playerFrame
+    
+    playerFrame.Parent = scrollFrame
+    
+    local executorFrame = Instance.new("Frame")
+    executorFrame.Name = "ExecutorFrame"
+    executorFrame.Size = UDim2.new(0.9, 0, 0, 50)
+    executorFrame.BackgroundColor3 = Color3.fromRGB(60, 60, 70)
+    executorFrame.BackgroundTransparency = 0.1
+    
+    local executorCorner = Instance.new("UICorner")
+    executorCorner.CornerRadius = UDim.new(0, 8)
+    executorCorner.Parent = executorFrame
+    
+    local executorStroke = Instance.new("UIStroke")
+    executorStroke.Thickness = 2
+    executorStroke.Color = Color3.fromRGB(80, 160, 255)
+    executorStroke.Transparency = 0.2
+    executorStroke.Parent = executorFrame
+    
+    local executorIcon = Instance.new("ImageLabel")
+    executorIcon.Name = "ExecutorIcon"
+    executorIcon.Size = UDim2.new(0, 32, 0, 32)
+    executorIcon.Position = UDim2.new(0, 10, 0.5, -16)
+    executorIcon.BackgroundTransparency = 1
+    executorIcon.Image = "rbxassetid://3926305904"
+    executorIcon.ImageRectSize = Vector2.new(64, 64)
+    executorIcon.ImageRectOffset = Vector2.new(192, 128)
+    executorIcon.Parent = executorFrame
+    
+    local executorLabel = Instance.new("TextLabel")
+    executorLabel.Name = "ExecutorName"
+    executorLabel.Size = UDim2.new(1, -50, 1, 0)
+    executorLabel.Position = UDim2.new(0, 50, 0, 0)
+    executorLabel.BackgroundTransparency = 1
+    executorLabel.Text = executorName
+    executorLabel.TextColor3 = Color3.fromRGB(220, 220, 230)
+    executorLabel.Font = Enum.Font.GothamSemibold
+    executorLabel.TextSize = 14
+    executorLabel.TextStrokeTransparency = 0.7
+    executorLabel.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
+    executorLabel.Parent = executorFrame
+    
+    local titleLabel3 = Instance.new("TextLabel")
+    titleLabel3.Name = "ExecutorTitle"
+    titleLabel3.Size = UDim2.new(1, -50, 0, 20)
+    titleLabel3.Position = UDim2.new(0, 50, 0, 2)
+    titleLabel3.BackgroundTransparency = 1
+    titleLabel3.Text = "注入器"
+    titleLabel3.TextColor3 = Color3.fromRGB(180, 200, 255)
+    titleLabel3.Font = Enum.Font.GothamBold
+    titleLabel3.TextSize = 12
+    titleLabel3.TextXAlignment = Enum.TextXAlignment.Left
+    titleLabel3.Parent = executorFrame
+    
+    executorFrame.Parent = scrollFrame
+    
+    local statusFrame = Instance.new("Frame")
+    statusFrame.Name = "StatusFrame"
+    statusFrame.Size = UDim2.new(0.9, 0, 0, 80)
+    statusFrame.BackgroundColor3 = Color3.fromRGB(60, 60, 70)
+    statusFrame.BackgroundTransparency = 0.1
+    
+    local statusCorner = Instance.new("UICorner")
+    statusCorner.CornerRadius = UDim.new(0, 8)
+    statusCorner.Parent = statusFrame
+    
+    local statusStroke = Instance.new("UIStroke")
+    statusStroke.Thickness = 2
+    statusStroke.Color = Color3.fromRGB(80, 160, 255)
+    statusStroke.Transparency = 0.2
+    statusStroke.Parent = statusFrame
+    
+    local statusIcon = Instance.new("ImageLabel")
+    statusIcon.Name = "StatusIcon"
+    statusIcon.Size = UDim2.new(0, 32, 0, 32)
+    statusIcon.Position = UDim2.new(0, 10, 0, 10)
+    statusIcon.BackgroundTransparency = 1
+    statusIcon.Image = "rbxassetid://3926305904"
+    statusIcon.ImageRectSize = Vector2.new(64, 64)
+    statusIcon.ImageRectOffset = Vector2.new(0, 64)
+    statusIcon.Parent = statusFrame
+    
+    local statusLabel = Instance.new("TextLabel")
+    statusLabel.Name = "StatusLabel"
+    statusLabel.Size = UDim2.new(1, -50, 0, 60)
+    statusLabel.Position = UDim2.new(0, 50, 0, 10)
+    statusLabel.BackgroundTransparency = 1
+    statusLabel.Text = "脚本状态：正常运行\n游戏ID：" .. game.PlaceId .. "\n玩家数量：" .. #Players:GetPlayers()
+    statusLabel.TextColor3 = Color3.fromRGB(220, 220, 230)
+    statusLabel.Font = Enum.Font.GothamSemibold
+    statusLabel.TextSize = 12
+    statusLabel.TextStrokeTransparency = 0.7
+    statusLabel.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
+    statusLabel.TextXAlignment = Enum.TextXAlignment.Left
+    statusLabel.TextYAlignment = Enum.TextYAlignment.Top
+    statusLabel.Parent = statusFrame
+    
+    local titleLabel4 = Instance.new("TextLabel")
+    titleLabel4.Name = "StatusTitle"
+    titleLabel4.Size = UDim2.new(1, -50, 0, 20)
+    titleLabel4.Position = UDim2.new(0, 50, 0, 2)
+    titleLabel4.BackgroundTransparency = 1
+    titleLabel4.Text = "系统状态"
+    titleLabel4.TextColor3 = Color3.fromRGB(180, 200, 255)
+    titleLabel4.Font = Enum.Font.GothamBold
+    titleLabel4.TextSize = 12
+    titleLabel4.TextXAlignment = Enum.TextXAlignment.Left
+    titleLabel4.Parent = statusFrame
+    
+    statusFrame.Parent = scrollFrame
+    
+    local function updateInfo()
+        timeLabel.Text = getBeijingTime()
+        playerLabel.Text = player.Name
+        executorLabel.Text = executorName
+        statusLabel.Text = string.format("脚本状态：正常运行\n游戏ID：%d\n玩家数量：%d", 
+            game.PlaceId, #Players:GetPlayers())
+    end
+    
+    RunService.RenderStepped:Connect(function()
+        updateInfo()
+    end)
     
     return container
 end
