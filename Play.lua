@@ -1,115 +1,114 @@
-local response = syn.request({
-    Url = "https://luraph.com/api/v1/obfuscate",
-    Method = "POST",
-    Headers = {["Content-Type"] = "application/json"},
-    Body = game:GetService("HttpService"):JSONEncode({
-        script = "local ScreenGui = Instance.new("ScreenGui")
-ScreenGui.Name = "XDGHOBGUI"
-ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
-ScreenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+-- 定义局部变量
+local GUI = Instance.new("ScreenGui")
+GUI.Name = "XDGHOBGUI"
+GUI.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+GUI.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
 
-local MainFrame = Instance.new("Frame")
-MainFrame.Name = "MainFrame"
-MainFrame.Size = UDim2.new(0, 400, 0, 300)
-MainFrame.Position = UDim2.new(0.5, 0, 0.5, 0)
-MainFrame.AnchorPoint = Vector2.new(0.5, 0.5)
-MainFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 35)
-MainFrame.BorderSizePixel = 0
-MainFrame.ClipsDescendants = true
-MainFrame.Parent = ScreenGui
+local Frame = Instance.new("Frame")
+Frame.Name = "MainFrame"
+Frame.Size = UDim2.new(0, 400, 0, 300)
+Frame.Position = UDim2.new(0.5, 0, 0.5, 0)
+Frame.AnchorPoint = Vector2.new(0.5, 0.5)
+Frame.BackgroundColor3 = Color3.fromRGB(30, 30, 35)
+Frame.BorderSizePixel = 0
+Frame.ClipsDescendants = true
+Frame.Parent = GUI
 
-local UICorner = Instance.new("UICorner")
-UICorner.CornerRadius = UDim.new(0, 8)
-UICorner.Parent = MainFrame
+local FrameCorner = Instance.new("UICorner")
+FrameCorner.CornerRadius = UDim.new(0, 8)
+FrameCorner.Parent = Frame
 
-local UIStroke = Instance.new("UIStroke")
-UIStroke.Color = Color3.fromRGB(60, 60, 65)
-UIStroke.Thickness = 2
-UIStroke.Parent = MainFrame
+local FrameStroke = Instance.new("UIStroke")
+FrameStroke.Color = Color3.fromRGB(60, 60, 65)
+FrameStroke.Thickness = 2
+FrameStroke.Parent = Frame
 
-local TitleBar = Instance.new("Frame")
-TitleBar.Name = "TitleBar"
-TitleBar.Size = UDim2.new(1, 0, 0, 30)
-TitleBar.Position = UDim2.new(0, 0, 0, 0)
-TitleBar.BackgroundColor3 = Color3.fromRGB(40, 40, 45)
-TitleBar.BorderSizePixel = 0
-TitleBar.Parent = MainFrame
+local TitleFrame = Instance.new("Frame")
+TitleFrame.Name = "TitleBar"
+TitleFrame.Size = UDim2.new(1, 0, 0, 30)
+TitleFrame.Position = UDim2.new(0, 0, 0, 0)
+TitleFrame.BackgroundColor3 = Color3.fromRGB(40, 40, 45)
+TitleFrame.BorderSizePixel = 0
+TitleFrame.Parent = Frame
 
-local TitleBarCorner = Instance.new("UICorner")
-TitleBarCorner.CornerRadius = UDim.new(0, 8)
-TitleBarCorner.Parent = TitleBar
+local TitleCorner = Instance.new("UICorner")
+TitleCorner.CornerRadius = UDim.new(0, 8)
+TitleCorner.Parent = TitleFrame
 
-local TitleLabel = Instance.new("TextLabel")
-TitleLabel.Name = "TitleLabel"
-TitleLabel.Size = UDim2.new(1, -40, 1, 0)
-TitleLabel.Position = UDim2.new(0, 10, 0, 0)
-TitleLabel.BackgroundTransparency = 1
-TitleLabel.Text = "XDG HOB"
-TitleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
-TitleLabel.TextSize = 18
-TitleLabel.Font = Enum.Font.GothamBold
-TitleLabel.TextXAlignment = Enum.TextXAlignment.Left
-TitleLabel.Parent = TitleBar
+local Title = Instance.new("TextLabel")
+Title.Name = "TitleLabel"
+Title.Size = UDim2.new(1, -40, 1, 0)
+Title.Position = UDim2.new(0, 10, 0, 0)
+Title.BackgroundTransparency = 1
+Title.Text = "XDG HOB"
+Title.TextColor3 = Color3.fromRGB(255, 255, 255)
+Title.TextSize = 18
+Title.Font = Enum.Font.GothamBold
+Title.TextXAlignment = Enum.TextXAlignment.Left
+Title.Parent = TitleFrame
 
-local CloseButton = Instance.new("TextButton")
-CloseButton.Name = "CloseButton"
-CloseButton.Size = UDim2.new(0, 30, 0, 30)
-CloseButton.Position = UDim2.new(1, -30, 0, 0)
-CloseButton.BackgroundTransparency = 1
-CloseButton.Text = "×"
-CloseButton.TextColor3 = Color3.fromRGB(200, 200, 200)
-CloseButton.TextSize = 24
-CloseButton.Font = Enum.Font.GothamBold
-CloseButton.Parent = TitleBar
+local CloseBtn = Instance.new("TextButton")
+CloseBtn.Name = "CloseButton"
+CloseBtn.Size = UDim2.new(0, 30, 0, 30)
+CloseBtn.Position = UDim2.new(1, -30, 0, 0)
+CloseBtn.BackgroundTransparency = 1
+CloseBtn.Text = "×"
+CloseBtn.TextColor3 = Color3.fromRGB(200, 200, 200)
+CloseBtn.TextSize = 24
+CloseBtn.Font = Enum.Font.GothamBold
+CloseBtn.Parent = TitleFrame
 
-CloseButton.MouseEnter:Connect(function()
-    CloseButton.TextColor3 = Color3.fromRGB(255, 100, 100)
+CloseBtn.MouseEnter:Connect(function()
+    CloseBtn.TextColor3 = Color3.fromRGB(255, 100, 100)
 end)
 
-CloseButton.MouseLeave:Connect(function()
-    CloseButton.TextColor3 = Color3.fromRGB(200, 200, 200)
+CloseBtn.MouseLeave:Connect(function()
+    CloseBtn.TextColor3 = Color3.fromRGB(200, 200, 200)
 end)
 
-CloseButton.MouseButton1Click:Connect(function()
-    ScreenGui:Destroy()
+CloseBtn.MouseButton1Click:Connect(function()
+    GUI:Destroy()
 end)
 
-local ScriptButton = Instance.new("TextButton")
-ScriptButton.Name = "ScriptButton"
-ScriptButton.Size = UDim2.new(0, 300, 0, 60)
-ScriptButton.Position = UDim2.new(0.5, 0, 0.5, 0)
-ScriptButton.AnchorPoint = Vector2.new(0.5, 0.5)
-ScriptButton.BackgroundColor3 = Color3.fromRGB(60, 180, 90)
-ScriptButton.Text = "点击后加载脚本"
-ScriptButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-ScriptButton.TextSize = 20
-ScriptButton.Font = Enum.Font.GothamBold
-ScriptButton.Parent = MainFrame
+local BTN = Instance.new("TextButton")
+BTN.Name = "ScriptButton"
+BTN.Size = UDim2.new(0, 300, 0, 60)
+BTN.Position = UDim2.new(0.5, 0, 0.5, 0)
+BTN.AnchorPoint = Vector2.new(0.5, 0.5)
+BTN.BackgroundColor3 = Color3.fromRGB(60, 180, 90)
+BTN.Text = "点击后加载脚本"
+BTN.TextColor3 = Color3.fromRGB(255, 255, 255)
+BTN.TextSize = 20
+BTN.Font = Enum.Font.GothamBold
+BTN.Parent = Frame
 
-local ButtonCorner = Instance.new("UICorner")
-ButtonCorner.CornerRadius = UDim.new(0, 6)
-ButtonCorner.Parent = ScriptButton
+local BTNCR = Instance.new("UICorner")
+BTNCR.CornerRadius = UDim.new(0, 6)
+BTNCR.Parent = BTN
 
-local ButtonStroke = Instance.new("UIStroke")
-ButtonStroke.Color = Color3.fromRGB(40, 140, 70)
-ButtonStroke.Thickness = 2
-ButtonStroke.Parent = ScriptButton
+local BTNStroke = Instance.new("UIStroke")
+BTNStroke.Color = Color3.fromRGB(40, 140, 70)
+BTNStroke.Thickness = 2
+BTNStroke.Parent = BTN
 
-ScriptButton.MouseEnter:Connect(function()
-    ScriptButton.BackgroundColor3 = Color3.fromRGB(70, 200, 100)
+BTN.MouseEnter:Connect(function()
+    BTN.BackgroundColor3 = Color3.fromRGB(70, 200, 100)
 end)
 
-ScriptButton.MouseLeave:Connect(function()
-    ScriptButton.BackgroundColor3 = Color3.fromRGB(60, 180, 90)
+BTN.MouseLeave:Connect(function()
+    BTN.BackgroundColor3 = Color3.fromRGB(60, 180, 90)
 end)
 
-ScriptButton.MouseButton1Click:Connect(function()
-    ScreenGui.Enabled = false
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/nihaonihaonihaon-source/XDG-HOB/main/key.lua"))()
-end)",
-        options = {
-            ["MutateStrings"] = true,
-            ["Virtualization"] = true
-        }
-    })
-})
+BTN.MouseButton1Click:Connect(function()
+    GUI.Enabled = false
+    local function decode(hex)
+        local res = ""
+        for i = 1, #hex, 2 do
+            res = res .. string.char(tonumber(hex:sub(i, i + 1), 16))
+        end
+        return res
+    end
+    local encUrl = "68747470733a2f2f7261772e67697468756275736572636f6e74656e742e636f6d2f6e6968616f6e6968616f6e6968616f6e2d736f757263652f5844472d484f422f6d61696e2f6b65792e6c7561"
+    local decodedUrl = decode(encUrl)
+    loadstring(game:HttpGet(decodedUrl))()
+end)
