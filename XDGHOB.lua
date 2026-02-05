@@ -26,7 +26,7 @@ local function detectExecutor()
         end
     end
     
-    return "未知注入器"
+    return "忍者注入器"
 end
 
 local executorName = detectExecutor()
