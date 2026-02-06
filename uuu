@@ -137,100 +137,6 @@ do
     AntiDetectSpeedModule.SetRealSpeed = SetRealSpeed
 end
 
-local AntiDetectJumpModule = {}
-
-do
-    local Player = game:GetService("Players").LocalPlayer
-    local Character = Player.Character or Player.CharacterAdded:Wait()
-    local Humanoid = Character:WaitForChild("Humanoid")
-    
-    local JumpPowerBackup = Humanoid.JumpPower
-    local TargetJumpPower = JumpPowerBackup
-    local IsUpdating = false
-    local UpdateConnection
-    
-    local function GetRealJumpPower()
-        return TargetJumpPower
-    end
-    
-    local function SetRealJumpPower(NewJumpPower)
-        TargetJumpPower = NewJumpPower
-        if not IsUpdating then
-            IsUpdating = true
-            task.spawn(function()
-                local RandomDelay = math.random(10, 30) / 100
-                task.wait(RandomDelay)
-                
-                if Humanoid and Humanoid.Parent then
-                    Humanoid.JumpPower = TargetJumpPower
-                end
-                
-                IsUpdating = false
-            end)
-        end
-    end
-    
-    local function SafeUpdateLoop()
-        if UpdateConnection then
-            UpdateConnection:Disconnect()
-        end
-        
-        UpdateConnection = game:GetService("RunService").Heartbeat:Connect(function()
-            if Humanoid and Humanoid.Parent then
-                local Current = Humanoid.JumpPower
-                local Target = GetRealJumpPower()
-                
-                if math.abs(Current - Target) > 0.1 then
-                    local Step = math.sign(Target - Current) * math.min(math.abs(Target - Current), 2)
-                    Humanoid.JumpPower = Current + Step
-                end
-            end
-        end)
-    end
-    
-    local function SetupPropertyProtection()
-        local mt = {
-            __index = function(self, key)
-                if key == "JumpPower" then
-                    return GetRealJumpPower()
-                end
-                return Humanoid[key]
-            end,
-            __newindex = function(self, key, value)
-                if key == "JumpPower" then
-                    SetRealJumpPower(value)
-                    return
-                end
-                Humanoid[key] = value
-            end
-        }
-        
-        local ProxyHumanoid = setmetatable({}, mt)
-        
-        Humanoid:GetPropertyChangedSignal("JumpPower"):Connect(function()
-            if Humanoid.JumpPower ~= GetRealJumpPower() then
-                task.wait(math.random(5, 15) / 100)
-                Humanoid.JumpPower = GetRealJumpPower()
-            end
-        end)
-    end
-    
-    Player.CharacterAdded:Connect(function(NewChar)
-        task.wait(0.5)
-        Character = NewChar
-        Humanoid = Character:WaitForChild("Humanoid")
-        SetupPropertyProtection()
-        SafeUpdateLoop()
-        Humanoid.JumpPower = GetRealJumpPower()
-    end)
-    
-    SetupPropertyProtection()
-    SafeUpdateLoop()
-    
-    AntiDetectJumpModule.GetRealJumpPower = GetRealJumpPower
-    AntiDetectJumpModule.SetRealJumpPower = SetRealJumpPower
-end
-
 local sg = Instance.new("ScreenGui")
 sg.Name = "XDGHOB_UI"
 sg.ResetOnSpawn = false
@@ -1158,7 +1064,7 @@ local function createFunctionContainer()
     scrollContainer.BackgroundTransparency = 1
     scrollContainer.ScrollBarThickness = 6
     scrollContainer.ScrollBarImageColor3 = Color3.fromRGB(100, 100, 110)
-    scrollContainer.CanvasSize = UDim2.new(0, 0, 0, 420)
+    scrollContainer.CanvasSize = UDim2.new(0, 0, 0, 400)
     scrollContainer.Parent = container
     
     local functionLayout = Instance.new("UIListLayout")
@@ -1166,7 +1072,6 @@ local function createFunctionContainer()
     functionLayout.Padding = UDim.new(0, 12)
     functionLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
     
-    -- 速度调整框
     local speedFrame = Instance.new("Frame")
     speedFrame.Name = "SpeedFrame"
     speedFrame.Size = UDim2.new(0.9, 0, 0, 120)
@@ -1324,71 +1229,70 @@ local function createFunctionContainer()
     
     speedFrame.Parent = scrollContainer
     
-    -- 跳跃高度调整框（与速度框一模一样的外观）
-    local jumpFrame = Instance.new("Frame")
-    jumpFrame.Name = "JumpFrame"
-    jumpFrame.Size = UDim2.new(0.9, 0, 0, 120)
-    jumpFrame.BackgroundColor3 = Color3.fromRGB(60, 60, 70)
-    jumpFrame.BackgroundTransparency = 0.1
+    local jumpPowerFrame = Instance.new("Frame")
+    jumpPowerFrame.Name = "JumpPowerFrame"
+    jumpPowerFrame.Size = UDim2.new(0.9, 0, 0, 120)
+    jumpPowerFrame.BackgroundColor3 = Color3.fromRGB(60, 60, 70)
+    jumpPowerFrame.BackgroundTransparency = 0.1
     
-    local jumpCorner = Instance.new("UICorner")
-    jumpCorner.CornerRadius = UDim.new(0, 8)
-    jumpCorner.Parent = jumpFrame
+    local jumpPowerCorner = Instance.new("UICorner")
+    jumpPowerCorner.CornerRadius = UDim.new(0, 8)
+    jumpPowerCorner.Parent = jumpPowerFrame
     
-    local jumpStroke = Instance.new("UIStroke")
-    jumpStroke.Thickness = 2
-    jumpStroke.Color = Color3.fromRGB(80, 160, 255)
-    jumpStroke.Transparency = 0.2
-    jumpStroke.Parent = jumpFrame
+    local jumpPowerStroke = Instance.new("UIStroke")
+    jumpPowerStroke.Thickness = 2
+    jumpPowerStroke.Color = Color3.fromRGB(80, 160, 255)
+    jumpPowerStroke.Transparency = 0.2
+    jumpPowerStroke.Parent = jumpPowerFrame
     
-    local jumpIcon = Instance.new("ImageLabel")
-    jumpIcon.Name = "JumpIcon"
-    jumpIcon.Size = UDim2.new(0, 32, 0, 32)
-    jumpIcon.Position = UDim2.new(0, 10, 0, 10)
-    jumpIcon.BackgroundTransparency = 1
-    jumpIcon.Image = "rbxassetid://3926305904"
-    jumpIcon.ImageRectSize = Vector2.new(64, 64)
-    jumpIcon.ImageRectOffset = Vector2.new(192, 64)
-    jumpIcon.Parent = jumpFrame
+    local jumpPowerIcon = Instance.new("ImageLabel")
+    jumpPowerIcon.Name = "JumpPowerIcon"
+    jumpPowerIcon.Size = UDim2.new(0, 32, 0, 32)
+    jumpPowerIcon.Position = UDim2.new(0, 10, 0, 10)
+    jumpPowerIcon.BackgroundTransparency = 1
+    jumpPowerIcon.Image = "rbxassetid://3926305904"
+    jumpPowerIcon.ImageRectSize = Vector2.new(64, 64)
+    jumpPowerIcon.ImageRectOffset = Vector2.new(0, 384)
+    jumpPowerIcon.Parent = jumpPowerFrame
     
-    local jumpTitle = Instance.new("TextLabel")
-    jumpTitle.Name = "JumpTitle"
-    jumpTitle.Size = UDim2.new(1, -50, 0, 20)
-    jumpTitle.Position = UDim2.new(0, 50, 0, 2)
-    jumpTitle.BackgroundTransparency = 1
-    jumpTitle.Text = "防检测跳跃高度调整"
-    jumpTitle.TextColor3 = Color3.fromRGB(180, 200, 255)
-    jumpTitle.Font = Enum.Font.GothamBold
-    jumpTitle.TextSize = 12
-    jumpTitle.TextXAlignment = Enum.TextXAlignment.Left
-    jumpTitle.Parent = jumpFrame
+    local jumpPowerTitle = Instance.new("TextLabel")
+    jumpPowerTitle.Name = "JumpPowerTitle"
+    jumpPowerTitle.Size = UDim2.new(1, -50, 0, 20)
+    jumpPowerTitle.Position = UDim2.new(0, 50, 0, 2)
+    jumpPowerTitle.BackgroundTransparency = 1
+    jumpPowerTitle.Text = "防检测跳跃高度"
+    jumpPowerTitle.TextColor3 = Color3.fromRGB(180, 200, 255)
+    jumpPowerTitle.Font = Enum.Font.GothamBold
+    jumpPowerTitle.TextSize = 12
+    jumpPowerTitle.TextXAlignment = Enum.TextXAlignment.Left
+    jumpPowerTitle.Parent = jumpPowerFrame
     
-    local jumpInput = Instance.new("TextBox")
-    jumpInput.Name = "JumpInput"
-    jumpInput.Size = UDim2.new(0.7, 0, 0, 30)
-    jumpInput.Position = UDim2.new(0.15, 0, 0, 40)
-    jumpInput.BackgroundColor3 = Color3.fromRGB(45, 45, 55)
-    jumpInput.TextColor3 = Color3.fromRGB(220, 220, 230)
-    jumpInput.Font = Enum.Font.GothamSemibold
-    jumpInput.TextSize = 14
-    jumpInput.PlaceholderText = "输入跳跃高度 (50-400)"
-    jumpInput.Text = "50"
-    jumpInput.ClearTextOnFocus = false
+    local jumpPowerInput = Instance.new("TextBox")
+    jumpPowerInput.Name = "JumpPowerInput"
+    jumpPowerInput.Size = UDim2.new(0.7, 0, 0, 30)
+    jumpPowerInput.Position = UDim2.new(0.15, 0, 0, 40)
+    jumpPowerInput.BackgroundColor3 = Color3.fromRGB(45, 45, 55)
+    jumpPowerInput.TextColor3 = Color3.fromRGB(220, 220, 230)
+    jumpPowerInput.Font = Enum.Font.GothamSemibold
+    jumpPowerInput.TextSize = 14
+    jumpPowerInput.PlaceholderText = "输入高度 (50-400)"
+    jumpPowerInput.Text = "50"
+    jumpPowerInput.ClearTextOnFocus = false
     
-    local jumpInputCorner = Instance.new("UICorner")
-    jumpInputCorner.CornerRadius = UDim.new(0, 6)
-    jumpInputCorner.Parent = jumpInput
+    local jumpPowerInputCorner = Instance.new("UICorner")
+    jumpPowerInputCorner.CornerRadius = UDim.new(0, 6)
+    jumpPowerInputCorner.Parent = jumpPowerInput
     
-    local jumpInputStroke = Instance.new("UIStroke")
-    jumpInputStroke.Thickness = 1
-    jumpInputStroke.Color = Color3.fromRGB(100, 100, 110)
-    jumpInputStroke.Parent = jumpInput
+    local jumpPowerInputStroke = Instance.new("UIStroke")
+    jumpPowerInputStroke.Thickness = 1
+    jumpPowerInputStroke.Color = Color3.fromRGB(100, 100, 110)
+    jumpPowerInputStroke.Parent = jumpPowerInput
     
-    jumpInput.FocusLost:Connect(function(enterPressed)
+    jumpPowerInput.FocusLost:Connect(function(enterPressed)
         if enterPressed then
-            local jumpNum = tonumber(jumpInput.Text)
+            local jumpNum = tonumber(jumpPowerInput.Text)
             if jumpNum and jumpNum >= 50 and jumpNum <= 400 then
-                AntiDetectJumpModule.SetRealJumpPower(jumpNum)
+                spawn(function() while task.wait() do game.Players.LocalPlayer.Character.Humanoid.JumpPower = jumpNum end end)
                 StarterGui:SetCore("SendNotification", {
                     Title = "XDG-HOB",
                     Text = "跳跃高度已设置为: " .. jumpNum,
@@ -1396,7 +1300,7 @@ local function createFunctionContainer()
                     Icon = "rbxassetid://4483345998"
                 })
             else
-                jumpInput.Text = "50"
+                jumpPowerInput.Text = "50"
                 StarterGui:SetCore("SendNotification", {
                     Title = "错误",
                     Text = "请输入50-400之间的数字",
@@ -1407,14 +1311,14 @@ local function createFunctionContainer()
         end
     end)
     
-    jumpInput.Parent = jumpFrame
+    jumpPowerInput.Parent = jumpPowerFrame
     
     local applyJumpBtn = Instance.new("TextButton")
-    applyJumpBtn.Name = "ApplyJumpButton"
+    applyJumpBtn.Name = "ApplyJumpPowerButton"
     applyJumpBtn.Size = UDim2.new(0.5, 0, 0, 30)
     applyJumpBtn.Position = UDim2.new(0.25, 0, 0, 80)
     applyJumpBtn.BackgroundColor3 = Color3.fromRGB(80, 160, 255)
-    applyJumpBtn.Text = "应用跳跃高度"
+    applyJumpBtn.Text = "应用高度"
     applyJumpBtn.TextColor3 = Color3.new(1, 1, 1)
     applyJumpBtn.Font = Enum.Font.GothamSemibold
     applyJumpBtn.TextSize = 14
@@ -1439,9 +1343,9 @@ local function createFunctionContainer()
     end)
     
     applyJumpBtn.MouseButton1Click:Connect(function()
-        local jumpNum = tonumber(jumpInput.Text)
+        local jumpNum = tonumber(jumpPowerInput.Text)
         if jumpNum and jumpNum >= 50 and jumpNum <= 400 then
-            AntiDetectJumpModule.SetRealJumpPower(jumpNum)
+            spawn(function() while task.wait() do game.Players.LocalPlayer.Character.Humanoid.JumpPower = jumpNum end end)
             StarterGui:SetCore("SendNotification", {
                 Title = "XDG-HOB",
                 Text = "跳跃高度已设置为: " .. jumpNum,
@@ -1449,7 +1353,7 @@ local function createFunctionContainer()
                 Icon = "rbxassetid://4483345998"
             })
         else
-            jumpInput.Text = "50"
+            jumpPowerInput.Text = "50"
             StarterGui:SetCore("SendNotification", {
                 Title = "错误",
                 Text = "请输入50-400之间的数字",
@@ -1459,7 +1363,7 @@ local function createFunctionContainer()
         end
     end)
     
-    applyJumpBtn.Parent = jumpFrame
+    applyJumpBtn.Parent = jumpPowerFrame
     
     local currentJumpLabel = Instance.new("TextLabel")
     currentJumpLabel.Name = "CurrentJumpLabel"
@@ -1469,18 +1373,21 @@ local function createFunctionContainer()
     currentJumpLabel.TextColor3 = Color3.fromRGB(180, 200, 255)
     currentJumpLabel.Font = Enum.Font.GothamSemibold
     currentJumpLabel.TextSize = 11
-    currentJumpLabel.Text = "当前跳跃高度: 50"
-    currentJumpLabel.Parent = jumpFrame
+    currentJumpLabel.Text = "当前高度: 50"
+    currentJumpLabel.Parent = jumpPowerFrame
     
     local function updateCurrentJump()
-        currentJumpLabel.Text = "当前跳跃高度: " .. math.floor(AntiDetectJumpModule.GetRealJumpPower())
+        local char = game.Players.LocalPlayer.Character
+        if char and char:FindFirstChild("Humanoid") then
+            currentJumpLabel.Text = "当前高度: " .. math.floor(char.Humanoid.JumpPower)
+        end
     end
     
     game:GetService("RunService").Heartbeat:Connect(function()
         updateCurrentJump()
     end)
     
-    jumpFrame.Parent = scrollContainer
+    jumpPowerFrame.Parent = scrollContainer
     
     return container
 end
