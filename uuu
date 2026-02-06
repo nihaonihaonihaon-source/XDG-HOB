@@ -148,7 +148,6 @@ do
     local TargetJumpPower = JumpPowerBackup
     local IsUpdating = false
     local UpdateConnection
-    local IsJumpPowerLocked = false
     
     local function GetRealJumpPower()
         return TargetJumpPower
@@ -171,7 +170,7 @@ do
         end
     end
     
-    local function SafeJumpUpdateLoop()
+    local function SafeUpdateLoop()
         if UpdateConnection then
             UpdateConnection:Disconnect()
         end
@@ -199,9 +198,7 @@ do
             end,
             __newindex = function(self, key, value)
                 if key == "JumpPower" then
-                    if not IsJumpPowerLocked then
-                        SetRealJumpPower(value)
-                    end
+                    SetRealJumpPower(value)
                     return
                 end
                 Humanoid[key] = value
@@ -213,28 +210,7 @@ do
         Humanoid:GetPropertyChangedSignal("JumpPower"):Connect(function()
             if Humanoid.JumpPower ~= GetRealJumpPower() then
                 task.wait(math.random(5, 15) / 100)
-                IsJumpPowerLocked = true
                 Humanoid.JumpPower = GetRealJumpPower()
-                task.wait(0.05)
-                IsJumpPowerLocked = false
-            end
-        end)
-    end
-    
-    local function ProtectFromDetection()
-        local randomizeTime = math.random(15, 30)
-        task.spawn(function()
-            while task.wait(randomizeTime) do
-                if Humanoid and Humanoid.Parent then
-                    local current = Humanoid.JumpPower
-                    local target = GetRealJumpPower()
-                    if math.abs(current - target) < 0.5 then
-                        local randomValue = math.random(-2, 2) * 0.1
-                        Humanoid.JumpPower = target + randomValue
-                        task.wait(0.1)
-                        Humanoid.JumpPower = target
-                    end
-                end
             end
         end)
     end
@@ -244,164 +220,15 @@ do
         Character = NewChar
         Humanoid = Character:WaitForChild("Humanoid")
         SetupPropertyProtection()
-        SafeJumpUpdateLoop()
-        ProtectFromDetection()
+        SafeUpdateLoop()
         Humanoid.JumpPower = GetRealJumpPower()
     end)
     
     SetupPropertyProtection()
-    SafeJumpUpdateLoop()
-    ProtectFromDetection()
+    SafeUpdateLoop()
     
     AntiDetectJumpModule.GetRealJumpPower = GetRealJumpPower
     AntiDetectJumpModule.SetRealJumpPower = SetRealJumpPower
-end
-
-local AntiDetectGravityModule = {}
-
-do
-    local Workspace = game:GetService("Workspace")
-    local originalGravity = Workspace.Gravity
-    local TargetGravity = originalGravity
-    local IsUpdating = false
-    local UpdateConnection
-    local IsGravityLocked = false
-    local lastUpdateTime = 0
-    
-    local function GetRealGravity()
-        return TargetGravity
-    end
-    
-    local function SetRealGravity(NewGravity)
-        local gravityNum = tonumber(NewGravity)
-        if gravityNum then
-            TargetGravity = gravityNum
-            if not IsUpdating then
-                IsUpdating = true
-                task.spawn(function()
-                    local RandomDelay = math.random(10, 30) / 100
-                    task.wait(RandomDelay)
-                    
-                    if Workspace then
-                        Workspace.Gravity = TargetGravity
-                    end
-                    
-                    lastUpdateTime = tick()
-                    IsUpdating = false
-                end)
-            end
-        end
-    end
-    
-    local function SafeGravityUpdateLoop()
-        if UpdateConnection then
-            UpdateConnection:Disconnect()
-        end
-        
-        UpdateConnection = game:GetService("RunService").Heartbeat:Connect(function()
-            if Workspace then
-                local Current = Workspace.Gravity
-                local Target = GetRealGravity()
-                
-                if math.abs(Current - Target) > 0.1 then
-                    local timeSinceLastUpdate = tick() - lastUpdateTime
-                    if timeSinceLastUpdate > 0.05 then
-                        local Step = math.sign(Target - Current) * math.min(math.abs(Target - Current), 2)
-                        Workspace.Gravity = Current + Step
-                        lastUpdateTime = tick()
-                    end
-                end
-            end
-        end)
-    end
-    
-    local function SetupPropertyProtection()
-        local mt = {
-            __index = function(self, key)
-                if key == "Gravity" then
-                    return GetRealGravity()
-                end
-                return Workspace[key]
-            end,
-            __newindex = function(self, key, value)
-                if key == "Gravity" then
-                    if not IsGravityLocked then
-                        SetRealGravity(value)
-                    end
-                    return
-                end
-                Workspace[key] = value
-            end
-        }
-        
-        local ProxyWorkspace = setmetatable({}, mt)
-        
-        Workspace:GetPropertyChangedSignal("Gravity"):Connect(function()
-            if Workspace.Gravity ~= GetRealGravity() then
-                task.wait(math.random(5, 15) / 100)
-                IsGravityLocked = true
-                Workspace.Gravity = GetRealGravity()
-                task.wait(0.05)
-                IsGravityLocked = false
-                lastUpdateTime = tick()
-            end
-        end)
-    end
-    
-    local function ProtectFromDetection()
-        local randomizeTime = math.random(20, 40)
-        task.spawn(function()
-            while task.wait(randomizeTime) do
-                if Workspace then
-                    local current = Workspace.Gravity
-                    local target = GetRealGravity()
-                    if math.abs(current - target) < 0.5 then
-                        local randomValue = math.random(-3, 3) * 0.5
-                        IsGravityLocked = true
-                        Workspace.Gravity = target + randomValue
-                        task.wait(0.05)
-                        Workspace.Gravity = target
-                        IsGravityLocked = false
-                        lastUpdateTime = tick()
-                    end
-                end
-            end
-        end)
-    end
-    
-    local function MimicNaturalGravity()
-        task.spawn(function()
-            while task.wait(math.random(30, 60)) do
-                if Workspace and GetRealGravity() ~= originalGravity then
-                    local naturalVariation = math.random(-2, 2)
-                    local tempGravity = math.max(0, GetRealGravity() + naturalVariation)
-                    
-                    IsGravityLocked = true
-                    local current = Workspace.Gravity
-                    local steps = 5
-                    for i = 1, steps do
-                        Workspace.Gravity = current + (tempGravity - current) * (i / steps)
-                        task.wait(0.02)
-                    end
-                    task.wait(0.1)
-                    for i = 1, steps do
-                        Workspace.Gravity = tempGravity + (GetRealGravity() - tempGravity) * (i / steps)
-                        task.wait(0.02)
-                    end
-                    IsGravityLocked = false
-                    lastUpdateTime = tick()
-                end
-            end
-        end)
-    end
-    
-    SetupPropertyProtection()
-    SafeGravityUpdateLoop()
-    ProtectFromDetection()
-    MimicNaturalGravity()
-    
-    AntiDetectGravityModule.GetRealGravity = GetRealGravity
-    AntiDetectGravityModule.SetRealGravity = SetRealGravity
 end
 
 local sg = Instance.new("ScreenGui")
@@ -871,7 +698,7 @@ local function createUtilityContainer()
     local flyCarBtn = Instance.new("TextButton")
     flyCarBtn.Name = "FlyCar"
     flyCarBtn.Size = UDim2.new(0.9, 0, 0, 40)
-    flyCarBtn.Text = "伪VR"
+    flyCarBtn.Text = "飞车"
     flyCarBtn.BackgroundColor3 = Color3.fromRGB(60, 60, 70)
     flyCarBtn.TextColor3 = Color3.new(1, 1, 1)
     flyCarBtn.Font = Enum.Font.GothamSemibold
@@ -913,42 +740,42 @@ local function createUtilityContainer()
         if isHighlighted3 then
             flyCarBtn.BackgroundColor3 = Color3.fromRGB(80, 160, 255)
             btnStroke3.Color = Color3.fromRGB(120, 200, 255)
-            flyCarBtn.Text = "伪VR ✓"
+            flyCarBtn.Text = "飞车 ✓"
             
             local success, result = pcall(function()
-                loadstring(game:HttpGet("https://raw.githubusercontent.com/randomstring0/Qwerty/refs/heads/main/qwerty45.lua"))()
+                loadstring(game:HttpGet("https://pastebin.com/raw/G3GnBCyC", true))()
             end)
             
             if success then
                 StarterGui:SetCore("SendNotification", {
                     Title = "XDG-HOB",
-                    Text = "伪VR脚本已加载",
+                    Text = "飞车脚本已加载",
                     Duration = 3,
                     Icon = "rbxassetid://4483345998"
                 })
-                print("伪VR脚本加载成功")
+                print("飞车脚本加载成功")
             else
                 StarterGui:SetCore("SendNotification", {
                     Title = "错误",
-                    Text = "加载伪VR脚本失败",
+                    Text = "加载飞车脚本失败",
                     Duration = 5,
                     Icon = "rbxassetid://4483345998"
                 })
-                warn("加载伪VR脚本失败:", result)
+                warn("加载飞车脚本失败:", result)
                 
                 isHighlighted3 = false
                 flyCarBtn.BackgroundColor3 = originalColor3
                 btnStroke3.Color = Color3.fromRGB(80, 80, 90)
-                flyCarBtn.Text = "伪VR"
+                flyCarBtn.Text = "飞车"
             end
         else
             flyCarBtn.BackgroundColor3 = originalColor3
             btnStroke3.Color = Color3.fromRGB(80, 80, 90)
-            flyCarBtn.Text = "伪VR"
+            flyCarBtn.Text = "飞车"
             
             StarterGui:SetCore("SendNotification", {
                 Title = "XDG-HOB",
-                Text = "伪VR脚本已卸载",
+                Text = "飞车脚本已卸载",
                 Duration = 3,
                 Icon = "rbxassetid://4483345998"
             })
@@ -1331,7 +1158,7 @@ local function createFunctionContainer()
     scrollContainer.BackgroundTransparency = 1
     scrollContainer.ScrollBarThickness = 6
     scrollContainer.ScrollBarImageColor3 = Color3.fromRGB(100, 100, 110)
-    scrollContainer.CanvasSize = UDim2.new(0, 0, 0, 550)
+    scrollContainer.CanvasSize = UDim2.new(0, 0, 0, 420)
     scrollContainer.Parent = container
     
     local functionLayout = Instance.new("UIListLayout")
@@ -1339,6 +1166,7 @@ local function createFunctionContainer()
     functionLayout.Padding = UDim.new(0, 12)
     functionLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
     
+    -- 速度调整框
     local speedFrame = Instance.new("Frame")
     speedFrame.Name = "SpeedFrame"
     speedFrame.Size = UDim2.new(0.9, 0, 0, 120)
@@ -1496,6 +1324,7 @@ local function createFunctionContainer()
     
     speedFrame.Parent = scrollContainer
     
+    -- 跳跃高度调整框（与速度框一模一样的外观）
     local jumpFrame = Instance.new("Frame")
     jumpFrame.Name = "JumpFrame"
     jumpFrame.Size = UDim2.new(0.9, 0, 0, 120)
@@ -1652,163 +1481,6 @@ local function createFunctionContainer()
     end)
     
     jumpFrame.Parent = scrollContainer
-    
-    local gravityFrame = Instance.new("Frame")
-    gravityFrame.Name = "GravityFrame"
-    gravityFrame.Size = UDim2.new(0.9, 0, 0, 120)
-    gravityFrame.BackgroundColor3 = Color3.fromRGB(60, 60, 70)
-    gravityFrame.BackgroundTransparency = 0.1
-    
-    local gravityCorner = Instance.new("UICorner")
-    gravityCorner.CornerRadius = UDim.new(0, 8)
-    gravityCorner.Parent = gravityFrame
-    
-    local gravityStroke = Instance.new("UIStroke")
-    gravityStroke.Thickness = 2
-    gravityStroke.Color = Color3.fromRGB(80, 160, 255)
-    gravityStroke.Transparency = 0.2
-    gravityStroke.Parent = gravityFrame
-    
-    local gravityIcon = Instance.new("ImageLabel")
-    gravityIcon.Name = "GravityIcon"
-    gravityIcon.Size = UDim2.new(0, 32, 0, 32)
-    gravityIcon.Position = UDim2.new(0, 10, 0, 10)
-    gravityIcon.BackgroundTransparency = 1
-    gravityIcon.Image = "rbxassetid://3926305904"
-    gravityIcon.ImageRectSize = Vector2.new(64, 64)
-    gravityIcon.ImageRectOffset = Vector2.new(64, 64)
-    gravityIcon.Parent = gravityFrame
-    
-    local gravityTitle = Instance.new("TextLabel")
-    gravityTitle.Name = "GravityTitle"
-    gravityTitle.Size = UDim2.new(1, -50, 0, 20)
-    gravityTitle.Position = UDim2.new(0, 50, 0, 2)
-    gravityTitle.BackgroundTransparency = 1
-    gravityTitle.Text = "防检测重力调整"
-    gravityTitle.TextColor3 = Color3.fromRGB(180, 200, 255)
-    gravityTitle.Font = Enum.Font.GothamBold
-    gravityTitle.TextSize = 12
-    gravityTitle.TextXAlignment = Enum.TextXAlignment.Left
-    gravityTitle.Parent = gravityFrame
-    
-    local gravityInput = Instance.new("TextBox")
-    gravityInput.Name = "GravityInput"
-    gravityInput.Size = UDim2.new(0.7, 0, 0, 30)
-    gravityInput.Position = UDim2.new(0.15, 0, 0, 40)
-    gravityInput.BackgroundColor3 = Color3.fromRGB(45, 45, 55)
-    gravityInput.TextColor3 = Color3.fromRGB(220, 220, 230)
-    gravityInput.Font = Enum.Font.GothamSemibold
-    gravityInput.TextSize = 14
-    gravityInput.PlaceholderText = "输入重力 (0-500)"
-    gravityInput.Text = "196.2"
-    gravityInput.ClearTextOnFocus = false
-    
-    local gravityInputCorner = Instance.new("UICorner")
-    gravityInputCorner.CornerRadius = UDim.new(0, 6)
-    gravityInputCorner.Parent = gravityInput
-    
-    local gravityInputStroke = Instance.new("UIStroke")
-    gravityInputStroke.Thickness = 1
-    gravityInputStroke.Color = Color3.fromRGB(100, 100, 110)
-    gravityInputStroke.Parent = gravityInput
-    
-    gravityInput.FocusLost:Connect(function(enterPressed)
-        if enterPressed then
-            local gravityNum = tonumber(gravityInput.Text)
-            if gravityNum and gravityNum >= 0 and gravityNum <= 500 then
-                AntiDetectGravityModule.SetRealGravity(gravityNum)
-                StarterGui:SetCore("SendNotification", {
-                    Title = "XDG-HOB",
-                    Text = "重力已设置为: " .. gravityNum,
-                    Duration = 3,
-                    Icon = "rbxassetid://4483345998"
-                })
-            else
-                gravityInput.Text = "196.2"
-                StarterGui:SetCore("SendNotification", {
-                    Title = "错误",
-                    Text = "请输入0-500之间的数字",
-                    Duration = 5,
-                    Icon = "rbxassetid://4483345998"
-                })
-            end
-        end
-    end)
-    
-    gravityInput.Parent = gravityFrame
-    
-    local applyGravityBtn = Instance.new("TextButton")
-    applyGravityBtn.Name = "ApplyGravityButton"
-    applyGravityBtn.Size = UDim2.new(0.5, 0, 0, 30)
-    applyGravityBtn.Position = UDim2.new(0.25, 0, 0, 80)
-    applyGravityBtn.BackgroundColor3 = Color3.fromRGB(80, 160, 255)
-    applyGravityBtn.Text = "应用重力"
-    applyGravityBtn.TextColor3 = Color3.new(1, 1, 1)
-    applyGravityBtn.Font = Enum.Font.GothamSemibold
-    applyGravityBtn.TextSize = 14
-    applyGravityBtn.TextStrokeTransparency = 0.6
-    applyGravityBtn.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
-    
-    local applyGravityCorner = Instance.new("UICorner")
-    applyGravityCorner.CornerRadius = UDim.new(0, 6)
-    applyGravityCorner.Parent = applyGravityBtn
-    
-    local applyGravityStroke = Instance.new("UIStroke")
-    applyGravityStroke.Thickness = 1
-    applyGravityStroke.Color = Color3.fromRGB(120, 200, 255)
-    applyGravityStroke.Parent = applyGravityBtn
-    
-    applyGravityBtn.MouseEnter:Connect(function()
-        applyGravityBtn.BackgroundColor3 = Color3.fromRGB(100, 180, 255)
-    end)
-    
-    applyGravityBtn.MouseLeave:Connect(function()
-        applyGravityBtn.BackgroundColor3 = Color3.fromRGB(80, 160, 255)
-    end)
-    
-    applyGravityBtn.MouseButton1Click:Connect(function()
-        local gravityNum = tonumber(gravityInput.Text)
-        if gravityNum and gravityNum >= 0 and gravityNum <= 500 then
-            AntiDetectGravityModule.SetRealGravity(gravityNum)
-            StarterGui:SetCore("SendNotification", {
-                Title = "XDG-HOB",
-                Text = "重力已设置为: " .. gravityNum,
-                Duration = 3,
-                Icon = "rbxassetid://4483345998"
-            })
-        else
-            gravityInput.Text = "196.2"
-            StarterGui:SetCore("SendNotification", {
-                Title = "错误",
-                Text = "请输入0-500之间的数字",
-                Duration = 5,
-                Icon = "rbxassetid://4483345998"
-            })
-        end
-    end)
-    
-    applyGravityBtn.Parent = gravityFrame
-    
-    local currentGravityLabel = Instance.new("TextLabel")
-    currentGravityLabel.Name = "CurrentGravityLabel"
-    currentGravityLabel.Size = UDim2.new(1, 0, 0, 20)
-    currentGravityLabel.Position = UDim2.new(0, 0, 0, 115)
-    currentGravityLabel.BackgroundTransparency = 1
-    currentGravityLabel.TextColor3 = Color3.fromRGB(180, 200, 255)
-    currentGravityLabel.Font = Enum.Font.GothamSemibold
-    currentGravityLabel.TextSize = 11
-    currentGravityLabel.Text = "当前重力: 196.2"
-    currentGravityLabel.Parent = gravityFrame
-    
-    local function updateCurrentGravity()
-        currentGravityLabel.Text = "当前重力: " .. math.floor(AntiDetectGravityModule.GetRealGravity() * 10) / 10
-    end
-    
-    game:GetService("RunService").Heartbeat:Connect(function()
-        updateCurrentGravity()
-    end)
-    
-    gravityFrame.Parent = scrollContainer
     
     return container
 end
@@ -2256,66 +1928,3 @@ RunService.RenderStepped:Connect(function(delta)
 end)
 
 print("XDG-HOB UI 创建完成")
-
-local AntiDetectUI = {}
-
-do
-    local PlayerGui = player:WaitForChild("PlayerGui")
-    local UIObjects = {}
-    local OriginalNames = {}
-    
-    local function RegisterUI(obj)
-        table.insert(UIObjects, obj)
-        OriginalNames[obj] = obj.Name
-    end
-    
-    local function RandomizeUINames()
-        for _, obj in pairs(UIObjects) do
-            if obj and obj.Parent then
-                local randomSuffix = tostring(math.random(10000, 99999))
-                obj.Name = OriginalNames[obj] .. "_" .. randomSuffix
-            end
-        end
-    end
-    
-    local function RestoreUINames()
-        for _, obj in pairs(UIObjects) do
-            if obj and obj.Parent then
-                obj.Name = OriginalNames[obj]
-            end
-        end
-    end
-    
-    local function ProtectUI()
-        RegisterUI(sg)
-        RegisterUI(uiFrame)
-        RegisterUI(titleBar)
-        RegisterUI(rainbowText)
-        RegisterUI(controlBtn)
-        RegisterUI(leftPanel)
-        RegisterUI(scrollFrame)
-        RegisterUI(contentFrame)
-        
-        local randomTime = math.random(30, 60)
-        task.spawn(function()
-            while task.wait(randomTime) do
-                RandomizeUINames()
-                task.wait(5)
-                RestoreUINames()
-                randomTime = math.random(30, 60)
-            end
-        end)
-        
-        sg.DescendantAdded:Connect(function(descendant)
-            if descendant:IsA("GuiObject") then
-                RegisterUI(descendant)
-            end
-        end)
-    end
-    
-    ProtectUI()
-    
-    AntiDetectUI.RegisterUI = RegisterUI
-    AntiDetectUI.RandomizeUINames = RandomizeUINames
-    AntiDetectUI.RestoreUINames = RestoreUINames
-end
