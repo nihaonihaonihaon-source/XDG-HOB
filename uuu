@@ -1288,14 +1288,32 @@ local function createFunctionContainer()
     jumpPowerInputStroke.Color = Color3.fromRGB(100, 100, 110)
     jumpPowerInputStroke.Parent = jumpPowerInput
     
+    local jumpPowerConnection
+    local currentJumpPower = 50
+    
+    local function updateJumpPower()
+        if jumpPowerConnection then
+            jumpPowerConnection:Disconnect()
+        end
+        
+        jumpPowerConnection = game:GetService("RunService").Heartbeat:Connect(function()
+            local player = game.Players.LocalPlayer
+            local character = player.Character
+            if character then
+                local humanoid = character:FindFirstChild("Humanoid")
+                if humanoid then
+                    humanoid.JumpPower = currentJumpPower
+                end
+            end
+        end)
+    end
+    
     jumpPowerInput.FocusLost:Connect(function(enterPressed)
         if enterPressed then
             local jumpNum = tonumber(jumpPowerInput.Text)
             if jumpNum and jumpNum >= 50 and jumpNum <= 400 then
-                local player = game.Players.LocalPlayer
-                local character = player.Character or player.CharacterAdded:Wait()
-                local humanoid = character:WaitForChild("Humanoid")
-                humanoid.JumpPower = jumpNum
+                currentJumpPower = jumpNum
+                updateJumpPower()
                 StarterGui:SetCore("SendNotification", {
                     Title = "XDG-HOB",
                     Text = "跳跃高度已设置为: " .. jumpNum,
@@ -1348,10 +1366,8 @@ local function createFunctionContainer()
     applyJumpBtn.MouseButton1Click:Connect(function()
         local jumpNum = tonumber(jumpPowerInput.Text)
         if jumpNum and jumpNum >= 50 and jumpNum <= 400 then
-            local player = game.Players.LocalPlayer
-            local character = player.Character or player.CharacterAdded:Wait()
-            local humanoid = character:WaitForChild("Humanoid")
-            humanoid.JumpPower = jumpNum
+            currentJumpPower = jumpNum
+            updateJumpPower()
             StarterGui:SetCore("SendNotification", {
                 Title = "XDG-HOB",
                 Text = "跳跃高度已设置为: " .. jumpNum,
@@ -1383,15 +1399,14 @@ local function createFunctionContainer()
     currentJumpLabel.Parent = jumpPowerFrame
     
     local function updateCurrentJump()
-        local char = game.Players.LocalPlayer.Character
-        if char and char:FindFirstChild("Humanoid") then
-            currentJumpLabel.Text = "当前高度: " .. math.floor(char.Humanoid.JumpPower)
-        end
+        currentJumpLabel.Text = "当前高度: " .. currentJumpPower
     end
     
     game:GetService("RunService").Heartbeat:Connect(function()
         updateCurrentJump()
     end)
+    
+    updateJumpPower()
     
     jumpPowerFrame.Parent = scrollContainer
     
