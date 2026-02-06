@@ -1,1 +1,2818 @@
-loadstring(game:HttpGet("https://raw.githubusercontent.com/nihaonihaonihaon-source/XDG-HOB/main/7"))()
+--[[
+ .____                  ________ ___.    _____                           __                
+ |    |    __ _______   \_____  \\_ |___/ ____\_ __  ______ ____ _____ _/  |_  ___________ 
+ |    |   |  |  \__  \   /   |   \| __ \   __\  |  \/  ___// ___\\__  \\   __\/  _ \_  __ \
+ |    |___|  |  // __ \_/    |    \ \_\ \  | |  |  /\___ \\  \___ / __ \|  | (  <_> )  | \/
+ |_______ \____/(____  /\_______  /___  /__| |____//____  >\___  >____  /__|  \____/|__|   
+         \/          \/         \/    \/                \/     \/     \/                   
+          \_Welcome to LuaObfuscator.com   (Alpha 0.10.9) ~  Much Love, Ferib 
+
+]]--
+
+bit32 = {};
+local N = 32;
+local P = 2 ^ N;
+bit32.bnot = function(x)
+	x = x % P;
+	return (P - 1) - x;
+end;
+bit32.band = function(x, y)
+	if (y == 255) then
+		return x % 256;
+	end
+	if (y == 65535) then
+		return x % 65536;
+	end
+	if (y == 4294967295) then
+		return x % 4294967296;
+	end
+	x, y = x % P, y % P;
+	local r = 0;
+	local p = 1;
+	for i = 1, N do
+		local a, b = x % 2, y % 2;
+		x, y = math.floor(x / 2), math.floor(y / 2);
+		if ((a + b) == 2) then
+			r = r + p;
+		end
+		p = 2 * p;
+	end
+	return r;
+end;
+bit32.bor = function(x, y)
+	if (y == 255) then
+		return (x - (x % 256)) + 255;
+	end
+	if (y == 65535) then
+		return (x - (x % 65536)) + 65535;
+	end
+	if (y == 4294967295) then
+		return 4294967295;
+	end
+	x, y = x % P, y % P;
+	local r = 0;
+	local p = 1;
+	for i = 1, N do
+		local a, b = x % 2, y % 2;
+		x, y = math.floor(x / 2), math.floor(y / 2);
+		if ((a + b) >= 1) then
+			r = r + p;
+		end
+		p = 2 * p;
+	end
+	return r;
+end;
+bit32.bxor = function(x, y)
+	x, y = x % P, y % P;
+	local r = 0;
+	local p = 1;
+	for i = 1, N do
+		local a, b = x % 2, y % 2;
+		x, y = math.floor(x / 2), math.floor(y / 2);
+		if ((a + b) == 1) then
+			r = r + p;
+		end
+		p = 2 * p;
+	end
+	return r;
+end;
+bit32.lshift = function(x, s_amount)
+	if (math.abs(s_amount) >= N) then
+		return 0;
+	end
+	x = x % P;
+	if (s_amount < 0) then
+		return math.floor(x * (2 ^ s_amount));
+	else
+		return (x * (2 ^ s_amount)) % P;
+	end
+end;
+bit32.rshift = function(x, s_amount)
+	if (math.abs(s_amount) >= N) then
+		return 0;
+	end
+	x = x % P;
+	if (s_amount > 0) then
+		return math.floor(x * (2 ^ -s_amount));
+	else
+		return (x * (2 ^ -s_amount)) % P;
+	end
+end;
+bit32.arshift = function(x, s_amount)
+	if (math.abs(s_amount) >= N) then
+		return 0;
+	end
+	x = x % P;
+	if (s_amount > 0) then
+		local add = 0;
+		if (x >= (P / 2)) then
+			add = P - (2 ^ (N - s_amount));
+		end
+		return math.floor(x * (2 ^ -s_amount)) + add;
+	else
+		return (x * (2 ^ -s_amount)) % P;
+	end
+end;
+local obf_stringmatch = string.match;
+local obf_tonumber = tonumber;
+local obf_pcall = pcall;
+local function obf_adjnqwidqwjhdpoq()
+	local function obf_wrapperfunc(obf_arg)
+		if obf_arg then
+			local v0 = string.char;
+			local v1 = string.byte;
+			local v2 = string.sub;
+			local v3 = bit32 or bit;
+			local v4 = v3.bxor;
+			local v5 = table.concat;
+			local v6 = table.insert;
+			local function v7(v24, v25)
+				local FlatIdent_95CAC = 0;
+				local v26;
+				while true do
+					if (FlatIdent_95CAC == 1) then
+						return v5(v26);
+					end
+					if (FlatIdent_95CAC == 0) then
+						v26 = {};
+						for v41 = 1, #v24 do
+							v6(v26, v0(v4(v1(v2(v24, v41, v41 + 1)), v1(v2(v25, 1 + (v41 % #v25), 1 + (v41 % #v25) + 1))) % 256));
+						end
+						FlatIdent_95CAC = 1;
+					end
+				end
+			end
+			local v8 = tonumber;
+			local v9 = string.byte;
+			local v10 = string.char;
+			local v11 = string.sub;
+			local v12 = string.gsub;
+			local v13 = string.rep;
+			local v14 = table.concat;
+			local v15 = table.insert;
+			local v16 = math.ldexp;
+			local v17 = getfenv or function()
+				return _ENV;
+			end;
+			local v18 = setmetatable;
+			local v19 = pcall;
+			local v20 = select;
+			local v21 = unpack or table.unpack;
+			local v22 = tonumber;
+			local function v23(v27, v28, ...)
+				local v29 = 1;
+				local v30;
+				v27 = v12(v11(v27, 8 - 3), v7("\61\245", "\158\19\219\48\218\161\187\128"), function(v42)
+					if (v9(v42, 2) == 81) then
+						local FlatIdent_10BCC = 0;
+						while true do
+							if (0 == FlatIdent_10BCC) then
+								v30 = v8(v11(v42, 1, 1));
+								return "";
+							end
+						end
+					else
+						local FlatIdent_47A9C = 0;
+						local v91;
+						local v92;
+						while true do
+							if (FlatIdent_47A9C == 1) then
+								while true do
+									if (v91 == 0) then
+										v92 = v10(v8(v42, 16));
+										if v30 then
+											local FlatIdent_23B4 = 0;
+											local FlatIdent_2584C;
+											local v119;
+											while true do
+												if (FlatIdent_23B4 == 0) then
+													FlatIdent_2584C = 0;
+													v119 = nil;
+													FlatIdent_23B4 = 1;
+												end
+												if (FlatIdent_23B4 == 1) then
+													while true do
+														local FlatIdent_44839 = 0;
+														while true do
+															if (FlatIdent_44839 == 0) then
+																if (FlatIdent_2584C == 0) then
+																	local FlatIdent_25011 = 0;
+																	while true do
+																		if (FlatIdent_25011 == 0) then
+																			v119 = v13(v92, v30);
+																			v30 = nil;
+																			FlatIdent_25011 = 1;
+																		end
+																		if (FlatIdent_25011 == 1) then
+																			FlatIdent_2584C = 1;
+																			break;
+																		end
+																	end
+																end
+																if (FlatIdent_2584C == 1) then
+																	return v119;
+																end
+																break;
+															end
+														end
+													end
+													break;
+												end
+											end
+										else
+											return v92;
+										end
+										break;
+									end
+								end
+								break;
+							end
+							if (FlatIdent_47A9C == 0) then
+								v91 = 0;
+								v92 = nil;
+								FlatIdent_47A9C = 1;
+							end
+						end
+					end
+				end);
+				local function v31(v43, v44, v45)
+					if v45 then
+						local FlatIdent_1076E = 0;
+						local FlatIdent_6D4CB;
+						local v93;
+						while true do
+							if (1 == FlatIdent_1076E) then
+								while true do
+									if (FlatIdent_6D4CB == 0) then
+										local FlatIdent_8F9B8 = 0;
+										while true do
+											if (FlatIdent_8F9B8 == 0) then
+												v93 = (v43 / (2 ^ (v44 - 1))) % (2 ^ (((v45 - 1) - (v44 - 1)) + 1));
+												return v93 - (v93 % (2 - 1));
+											end
+										end
+									end
+								end
+								break;
+							end
+							if (FlatIdent_1076E == 0) then
+								FlatIdent_6D4CB = 0;
+								v93 = nil;
+								FlatIdent_1076E = 1;
+							end
+						end
+					else
+						local FlatIdent_A36C = 0;
+						local FlatIdent_10BCC;
+						local v94;
+						while true do
+							if (FlatIdent_A36C == 0) then
+								FlatIdent_10BCC = 0;
+								v94 = nil;
+								FlatIdent_A36C = 1;
+							end
+							if (FlatIdent_A36C == 1) then
+								while true do
+									if (0 == FlatIdent_10BCC) then
+										local FlatIdent_7FAC9 = 0;
+										while true do
+											if (0 == FlatIdent_7FAC9) then
+												v94 = (5 - 3) ^ (v44 - 1);
+												return (((v43 % (v94 + v94)) >= v94) and (1 - 0)) or 0;
+											end
+										end
+									end
+								end
+								break;
+							end
+						end
+					end
+				end
+				local function v32()
+					local FlatIdent_EE01 = 0;
+					local v46;
+					while true do
+						if (0 == FlatIdent_EE01) then
+							v46 = v9(v27, v29, v29);
+							v29 = v29 + 1;
+							FlatIdent_EE01 = 1;
+						end
+						if (FlatIdent_EE01 == 1) then
+							return v46;
+						end
+					end
+				end
+				local function v33()
+					local FlatIdent_455BF = 0;
+					local FlatIdent_47A9C;
+					local v47;
+					local v48;
+					local v49;
+					while true do
+						if (FlatIdent_455BF == 0) then
+							FlatIdent_47A9C = 0;
+							v47 = nil;
+							FlatIdent_455BF = 1;
+						end
+						if (FlatIdent_455BF == 1) then
+							v48 = nil;
+							v49 = nil;
+							FlatIdent_455BF = 2;
+						end
+						if (FlatIdent_455BF == 2) then
+							while true do
+								if (FlatIdent_47A9C == 1) then
+									v49 = nil;
+									while true do
+										local FlatIdent_23BE8 = 0;
+										while true do
+											if (FlatIdent_23BE8 == 0) then
+												if (0 == v47) then
+													local FlatIdent_72401 = 0;
+													while true do
+														if (1 == FlatIdent_72401) then
+															v47 = 1;
+															break;
+														end
+														if (FlatIdent_72401 == 0) then
+															v48, v49 = v9(v27, v29, v29 + 2);
+															v29 = v29 + 2 + 0;
+															FlatIdent_72401 = 1;
+														end
+													end
+												end
+												if (v47 == 1) then
+													return (v49 * (1047 - (368 + 423))) + v48;
+												end
+												break;
+											end
+										end
+									end
+									break;
+								end
+								if (FlatIdent_47A9C == 0) then
+									v47 = 0;
+									v48 = nil;
+									FlatIdent_47A9C = 1;
+								end
+							end
+							break;
+						end
+					end
+				end
+				local function v34()
+					local v50, v51, v52, v53 = v9(v27, v29, v29 + 3);
+					v29 = v29 + 4;
+					return (v53 * 16777216) + (v52 * 65536) + (v51 * 256) + v50;
+				end
+				local function v35()
+					local FlatIdent_65290 = 0;
+					local v54;
+					local v55;
+					local v56;
+					local v57;
+					local v58;
+					local v59;
+					while true do
+						if (FlatIdent_65290 == 1) then
+							v56 = 1;
+							v57 = (v31(v55, 1, 62 - 42) * (2 ^ 32)) + v54;
+							FlatIdent_65290 = 2;
+						end
+						if (FlatIdent_65290 == 2) then
+							v58 = v31(v55, 21, 31);
+							v59 = ((v31(v55, 32) == 1) and -(19 - (10 + 8))) or 1;
+							FlatIdent_65290 = 3;
+						end
+						if (FlatIdent_65290 == 3) then
+							if (v58 == (0 - 0)) then
+								if (v57 == 0) then
+									return v59 * 0;
+								else
+									local FlatIdent_5BA5E = 0;
+									local FlatIdent_8199B;
+									while true do
+										if (FlatIdent_5BA5E == 0) then
+											FlatIdent_8199B = 0;
+											while true do
+												if (FlatIdent_8199B == 0) then
+													v58 = 1;
+													v56 = 442 - (416 + 26);
+													break;
+												end
+											end
+											break;
+										end
+									end
+								end
+							elseif (v58 == 2047) then
+								return ((v57 == 0) and (v59 * (1 / (0 - 0)))) or (v59 * NaN);
+							end
+							return v16(v59, v58 - (3266 - 2243)) * (v56 + (v57 / ((621 - (555 + 64)) ^ (983 - (857 + 74)))));
+						end
+						if (FlatIdent_65290 == 0) then
+							v54 = v34();
+							v55 = v34();
+							FlatIdent_65290 = 1;
+						end
+					end
+				end
+				local function v36(v60)
+					local FlatIdent_74348 = 0;
+					local v61;
+					local v62;
+					local v63;
+					while true do
+						if (FlatIdent_74348 == 1) then
+							v63 = nil;
+							while true do
+								local FlatIdent_981A3 = 0;
+								local FlatIdent_39B0;
+								while true do
+									if (FlatIdent_981A3 == 0) then
+										FlatIdent_39B0 = 0;
+										while true do
+											if (FlatIdent_39B0 == 0) then
+												local FlatIdent_29662 = 0;
+												while true do
+													if (FlatIdent_29662 == 1) then
+														FlatIdent_39B0 = 1;
+														break;
+													end
+													if (FlatIdent_29662 == 0) then
+														if (v61 == 1) then
+															local FlatIdent_35A31 = 0;
+															local FlatIdent_61585;
+															while true do
+																if (FlatIdent_35A31 == 0) then
+																	FlatIdent_61585 = 0;
+																	while true do
+																		if (1 == FlatIdent_61585) then
+																			v61 = 2;
+																			break;
+																		end
+																		if (0 == FlatIdent_61585) then
+																			local FlatIdent_9622C = 0;
+																			while true do
+																				if (FlatIdent_9622C == 1) then
+																					FlatIdent_61585 = 1;
+																					break;
+																				end
+																				if (FlatIdent_9622C == 0) then
+																					v62 = v11(v27, v29, (v29 + v60) - 1);
+																					v29 = v29 + v60;
+																					FlatIdent_9622C = 1;
+																				end
+																			end
+																		end
+																	end
+																	break;
+																end
+															end
+														end
+														if (v61 == 2) then
+															local FlatIdent_2F94A = 0;
+															local FlatIdent_1BCFB;
+															while true do
+																if (FlatIdent_2F94A == 0) then
+																	FlatIdent_1BCFB = 0;
+																	while true do
+																		if (FlatIdent_1BCFB == 1) then
+																			v61 = 3;
+																			break;
+																		end
+																		if (FlatIdent_1BCFB == 0) then
+																			local FlatIdent_207CC = 0;
+																			while true do
+																				if (FlatIdent_207CC == 1) then
+																					FlatIdent_1BCFB = 1;
+																					break;
+																				end
+																				if (FlatIdent_207CC == 0) then
+																					v63 = {};
+																					for v98 = 1, #v62 do
+																						v63[v98] = v10(v9(v11(v62, v98, v98)));
+																					end
+																					FlatIdent_207CC = 1;
+																				end
+																			end
+																		end
+																	end
+																	break;
+																end
+															end
+														end
+														FlatIdent_29662 = 1;
+													end
+												end
+											end
+											if (FlatIdent_39B0 == 1) then
+												if (v61 == 3) then
+													return v14(v63);
+												end
+												if (0 == v61) then
+													local FlatIdent_8B6F5 = 0;
+													local FlatIdent_27957;
+													while true do
+														if (FlatIdent_8B6F5 == 0) then
+															FlatIdent_27957 = 0;
+															while true do
+																if (FlatIdent_27957 == 1) then
+																	v61 = 1;
+																	break;
+																end
+																if (0 == FlatIdent_27957) then
+																	local FlatIdent_5B4A8 = 0;
+																	while true do
+																		if (FlatIdent_5B4A8 == 1) then
+																			FlatIdent_27957 = 1;
+																			break;
+																		end
+																		if (FlatIdent_5B4A8 == 0) then
+																			v62 = nil;
+																			if not v60 then
+																				local FlatIdent_32B1C = 0;
+																				local FlatIdent_8F59B;
+																				local v112;
+																				while true do
+																					if (FlatIdent_32B1C == 1) then
+																						while true do
+																							if (FlatIdent_8F59B == 0) then
+																								v112 = 0;
+																								while true do
+																									if (v112 == 0) then
+																										v60 = v34();
+																										if (v60 == 0) then
+																											return "";
+																										end
+																										break;
+																									end
+																								end
+																								break;
+																							end
+																						end
+																						break;
+																					end
+																					if (FlatIdent_32B1C == 0) then
+																						FlatIdent_8F59B = 0;
+																						v112 = nil;
+																						FlatIdent_32B1C = 1;
+																					end
+																				end
+																			end
+																			FlatIdent_5B4A8 = 1;
+																		end
+																	end
+																end
+															end
+															break;
+														end
+													end
+												end
+												break;
+											end
+										end
+										break;
+									end
+								end
+							end
+							break;
+						end
+						if (FlatIdent_74348 == 0) then
+							v61 = 0;
+							v62 = nil;
+							FlatIdent_74348 = 1;
+						end
+					end
+				end
+				local v37 = v34;
+				local function v38(...)
+					return {...}, v20("#", ...);
+				end
+				local function v39()
+					local v64 = 0;
+					local v65;
+					local v66;
+					local v67;
+					local v68;
+					local v69;
+					local v70;
+					while true do
+						if (v64 == 1) then
+							local FlatIdent_4C119 = 0;
+							local FlatIdent_2D2B8;
+							while true do
+								if (FlatIdent_4C119 == 0) then
+									FlatIdent_2D2B8 = 0;
+									while true do
+										if (FlatIdent_2D2B8 == 2) then
+											v64 = 2;
+											break;
+										end
+										if (FlatIdent_2D2B8 == 1) then
+											local FlatIdent_38103 = 0;
+											while true do
+												if (FlatIdent_38103 == 1) then
+													FlatIdent_2D2B8 = 2;
+													break;
+												end
+												if (FlatIdent_38103 == 0) then
+													for v100 = 1, v69 do
+														local FlatIdent_5B2CE = 0;
+														local FlatIdent_74348;
+														local v101;
+														local v102;
+														while true do
+															if (FlatIdent_5B2CE == 1) then
+																v102 = nil;
+																while true do
+																	if (FlatIdent_74348 == 1) then
+																		if (v101 == 1) then
+																			v102 = v32() ~= 0;
+																		elseif (v101 == 2) then
+																			v102 = v35();
+																		elseif (v101 == 3) then
+																			v102 = v36();
+																		end
+																		v70[v100] = v102;
+																		break;
+																	end
+																	if (FlatIdent_74348 == 0) then
+																		local FlatIdent_56394 = 0;
+																		while true do
+																			if (FlatIdent_56394 == 0) then
+																				v101 = v32();
+																				v102 = nil;
+																				FlatIdent_56394 = 1;
+																			end
+																			if (FlatIdent_56394 == 1) then
+																				FlatIdent_74348 = 1;
+																				break;
+																			end
+																		end
+																	end
+																end
+																break;
+															end
+															if (FlatIdent_5B2CE == 0) then
+																FlatIdent_74348 = 0;
+																v101 = nil;
+																FlatIdent_5B2CE = 1;
+															end
+														end
+													end
+													v68[3] = v32();
+													FlatIdent_38103 = 1;
+												end
+											end
+										end
+										if (FlatIdent_2D2B8 == 0) then
+											local FlatIdent_1D2CD = 0;
+											while true do
+												if (FlatIdent_1D2CD == 0) then
+													v69 = v34();
+													v70 = {};
+													FlatIdent_1D2CD = 1;
+												end
+												if (1 == FlatIdent_1D2CD) then
+													FlatIdent_2D2B8 = 1;
+													break;
+												end
+											end
+										end
+									end
+									break;
+								end
+							end
+						end
+						if (v64 == 2) then
+							for v104 = 1, v34() do
+								local v105 = v32();
+								if (v31(v105, 1, 1) == 0) then
+									local FlatIdent_494DF = 0;
+									local v115;
+									local v116;
+									local v117;
+									local v118;
+									while true do
+										if (FlatIdent_494DF == 2) then
+											while true do
+												if (v115 == 0) then
+													local FlatIdent_75224 = 0;
+													local FlatIdent_2A862;
+													while true do
+														if (FlatIdent_75224 == 0) then
+															FlatIdent_2A862 = 0;
+															while true do
+																if (FlatIdent_2A862 == 1) then
+																	v115 = 1;
+																	break;
+																end
+																if (FlatIdent_2A862 == 0) then
+																	local FlatIdent_360C0 = 0;
+																	while true do
+																		if (FlatIdent_360C0 == 0) then
+																			v116 = v31(v105, 2, 4 - 1);
+																			v117 = v31(v105, 4, 6);
+																			FlatIdent_360C0 = 1;
+																		end
+																		if (1 == FlatIdent_360C0) then
+																			FlatIdent_2A862 = 1;
+																			break;
+																		end
+																	end
+																end
+															end
+															break;
+														end
+													end
+												end
+												if (v115 == 1) then
+													local FlatIdent_90A41 = 0;
+													while true do
+														if (FlatIdent_90A41 == 1) then
+															v115 = 2;
+															break;
+														end
+														if (FlatIdent_90A41 == 0) then
+															v118 = {v33(),v33(),nil,nil};
+															if (v116 == 0) then
+																local FlatIdent_8B523 = 0;
+																local v121;
+																while true do
+																	if (FlatIdent_8B523 == 0) then
+																		v121 = 0;
+																		while true do
+																			if (0 == v121) then
+																				v118[441 - (145 + 293)] = v33();
+																				v118[4] = v33();
+																				break;
+																			end
+																		end
+																		break;
+																	end
+																end
+															elseif (v116 == 1) then
+																v118[3] = v34();
+															elseif (v116 == 2) then
+																v118[3] = v34() - (2 ^ 16);
+															elseif (v116 == 3) then
+																local FlatIdent_6225E = 0;
+																local FlatIdent_28F1;
+																while true do
+																	if (FlatIdent_6225E == 0) then
+																		FlatIdent_28F1 = 0;
+																		while true do
+																			if (0 == FlatIdent_28F1) then
+																				v118[3] = v34() - (2 ^ 16);
+																				v118[4] = v33();
+																				break;
+																			end
+																		end
+																		break;
+																	end
+																end
+															end
+															FlatIdent_90A41 = 1;
+														end
+													end
+												end
+												if (v115 == 3) then
+													if (v31(v117, 1 + 2, 3) == 1) then
+														v118[4] = v70[v118[4]];
+													end
+													v65[v104] = v118;
+													break;
+												end
+												if (v115 == 2) then
+													local FlatIdent_94E30 = 0;
+													while true do
+														if (FlatIdent_94E30 == 1) then
+															v115 = 3;
+															break;
+														end
+														if (FlatIdent_94E30 == 0) then
+															if (v31(v117, 1, 1) == (431 - (44 + 386))) then
+																v118[2] = v70[v118[2]];
+															end
+															if (v31(v117, 1488 - (998 + 488), 929 - (214 + 713)) == 1) then
+																v118[3] = v70[v118[3]];
+															end
+															FlatIdent_94E30 = 1;
+														end
+													end
+												end
+											end
+											break;
+										end
+										if (FlatIdent_494DF == 1) then
+											v117 = nil;
+											v118 = nil;
+											FlatIdent_494DF = 2;
+										end
+										if (FlatIdent_494DF == 0) then
+											v115 = 0;
+											v116 = nil;
+											FlatIdent_494DF = 1;
+										end
+									end
+								end
+							end
+							for v106 = 1, v34() do
+								v66[v106 - 1] = v39();
+							end
+							return v68;
+						end
+						if (v64 == 0) then
+							local FlatIdent_32B97 = 0;
+							local FlatIdent_68E92;
+							while true do
+								if (FlatIdent_32B97 == 0) then
+									FlatIdent_68E92 = 0;
+									while true do
+										if (2 == FlatIdent_68E92) then
+											v64 = 1;
+											break;
+										end
+										if (FlatIdent_68E92 == 1) then
+											local FlatIdent_67691 = 0;
+											while true do
+												if (FlatIdent_67691 == 1) then
+													FlatIdent_68E92 = 2;
+													break;
+												end
+												if (FlatIdent_67691 == 0) then
+													v67 = {};
+													v68 = {v65,v66,nil,v67};
+													FlatIdent_67691 = 1;
+												end
+											end
+										end
+										if (FlatIdent_68E92 == 0) then
+											local FlatIdent_284EA = 0;
+											while true do
+												if (FlatIdent_284EA == 0) then
+													v65 = {};
+													v66 = {};
+													FlatIdent_284EA = 1;
+												end
+												if (FlatIdent_284EA == 1) then
+													FlatIdent_68E92 = 1;
+													break;
+												end
+											end
+										end
+									end
+									break;
+								end
+							end
+						end
+					end
+				end
+				local function v40(v71, v72, v73)
+					local v74 = v71[1 + 0];
+					local v75 = v71[2];
+					local v76 = v71[1 + 2];
+					return function(...)
+						local v77 = v74;
+						local v78 = v75;
+						local v79 = v76;
+						local v80 = v38;
+						local v81 = 1;
+						local v82 = -1;
+						local v83 = {};
+						local v84 = {...};
+						local v85 = v20("#", ...) - 1;
+						local v86 = {};
+						local v87 = {};
+						for v95 = 0 + 0, v85 do
+							if (v95 >= v79) then
+								v83[v95 - v79] = v84[v95 + 1];
+							else
+								v87[v95] = v84[v95 + 1];
+							end
+						end
+						local v88 = (v85 - v79) + (878 - (282 + 595));
+						local v89;
+						local v90;
+						while true do
+							local v96 = 0;
+							while true do
+								if (v96 == 0) then
+									local FlatIdent_2E34E = 0;
+									while true do
+										if (FlatIdent_2E34E == 0) then
+											v89 = v77[v81];
+											v90 = v89[1];
+											FlatIdent_2E34E = 1;
+										end
+										if (FlatIdent_2E34E == 1) then
+											v96 = 1;
+											break;
+										end
+									end
+								end
+								if (v96 == 1) then
+									if (v90 <= (1668 - (1523 + 114))) then
+										if (v90 <= (14 + 1)) then
+											if (v90 <= 7) then
+												if (v90 <= 3) then
+													if (v90 <= 1) then
+														if (v90 == 0) then
+															local FlatIdent_3CF36 = 0;
+															local v134;
+															local v135;
+															local v136;
+															while true do
+																if (0 == FlatIdent_3CF36) then
+																	local FlatIdent_30046 = 0;
+																	while true do
+																		if (FlatIdent_30046 == 0) then
+																			v134 = v89[2];
+																			v135 = v87[v134];
+																			FlatIdent_30046 = 1;
+																		end
+																		if (FlatIdent_30046 == 1) then
+																			FlatIdent_3CF36 = 1;
+																			break;
+																		end
+																	end
+																end
+																if (FlatIdent_3CF36 == 1) then
+																	v136 = v87[v134 + 2];
+																	if (v136 > 0) then
+																		if (v135 > v87[v134 + 1]) then
+																			v81 = v89[3];
+																		else
+																			v87[v134 + 3] = v135;
+																		end
+																	elseif (v135 < v87[v134 + 1]) then
+																		v81 = v89[3];
+																	else
+																		v87[v134 + 3] = v135;
+																	end
+																	break;
+																end
+															end
+														elseif v87[v89[2]] then
+															v81 = v81 + 1;
+														else
+															v81 = v89[3];
+														end
+													elseif (v90 == 2) then
+														local FlatIdent_1A54 = 0;
+														local v137;
+														while true do
+															if (0 == FlatIdent_1A54) then
+																v137 = v89[774 - (201 + 571)];
+																v87[v137](v21(v87, v137 + 1, v82));
+																break;
+															end
+														end
+													elseif v87[v89[2]] then
+														v81 = v81 + 1;
+													else
+														v81 = v89[3];
+													end
+												elseif (v90 <= 5) then
+													if (v90 > 4) then
+														do
+															return v87[v89[2]]();
+														end
+													else
+														local FlatIdent_6AEED = 0;
+														local FlatIdent_61800;
+														local v138;
+														local v139;
+														local v140;
+														while true do
+															if (FlatIdent_6AEED == 2) then
+																while true do
+																	if (FlatIdent_61800 == 2) then
+																		if (v139 > (0 - 0)) then
+																			if (v140 <= v87[v138 + 1]) then
+																				local FlatIdent_581C8 = 0;
+																				while true do
+																					if (FlatIdent_581C8 == 0) then
+																						v81 = v89[3];
+																						v87[v138 + 3] = v140;
+																						break;
+																					end
+																				end
+																			end
+																		elseif (v140 >= v87[v138 + 1]) then
+																			local v310 = 0;
+																			while true do
+																				if (v310 == 0) then
+																					v81 = v89[3];
+																					v87[v138 + (1141 - (116 + 1022))] = v140;
+																					break;
+																				end
+																			end
+																		end
+																		break;
+																	end
+																	if (FlatIdent_61800 == 1) then
+																		local FlatIdent_331F0 = 0;
+																		while true do
+																			if (FlatIdent_331F0 == 0) then
+																				v140 = v87[v138] + v139;
+																				v87[v138] = v140;
+																				FlatIdent_331F0 = 1;
+																			end
+																			if (FlatIdent_331F0 == 1) then
+																				FlatIdent_61800 = 2;
+																				break;
+																			end
+																		end
+																	end
+																	if (FlatIdent_61800 == 0) then
+																		local FlatIdent_6D68E = 0;
+																		while true do
+																			if (FlatIdent_6D68E == 0) then
+																				v138 = v89[2];
+																				v139 = v87[v138 + 2];
+																				FlatIdent_6D68E = 1;
+																			end
+																			if (FlatIdent_6D68E == 1) then
+																				FlatIdent_61800 = 1;
+																				break;
+																			end
+																		end
+																	end
+																end
+																break;
+															end
+															if (FlatIdent_6AEED == 0) then
+																FlatIdent_61800 = 0;
+																v138 = nil;
+																FlatIdent_6AEED = 1;
+															end
+															if (FlatIdent_6AEED == 1) then
+																v139 = nil;
+																v140 = nil;
+																FlatIdent_6AEED = 2;
+															end
+														end
+													end
+												elseif (v90 > 6) then
+													v87[v89[2]] = v87[v89[12 - 9]][v89[4]];
+												else
+													do
+														return v87[v89[2]]();
+													end
+												end
+											elseif (v90 <= 11) then
+												if (v90 <= 9) then
+													if (v90 == 8) then
+														if not v87[v89[2]] then
+															v81 = v81 + 1;
+														else
+															v81 = v89[3];
+														end
+													else
+														v87[v89[2]] = {};
+													end
+												elseif (v90 > 10) then
+													v87[v89[2]] = v87[v89[1068 - (68 + 997)]][v89[4]];
+												else
+													local FlatIdent_854BA = 0;
+													local FlatIdent_1B881;
+													local v147;
+													while true do
+														if (FlatIdent_854BA == 0) then
+															FlatIdent_1B881 = 0;
+															v147 = nil;
+															FlatIdent_854BA = 1;
+														end
+														if (FlatIdent_854BA == 1) then
+															while true do
+																if (FlatIdent_1B881 == 0) then
+																	v147 = v89[2];
+																	do
+																		return v21(v87, v147, v82);
+																	end
+																	break;
+																end
+															end
+															break;
+														end
+													end
+												end
+											elseif (v90 <= 13) then
+												if (v90 == 12) then
+													local FlatIdent_6128B = 0;
+													local FlatIdent_25A9F;
+													local v148;
+													local v149;
+													while true do
+														if (FlatIdent_6128B == 1) then
+															v149 = nil;
+															while true do
+																if (FlatIdent_25A9F == 0) then
+																	local FlatIdent_5962D = 0;
+																	while true do
+																		if (0 == FlatIdent_5962D) then
+																			v148 = 0;
+																			v149 = nil;
+																			FlatIdent_5962D = 1;
+																		end
+																		if (FlatIdent_5962D == 1) then
+																			FlatIdent_25A9F = 1;
+																			break;
+																		end
+																	end
+																end
+																if (FlatIdent_25A9F == 1) then
+																	while true do
+																		if (v148 == 0) then
+																			v149 = v89[2];
+																			v87[v149] = v87[v149](v21(v87, v149 + 1, v89[3]));
+																			break;
+																		end
+																	end
+																	break;
+																end
+															end
+															break;
+														end
+														if (0 == FlatIdent_6128B) then
+															FlatIdent_25A9F = 0;
+															v148 = nil;
+															FlatIdent_6128B = 1;
+														end
+													end
+												else
+													v87[v89[2 + 0]] = v87[v89[3]];
+												end
+											elseif (v90 > 14) then
+												v81 = v89[3];
+											else
+												local v153 = 0;
+												local v154;
+												while true do
+													if (v153 == 0) then
+														v154 = v89[2];
+														do
+															return v21(v87, v154, v82);
+														end
+														break;
+													end
+												end
+											end
+										elseif (v90 <= (83 - 60)) then
+											if (v90 <= 19) then
+												if (v90 <= 17) then
+													if (v90 == 16) then
+														v87[v89[1272 - (226 + 1044)]] = #v87[v89[3]];
+													else
+														local FlatIdent_44100 = 0;
+														local FlatIdent_4508F;
+														local v156;
+														while true do
+															if (FlatIdent_44100 == 1) then
+																while true do
+																	if (FlatIdent_4508F == 0) then
+																		v156 = v89[2];
+																		do
+																			return v87[v156](v21(v87, v156 + 1, v89[3]));
+																		end
+																		break;
+																	end
+																end
+																break;
+															end
+															if (FlatIdent_44100 == 0) then
+																FlatIdent_4508F = 0;
+																v156 = nil;
+																FlatIdent_44100 = 1;
+															end
+														end
+													end
+												elseif (v90 > (877 - (814 + 45))) then
+													v87[v89[2]] = v89[7 - 4];
+												else
+													local FlatIdent_89917 = 0;
+													local FlatIdent_284EA;
+													local v159;
+													local v160;
+													while true do
+														if (FlatIdent_89917 == 1) then
+															v160 = nil;
+															while true do
+																if (FlatIdent_284EA == 0) then
+																	local FlatIdent_10550 = 0;
+																	while true do
+																		if (0 == FlatIdent_10550) then
+																			v159 = 0;
+																			v160 = nil;
+																			FlatIdent_10550 = 1;
+																		end
+																		if (FlatIdent_10550 == 1) then
+																			FlatIdent_284EA = 1;
+																			break;
+																		end
+																	end
+																end
+																if (FlatIdent_284EA == 1) then
+																	while true do
+																		if (v159 == 0) then
+																			v160 = v89[2];
+																			v87[v160](v21(v87, v160 + 1 + 0, v82));
+																			break;
+																		end
+																	end
+																	break;
+																end
+															end
+															break;
+														end
+														if (FlatIdent_89917 == 0) then
+															FlatIdent_284EA = 0;
+															v159 = nil;
+															FlatIdent_89917 = 1;
+														end
+													end
+												end
+											elseif (v90 <= 21) then
+												if (v90 > 20) then
+													v87[v89[2]]();
+												else
+													v87[v89[2]] = v89[3];
+												end
+											elseif (v90 == 22) then
+												if not v87[v89[2]] then
+													v81 = v81 + 1;
+												else
+													v81 = v89[2 + 1];
+												end
+											else
+												v87[v89[2]] = v89[888 - (261 + 624)] + v87[v89[4]];
+											end
+										elseif (v90 <= (117 - 90)) then
+											if (v90 <= 25) then
+												if (v90 == 24) then
+													local FlatIdent_89562 = 0;
+													local FlatIdent_628E3;
+													local v164;
+													local v165;
+													while true do
+														if (FlatIdent_89562 == 0) then
+															FlatIdent_628E3 = 0;
+															v164 = nil;
+															FlatIdent_89562 = 1;
+														end
+														if (FlatIdent_89562 == 1) then
+															v165 = nil;
+															while true do
+																if (FlatIdent_628E3 == 0) then
+																	local FlatIdent_77478 = 0;
+																	while true do
+																		if (FlatIdent_77478 == 0) then
+																			v164 = 0;
+																			v165 = nil;
+																			FlatIdent_77478 = 1;
+																		end
+																		if (1 == FlatIdent_77478) then
+																			FlatIdent_628E3 = 1;
+																			break;
+																		end
+																	end
+																end
+																if (FlatIdent_628E3 == 1) then
+																	while true do
+																		if (0 == v164) then
+																			v165 = v89[2];
+																			v87[v165] = v87[v165](v21(v87, v165 + 1, v89[3]));
+																			break;
+																		end
+																	end
+																	break;
+																end
+															end
+															break;
+														end
+													end
+												else
+													for v250 = v89[2], v89[4 - 1] do
+														v87[v250] = nil;
+													end
+												end
+											elseif (v90 == 26) then
+												v87[v89[2]] = v87[v89[3]] + v89[4];
+											else
+												local FlatIdent_2A9F7 = 0;
+												local v167;
+												local v168;
+												local v169;
+												local v170;
+												while true do
+													if (FlatIdent_2A9F7 == 0) then
+														local FlatIdent_65844 = 0;
+														while true do
+															if (FlatIdent_65844 == 1) then
+																FlatIdent_2A9F7 = 1;
+																break;
+															end
+															if (FlatIdent_65844 == 0) then
+																v167 = 0;
+																v168 = nil;
+																FlatIdent_65844 = 1;
+															end
+														end
+													end
+													if (FlatIdent_2A9F7 == 1) then
+														local FlatIdent_527C6 = 0;
+														while true do
+															if (FlatIdent_527C6 == 0) then
+																v169 = nil;
+																v170 = nil;
+																FlatIdent_527C6 = 1;
+															end
+															if (1 == FlatIdent_527C6) then
+																FlatIdent_2A9F7 = 2;
+																break;
+															end
+														end
+													end
+													if (FlatIdent_2A9F7 == 2) then
+														while true do
+															if (2 == v167) then
+																for v311 = 1, v89[4] do
+																	local FlatIdent_9874B = 0;
+																	local FlatIdent_5E109;
+																	local v312;
+																	while true do
+																		if (FlatIdent_9874B == 0) then
+																			FlatIdent_5E109 = 0;
+																			v312 = nil;
+																			FlatIdent_9874B = 1;
+																		end
+																		if (FlatIdent_9874B == 1) then
+																			while true do
+																				if (FlatIdent_5E109 == 0) then
+																					local FlatIdent_4965B = 0;
+																					while true do
+																						if (0 == FlatIdent_4965B) then
+																							v81 = v81 + 1 + 0;
+																							v312 = v77[v81];
+																							FlatIdent_4965B = 1;
+																						end
+																						if (FlatIdent_4965B == 1) then
+																							FlatIdent_5E109 = 1;
+																							break;
+																						end
+																					end
+																				end
+																				if (FlatIdent_5E109 == 1) then
+																					if (v312[1] == 13) then
+																						v170[v311 - 1] = {v87,v312[3]};
+																					else
+																						v170[v311 - 1] = {v72,v312[3]};
+																					end
+																					v86[#v86 + (1424 - (630 + 793))] = v170;
+																					break;
+																				end
+																			end
+																			break;
+																		end
+																	end
+																end
+																v87[v89[2]] = v40(v168, v169, v73);
+																break;
+															end
+															if (v167 == 0) then
+																local FlatIdent_9761C = 0;
+																local FlatIdent_15A17;
+																while true do
+																	if (0 == FlatIdent_9761C) then
+																		FlatIdent_15A17 = 0;
+																		while true do
+																			if (FlatIdent_15A17 == 1) then
+																				v167 = 1;
+																				break;
+																			end
+																			if (FlatIdent_15A17 == 0) then
+																				local FlatIdent_86E18 = 0;
+																				while true do
+																					if (FlatIdent_86E18 == 1) then
+																						FlatIdent_15A17 = 1;
+																						break;
+																					end
+																					if (FlatIdent_86E18 == 0) then
+																						v168 = v78[v89[3]];
+																						v169 = nil;
+																						FlatIdent_86E18 = 1;
+																					end
+																				end
+																			end
+																		end
+																		break;
+																	end
+																end
+															end
+															if (1 == v167) then
+																local FlatIdent_C595 = 0;
+																local FlatIdent_44603;
+																while true do
+																	if (FlatIdent_C595 == 0) then
+																		FlatIdent_44603 = 0;
+																		while true do
+																			if (FlatIdent_44603 == 0) then
+																				local FlatIdent_6147E = 0;
+																				while true do
+																					if (FlatIdent_6147E == 0) then
+																						v170 = {};
+																						v169 = v18({}, {[v7("\67\118\210\65\1\116\100", "\17\28\41\187\47\101")]=function(v314, v315)
+																							local FlatIdent_1BB5D = 0;
+																							local FlatIdent_82923;
+																							local v316;
+																							local v317;
+																							while true do
+																								if (FlatIdent_1BB5D == 1) then
+																									v317 = nil;
+																									while true do
+																										if (FlatIdent_82923 == 0) then
+																											local FlatIdent_13B77 = 0;
+																											while true do
+																												if (0 == FlatIdent_13B77) then
+																													v316 = 0;
+																													v317 = nil;
+																													FlatIdent_13B77 = 1;
+																												end
+																												if (FlatIdent_13B77 == 1) then
+																													FlatIdent_82923 = 1;
+																													break;
+																												end
+																											end
+																										end
+																										if (1 == FlatIdent_82923) then
+																											while true do
+																												if (0 == v316) then
+																													local FlatIdent_98327 = 0;
+																													while true do
+																														if (FlatIdent_98327 == 0) then
+																															v317 = v170[v315];
+																															return v317[1][v317[2]];
+																														end
+																													end
+																												end
+																											end
+																											break;
+																										end
+																									end
+																									break;
+																								end
+																								if (FlatIdent_1BB5D == 0) then
+																									FlatIdent_82923 = 0;
+																									v316 = nil;
+																									FlatIdent_1BB5D = 1;
+																								end
+																							end
+																						end,[v7("\13\57\52\187\22\59\8\62\187\25", "\97\82\102\90\222")]=function(v318, v319, v320)
+																							local FlatIdent_77529 = 0;
+																							local FlatIdent_5962D;
+																							local v321;
+																							while true do
+																								if (0 == FlatIdent_77529) then
+																									FlatIdent_5962D = 0;
+																									v321 = nil;
+																									FlatIdent_77529 = 1;
+																								end
+																								if (1 == FlatIdent_77529) then
+																									while true do
+																										if (0 == FlatIdent_5962D) then
+																											v321 = v170[v319];
+																											v321[118 - (32 + 85)][v321[2]] = v320;
+																											break;
+																										end
+																									end
+																									break;
+																								end
+																							end
+																						end});
+																						FlatIdent_6147E = 1;
+																					end
+																					if (FlatIdent_6147E == 1) then
+																						FlatIdent_44603 = 1;
+																						break;
+																					end
+																				end
+																			end
+																			if (FlatIdent_44603 == 1) then
+																				v167 = 2;
+																				break;
+																			end
+																		end
+																		break;
+																	end
+																end
+															end
+														end
+														break;
+													end
+												end
+											end
+										elseif (v90 <= 29) then
+											if (v90 > 28) then
+												v87[v89[2]] = v87[v89[1 + 2]] + v89[4];
+											else
+												local FlatIdent_7AA3 = 0;
+												local FlatIdent_2593F;
+												local v172;
+												local v173;
+												local v174;
+												local v175;
+												local v176;
+												while true do
+													if (FlatIdent_7AA3 == 3) then
+														while true do
+															if (FlatIdent_2593F == 0) then
+																local FlatIdent_37555 = 0;
+																while true do
+																	if (FlatIdent_37555 == 1) then
+																		FlatIdent_2593F = 1;
+																		break;
+																	end
+																	if (FlatIdent_37555 == 0) then
+																		v172 = 0;
+																		v173 = nil;
+																		FlatIdent_37555 = 1;
+																	end
+																end
+															end
+															if (FlatIdent_2593F == 2) then
+																v176 = nil;
+																while true do
+																	if (v172 == 1) then
+																		local FlatIdent_5D905 = 0;
+																		local FlatIdent_3CDED;
+																		while true do
+																			if (FlatIdent_5D905 == 0) then
+																				FlatIdent_3CDED = 0;
+																				while true do
+																					if (0 == FlatIdent_3CDED) then
+																						local FlatIdent_61610 = 0;
+																						while true do
+																							if (0 == FlatIdent_61610) then
+																								v82 = (v175 + v173) - (3 - 2);
+																								v176 = 0;
+																								FlatIdent_61610 = 1;
+																							end
+																							if (FlatIdent_61610 == 1) then
+																								FlatIdent_3CDED = 1;
+																								break;
+																							end
+																						end
+																					end
+																					if (FlatIdent_3CDED == 1) then
+																						v172 = 2;
+																						break;
+																					end
+																				end
+																				break;
+																			end
+																		end
+																	end
+																	if (v172 == 2) then
+																		for v323 = v173, v82 do
+																			local FlatIdent_3501F = 0;
+																			local FlatIdent_21CA5;
+																			local v324;
+																			while true do
+																				if (0 == FlatIdent_3501F) then
+																					FlatIdent_21CA5 = 0;
+																					v324 = nil;
+																					FlatIdent_3501F = 1;
+																				end
+																				if (FlatIdent_3501F == 1) then
+																					while true do
+																						if (FlatIdent_21CA5 == 0) then
+																							v324 = 0;
+																							while true do
+																								if (v324 == 0) then
+																									v176 = v176 + 1;
+																									v87[v323] = v174[v176];
+																									break;
+																								end
+																							end
+																							break;
+																						end
+																					end
+																					break;
+																				end
+																			end
+																		end
+																		break;
+																	end
+																	if (v172 == 0) then
+																		local FlatIdent_669F5 = 0;
+																		local FlatIdent_6EEC8;
+																		while true do
+																			if (FlatIdent_669F5 == 0) then
+																				FlatIdent_6EEC8 = 0;
+																				while true do
+																					if (0 == FlatIdent_6EEC8) then
+																						local FlatIdent_23FF9 = 0;
+																						while true do
+																							if (FlatIdent_23FF9 == 0) then
+																								v173 = v89[2];
+																								v174, v175 = v80(v87[v173](v21(v87, v173 + 1, v89[960 - (892 + 65)])));
+																								FlatIdent_23FF9 = 1;
+																							end
+																							if (FlatIdent_23FF9 == 1) then
+																								FlatIdent_6EEC8 = 1;
+																								break;
+																							end
+																						end
+																					end
+																					if (FlatIdent_6EEC8 == 1) then
+																						v172 = 1;
+																						break;
+																					end
+																				end
+																				break;
+																			end
+																		end
+																	end
+																end
+																break;
+															end
+															if (FlatIdent_2593F == 1) then
+																local FlatIdent_69D54 = 0;
+																while true do
+																	if (FlatIdent_69D54 == 0) then
+																		v174 = nil;
+																		v175 = nil;
+																		FlatIdent_69D54 = 1;
+																	end
+																	if (FlatIdent_69D54 == 1) then
+																		FlatIdent_2593F = 2;
+																		break;
+																	end
+																end
+															end
+														end
+														break;
+													end
+													if (FlatIdent_7AA3 == 1) then
+														v173 = nil;
+														v174 = nil;
+														FlatIdent_7AA3 = 2;
+													end
+													if (FlatIdent_7AA3 == 2) then
+														v175 = nil;
+														v176 = nil;
+														FlatIdent_7AA3 = 3;
+													end
+													if (0 == FlatIdent_7AA3) then
+														FlatIdent_2593F = 0;
+														v172 = nil;
+														FlatIdent_7AA3 = 1;
+													end
+												end
+											end
+										elseif (v90 > 30) then
+											v87[v89[2]] = v87[v89[14 - 11]] % v87[v89[9 - 5]];
+										else
+											v87[v89[2]] = v87[v89[3]] % v89[4];
+										end
+									elseif (v90 <= 47) then
+										if (v90 <= (16 + 23)) then
+											if (v90 <= 35) then
+												if (v90 <= 33) then
+													if (v90 == 32) then
+														v87[v89[6 - 4]] = v87[v89[3]];
+													else
+														local FlatIdent_523B3 = 0;
+														local FlatIdent_2BE68;
+														local v181;
+														local v182;
+														while true do
+															if (FlatIdent_523B3 == 0) then
+																FlatIdent_2BE68 = 0;
+																v181 = nil;
+																FlatIdent_523B3 = 1;
+															end
+															if (FlatIdent_523B3 == 1) then
+																v182 = nil;
+																while true do
+																	if (FlatIdent_2BE68 == 0) then
+																		local FlatIdent_9851B = 0;
+																		while true do
+																			if (FlatIdent_9851B == 0) then
+																				v181 = 0;
+																				v182 = nil;
+																				FlatIdent_9851B = 1;
+																			end
+																			if (FlatIdent_9851B == 1) then
+																				FlatIdent_2BE68 = 1;
+																				break;
+																			end
+																		end
+																	end
+																	if (FlatIdent_2BE68 == 1) then
+																		while true do
+																			if (v181 == 0) then
+																				v182 = v89[3 - 1];
+																				v87[v182] = v87[v182](v21(v87, v182 + 1, v82));
+																				break;
+																			end
+																		end
+																		break;
+																	end
+																end
+																break;
+															end
+														end
+													end
+												elseif (v90 > (62 - 28)) then
+													for v252 = v89[2], v89[3] do
+														v87[v252] = nil;
+													end
+												else
+													local FlatIdent_835BC = 0;
+													local v183;
+													local v184;
+													while true do
+														if (FlatIdent_835BC == 1) then
+															while true do
+																if (v183 == 0) then
+																	v184 = v89[2];
+																	do
+																		return v87[v184](v21(v87, v184 + (1748 - (760 + 987)), v89[3]));
+																	end
+																	break;
+																end
+															end
+															break;
+														end
+														if (0 == FlatIdent_835BC) then
+															local FlatIdent_4058F = 0;
+															while true do
+																if (FlatIdent_4058F == 1) then
+																	FlatIdent_835BC = 1;
+																	break;
+																end
+																if (FlatIdent_4058F == 0) then
+																	v183 = 0;
+																	v184 = nil;
+																	FlatIdent_4058F = 1;
+																end
+															end
+														end
+													end
+												end
+											elseif (v90 <= 37) then
+												if (v90 > 36) then
+													v87[v89[2]] = v72[v89[3]];
+												else
+													local FlatIdent_243F3 = 0;
+													local v187;
+													local v188;
+													local v189;
+													local v190;
+													local v191;
+													while true do
+														if (FlatIdent_243F3 == 2) then
+															v191 = nil;
+															while true do
+																if (v187 == 1) then
+																	local FlatIdent_28BB6 = 0;
+																	local FlatIdent_7B2D6;
+																	while true do
+																		if (FlatIdent_28BB6 == 0) then
+																			FlatIdent_7B2D6 = 0;
+																			while true do
+																				if (FlatIdent_7B2D6 == 0) then
+																					local FlatIdent_57FA = 0;
+																					while true do
+																						if (FlatIdent_57FA == 0) then
+																							v82 = (v190 + v188) - 1;
+																							v191 = 0;
+																							FlatIdent_57FA = 1;
+																						end
+																						if (FlatIdent_57FA == 1) then
+																							FlatIdent_7B2D6 = 1;
+																							break;
+																						end
+																					end
+																				end
+																				if (FlatIdent_7B2D6 == 1) then
+																					v187 = 2;
+																					break;
+																				end
+																			end
+																			break;
+																		end
+																	end
+																end
+																if (2 == v187) then
+																	for v325 = v188, v82 do
+																		local FlatIdent_86E18 = 0;
+																		local v326;
+																		while true do
+																			if (FlatIdent_86E18 == 0) then
+																				v326 = 0;
+																				while true do
+																					if (v326 == 0) then
+																						v191 = v191 + 1;
+																						v87[v325] = v189[v191];
+																						break;
+																					end
+																				end
+																				break;
+																			end
+																		end
+																	end
+																	break;
+																end
+																if (v187 == 0) then
+																	local FlatIdent_43E8E = 0;
+																	local FlatIdent_163A8;
+																	while true do
+																		if (FlatIdent_43E8E == 0) then
+																			FlatIdent_163A8 = 0;
+																			while true do
+																				if (FlatIdent_163A8 == 1) then
+																					v187 = 1;
+																					break;
+																				end
+																				if (FlatIdent_163A8 == 0) then
+																					local FlatIdent_8AD85 = 0;
+																					while true do
+																						if (FlatIdent_8AD85 == 1) then
+																							FlatIdent_163A8 = 1;
+																							break;
+																						end
+																						if (FlatIdent_8AD85 == 0) then
+																							v188 = v89[2];
+																							v189, v190 = v80(v87[v188](v87[v188 + (351 - (87 + 263))]));
+																							FlatIdent_8AD85 = 1;
+																						end
+																					end
+																				end
+																			end
+																			break;
+																		end
+																	end
+																end
+															end
+															break;
+														end
+														if (FlatIdent_243F3 == 0) then
+															v187 = 0;
+															v188 = nil;
+															FlatIdent_243F3 = 1;
+														end
+														if (FlatIdent_243F3 == 1) then
+															v189 = nil;
+															v190 = nil;
+															FlatIdent_243F3 = 2;
+														end
+													end
+												end
+											elseif (v90 > (1951 - (1789 + 124))) then
+												local FlatIdent_6147E = 0;
+												local v192;
+												local v193;
+												local v194;
+												local v195;
+												local v196;
+												while true do
+													if (FlatIdent_6147E == 1) then
+														local FlatIdent_C79F = 0;
+														while true do
+															if (0 == FlatIdent_C79F) then
+																v194 = nil;
+																v195 = nil;
+																FlatIdent_C79F = 1;
+															end
+															if (FlatIdent_C79F == 1) then
+																FlatIdent_6147E = 2;
+																break;
+															end
+														end
+													end
+													if (FlatIdent_6147E == 2) then
+														v196 = nil;
+														while true do
+															if (v192 == 2) then
+																for v327 = v193, v82 do
+																	local FlatIdent_92514 = 0;
+																	while true do
+																		if (FlatIdent_92514 == 0) then
+																			v196 = v196 + 1;
+																			v87[v327] = v194[v196];
+																			break;
+																		end
+																	end
+																end
+																break;
+															end
+															if (v192 == 1) then
+																local FlatIdent_2C453 = 0;
+																while true do
+																	if (FlatIdent_2C453 == 1) then
+																		v192 = 2;
+																		break;
+																	end
+																	if (FlatIdent_2C453 == 0) then
+																		v82 = (v195 + v193) - 1;
+																		v196 = 0;
+																		FlatIdent_2C453 = 1;
+																	end
+																end
+															end
+															if (v192 == 0) then
+																local FlatIdent_92569 = 0;
+																local FlatIdent_13B77;
+																while true do
+																	if (FlatIdent_92569 == 0) then
+																		FlatIdent_13B77 = 0;
+																		while true do
+																			if (0 == FlatIdent_13B77) then
+																				local FlatIdent_4D69A = 0;
+																				while true do
+																					if (0 == FlatIdent_4D69A) then
+																						v193 = v89[768 - (745 + 21)];
+																						v194, v195 = v80(v87[v193](v87[v193 + 1]));
+																						FlatIdent_4D69A = 1;
+																					end
+																					if (FlatIdent_4D69A == 1) then
+																						FlatIdent_13B77 = 1;
+																						break;
+																					end
+																				end
+																			end
+																			if (FlatIdent_13B77 == 1) then
+																				v192 = 1;
+																				break;
+																			end
+																		end
+																		break;
+																	end
+																end
+															end
+														end
+														break;
+													end
+													if (FlatIdent_6147E == 0) then
+														local FlatIdent_12B71 = 0;
+														while true do
+															if (FlatIdent_12B71 == 1) then
+																FlatIdent_6147E = 1;
+																break;
+															end
+															if (FlatIdent_12B71 == 0) then
+																v192 = 0;
+																v193 = nil;
+																FlatIdent_12B71 = 1;
+															end
+														end
+													end
+												end
+											else
+												v87[v89[2]] = v72[v89[3]];
+											end
+										elseif (v90 <= 43) then
+											if (v90 <= 41) then
+												if (v90 == 40) then
+													v87[v89[1 + 1]] = #v87[v89[183 - (67 + 113)]];
+												else
+													local FlatIdent_8BF78 = 0;
+													local FlatIdent_7699F;
+													local v200;
+													local v201;
+													local v202;
+													local v203;
+													local v204;
+													while true do
+														if (FlatIdent_8BF78 == 1) then
+															v201 = nil;
+															v202 = nil;
+															FlatIdent_8BF78 = 2;
+														end
+														if (0 == FlatIdent_8BF78) then
+															FlatIdent_7699F = 0;
+															v200 = nil;
+															FlatIdent_8BF78 = 1;
+														end
+														if (FlatIdent_8BF78 == 3) then
+															while true do
+																if (1 == FlatIdent_7699F) then
+																	local FlatIdent_31791 = 0;
+																	while true do
+																		if (FlatIdent_31791 == 0) then
+																			v202 = nil;
+																			v203 = nil;
+																			FlatIdent_31791 = 1;
+																		end
+																		if (1 == FlatIdent_31791) then
+																			FlatIdent_7699F = 2;
+																			break;
+																		end
+																	end
+																end
+																if (FlatIdent_7699F == 2) then
+																	v204 = nil;
+																	while true do
+																		if (v200 == 2) then
+																			for v330 = v201, v82 do
+																				local FlatIdent_2A1A = 0;
+																				local FlatIdent_14716;
+																				local v331;
+																				while true do
+																					if (FlatIdent_2A1A == 1) then
+																						while true do
+																							if (0 == FlatIdent_14716) then
+																								v331 = 0;
+																								while true do
+																									if (v331 == 0) then
+																										v204 = v204 + 1;
+																										v87[v330] = v202[v204];
+																										break;
+																									end
+																								end
+																								break;
+																							end
+																						end
+																						break;
+																					end
+																					if (0 == FlatIdent_2A1A) then
+																						FlatIdent_14716 = 0;
+																						v331 = nil;
+																						FlatIdent_2A1A = 1;
+																					end
+																				end
+																			end
+																			break;
+																		end
+																		if (v200 == 0) then
+																			local FlatIdent_1784A = 0;
+																			local FlatIdent_A446;
+																			while true do
+																				if (FlatIdent_1784A == 0) then
+																					FlatIdent_A446 = 0;
+																					while true do
+																						if (FlatIdent_A446 == 1) then
+																							v200 = 1;
+																							break;
+																						end
+																						if (FlatIdent_A446 == 0) then
+																							local FlatIdent_511F5 = 0;
+																							while true do
+																								if (FlatIdent_511F5 == 1) then
+																									FlatIdent_A446 = 1;
+																									break;
+																								end
+																								if (0 == FlatIdent_511F5) then
+																									v201 = v89[2 + 0];
+																									v202, v203 = v80(v87[v201](v21(v87, v201 + 1, v82)));
+																									FlatIdent_511F5 = 1;
+																								end
+																							end
+																						end
+																					end
+																					break;
+																				end
+																			end
+																		end
+																		if (v200 == 1) then
+																			local FlatIdent_202CC = 0;
+																			while true do
+																				if (FlatIdent_202CC == 0) then
+																					v82 = (v203 + v201) - (2 - 1);
+																					v204 = 0;
+																					FlatIdent_202CC = 1;
+																				end
+																				if (FlatIdent_202CC == 1) then
+																					v200 = 2;
+																					break;
+																				end
+																			end
+																		end
+																	end
+																	break;
+																end
+																if (FlatIdent_7699F == 0) then
+																	local FlatIdent_82A94 = 0;
+																	while true do
+																		if (FlatIdent_82A94 == 1) then
+																			FlatIdent_7699F = 1;
+																			break;
+																		end
+																		if (0 == FlatIdent_82A94) then
+																			v200 = 0;
+																			v201 = nil;
+																			FlatIdent_82A94 = 1;
+																		end
+																	end
+																end
+															end
+															break;
+														end
+														if (FlatIdent_8BF78 == 2) then
+															v203 = nil;
+															v204 = nil;
+															FlatIdent_8BF78 = 3;
+														end
+													end
+												end
+											elseif (v90 > 42) then
+												if (v87[v89[4 - 2]] == v89[4]) then
+													v81 = v81 + 1;
+												else
+													v81 = v89[3];
+												end
+											else
+												local FlatIdent_8DAB1 = 0;
+												local v205;
+												local v206;
+												local v207;
+												while true do
+													if (FlatIdent_8DAB1 == 1) then
+														v207 = nil;
+														while true do
+															if (v205 == 0) then
+																local FlatIdent_2B679 = 0;
+																while true do
+																	if (FlatIdent_2B679 == 0) then
+																		v206 = v89[2];
+																		v207 = v87[v206];
+																		FlatIdent_2B679 = 1;
+																	end
+																	if (1 == FlatIdent_2B679) then
+																		v205 = 1;
+																		break;
+																	end
+																end
+															end
+															if (v205 == 1) then
+																for v332 = v206 + 1, v82 do
+																	v15(v207, v87[v332]);
+																end
+																break;
+															end
+														end
+														break;
+													end
+													if (FlatIdent_8DAB1 == 0) then
+														v205 = 0;
+														v206 = nil;
+														FlatIdent_8DAB1 = 1;
+													end
+												end
+											end
+										elseif (v90 <= 45) then
+											if (v90 == 44) then
+												local FlatIdent_67408 = 0;
+												local FlatIdent_8E29D;
+												local v208;
+												local v209;
+												while true do
+													if (FlatIdent_67408 == 1) then
+														v209 = nil;
+														while true do
+															if (1 == FlatIdent_8E29D) then
+																while true do
+																	if (v208 == 0) then
+																		v209 = v89[2];
+																		v87[v209] = v87[v209](v21(v87, v209 + 1 + 0, v82));
+																		break;
+																	end
+																end
+																break;
+															end
+															if (FlatIdent_8E29D == 0) then
+																local FlatIdent_1BC4A = 0;
+																while true do
+																	if (FlatIdent_1BC4A == 0) then
+																		v208 = 0;
+																		v209 = nil;
+																		FlatIdent_1BC4A = 1;
+																	end
+																	if (FlatIdent_1BC4A == 1) then
+																		FlatIdent_8E29D = 1;
+																		break;
+																	end
+																end
+															end
+														end
+														break;
+													end
+													if (FlatIdent_67408 == 0) then
+														FlatIdent_8E29D = 0;
+														v208 = nil;
+														FlatIdent_67408 = 1;
+													end
+												end
+											else
+												do
+													return;
+												end
+											end
+										elseif (v90 == 46) then
+											local FlatIdent_6A15B = 0;
+											local FlatIdent_11AA1;
+											local v210;
+											local v211;
+											local v212;
+											local v213;
+											local v214;
+											while true do
+												if (FlatIdent_6A15B == 3) then
+													while true do
+														if (FlatIdent_11AA1 == 2) then
+															v214 = nil;
+															while true do
+																if (v210 == 0) then
+																	local FlatIdent_15F29 = 0;
+																	while true do
+																		if (FlatIdent_15F29 == 0) then
+																			local FlatIdent_74083 = 0;
+																			while true do
+																				if (FlatIdent_74083 == 1) then
+																					FlatIdent_15F29 = 1;
+																					break;
+																				end
+																				if (FlatIdent_74083 == 0) then
+																					v211 = v89[2];
+																					v212, v213 = v80(v87[v211](v21(v87, v211 + 1, v82)));
+																					FlatIdent_74083 = 1;
+																				end
+																			end
+																		end
+																		if (FlatIdent_15F29 == 1) then
+																			v210 = 1;
+																			break;
+																		end
+																	end
+																end
+																if (v210 == 1) then
+																	local FlatIdent_54124 = 0;
+																	local FlatIdent_5CC3B;
+																	while true do
+																		if (FlatIdent_54124 == 0) then
+																			FlatIdent_5CC3B = 0;
+																			while true do
+																				if (1 == FlatIdent_5CC3B) then
+																					v210 = 2;
+																					break;
+																				end
+																				if (0 == FlatIdent_5CC3B) then
+																					local FlatIdent_3F966 = 0;
+																					while true do
+																						if (0 == FlatIdent_3F966) then
+																							v82 = (v213 + v211) - (3 - 2);
+																							v214 = 0 - 0;
+																							FlatIdent_3F966 = 1;
+																						end
+																						if (FlatIdent_3F966 == 1) then
+																							FlatIdent_5CC3B = 1;
+																							break;
+																						end
+																					end
+																				end
+																			end
+																			break;
+																		end
+																	end
+																end
+																if (v210 == 2) then
+																	for v333 = v211, v82 do
+																		local FlatIdent_61057 = 0;
+																		local FlatIdent_84ED3;
+																		local v334;
+																		while true do
+																			if (0 == FlatIdent_61057) then
+																				FlatIdent_84ED3 = 0;
+																				v334 = nil;
+																				FlatIdent_61057 = 1;
+																			end
+																			if (FlatIdent_61057 == 1) then
+																				while true do
+																					if (0 == FlatIdent_84ED3) then
+																						v334 = 0;
+																						while true do
+																							if (v334 == 0) then
+																								v214 = v214 + 1;
+																								v87[v333] = v212[v214];
+																								break;
+																							end
+																						end
+																						break;
+																					end
+																				end
+																				break;
+																			end
+																		end
+																	end
+																	break;
+																end
+															end
+															break;
+														end
+														if (FlatIdent_11AA1 == 0) then
+															local FlatIdent_9875A = 0;
+															while true do
+																if (FlatIdent_9875A == 1) then
+																	FlatIdent_11AA1 = 1;
+																	break;
+																end
+																if (FlatIdent_9875A == 0) then
+																	v210 = 0;
+																	v211 = nil;
+																	FlatIdent_9875A = 1;
+																end
+															end
+														end
+														if (1 == FlatIdent_11AA1) then
+															local FlatIdent_1F1FE = 0;
+															while true do
+																if (FlatIdent_1F1FE == 0) then
+																	v212 = nil;
+																	v213 = nil;
+																	FlatIdent_1F1FE = 1;
+																end
+																if (FlatIdent_1F1FE == 1) then
+																	FlatIdent_11AA1 = 2;
+																	break;
+																end
+															end
+														end
+													end
+													break;
+												end
+												if (FlatIdent_6A15B == 1) then
+													v211 = nil;
+													v212 = nil;
+													FlatIdent_6A15B = 2;
+												end
+												if (0 == FlatIdent_6A15B) then
+													FlatIdent_11AA1 = 0;
+													v210 = nil;
+													FlatIdent_6A15B = 1;
+												end
+												if (FlatIdent_6A15B == 2) then
+													v213 = nil;
+													v214 = nil;
+													FlatIdent_6A15B = 3;
+												end
+											end
+										else
+											v87[v89[2]] = v89[955 - (802 + 150)] + v87[v89[4]];
+										end
+									elseif (v90 <= 55) then
+										if (v90 <= 51) then
+											if (v90 <= 49) then
+												if (v90 == 48) then
+													local FlatIdent_6FF03 = 0;
+													local FlatIdent_6B9E2;
+													local v216;
+													local v217;
+													while true do
+														if (FlatIdent_6FF03 == 0) then
+															FlatIdent_6B9E2 = 0;
+															v216 = nil;
+															FlatIdent_6FF03 = 1;
+														end
+														if (FlatIdent_6FF03 == 1) then
+															v217 = nil;
+															while true do
+																if (FlatIdent_6B9E2 == 0) then
+																	local FlatIdent_2E38B = 0;
+																	while true do
+																		if (0 == FlatIdent_2E38B) then
+																			v216 = v89[2];
+																			v217 = v87[v216];
+																			FlatIdent_2E38B = 1;
+																		end
+																		if (FlatIdent_2E38B == 1) then
+																			FlatIdent_6B9E2 = 1;
+																			break;
+																		end
+																	end
+																end
+																if (FlatIdent_6B9E2 == 1) then
+																	for v254 = v216 + 1, v82 do
+																		v15(v217, v87[v254]);
+																	end
+																	break;
+																end
+															end
+															break;
+														end
+													end
+												else
+													do
+														return;
+													end
+												end
+											elseif (v90 > 50) then
+												v81 = v89[3];
+											elseif (v87[v89[2]] == v89[4]) then
+												v81 = v81 + 1;
+											else
+												v81 = v89[3];
+											end
+										elseif (v90 <= 53) then
+											if (v90 == 52) then
+												local FlatIdent_5C97A = 0;
+												local v219;
+												local v220;
+												local v221;
+												while true do
+													if (FlatIdent_5C97A == 0) then
+														v219 = 0;
+														v220 = nil;
+														FlatIdent_5C97A = 1;
+													end
+													if (FlatIdent_5C97A == 1) then
+														v221 = nil;
+														while true do
+															if (v219 == 0) then
+																local FlatIdent_58C0A = 0;
+																local FlatIdent_1CFC3;
+																while true do
+																	if (FlatIdent_58C0A == 0) then
+																		FlatIdent_1CFC3 = 0;
+																		while true do
+																			if (FlatIdent_1CFC3 == 0) then
+																				local FlatIdent_936D7 = 0;
+																				while true do
+																					if (FlatIdent_936D7 == 1) then
+																						FlatIdent_1CFC3 = 1;
+																						break;
+																					end
+																					if (FlatIdent_936D7 == 0) then
+																						v220 = v89[2];
+																						v221 = v87[v89[3]];
+																						FlatIdent_936D7 = 1;
+																					end
+																				end
+																			end
+																			if (FlatIdent_1CFC3 == 1) then
+																				v219 = 1;
+																				break;
+																			end
+																		end
+																		break;
+																	end
+																end
+															end
+															if (v219 == 1) then
+																v87[v220 + 1] = v221;
+																v87[v220] = v221[v89[4]];
+																break;
+															end
+														end
+														break;
+													end
+												end
+											else
+												v87[v89[2]] = v73[v89[3]];
+											end
+										elseif (v90 == (1 + 53)) then
+											v87[v89[2]] = v87[v89[3]] % v89[10 - 6];
+										else
+											v87[v89[2]] = v87[v89[3 + 0]] % v87[v89[4]];
+										end
+									elseif (v90 <= 59) then
+										if (v90 <= 57) then
+											if (v90 == 56) then
+												local FlatIdent_2DF14 = 0;
+												local v226;
+												local v227;
+												local v228;
+												while true do
+													if (0 == FlatIdent_2DF14) then
+														local FlatIdent_D6BD = 0;
+														while true do
+															if (FlatIdent_D6BD == 0) then
+																v226 = v89[2];
+																v227 = v87[v226 + 2];
+																FlatIdent_D6BD = 1;
+															end
+															if (FlatIdent_D6BD == 1) then
+																FlatIdent_2DF14 = 1;
+																break;
+															end
+														end
+													end
+													if (FlatIdent_2DF14 == 1) then
+														v228 = v87[v226] + v227;
+														v87[v226] = v228;
+														FlatIdent_2DF14 = 2;
+													end
+													if (FlatIdent_2DF14 == 2) then
+														if (v227 > (1055 - (87 + 968))) then
+															if (v228 <= v87[v226 + (1 - 0)]) then
+																local FlatIdent_7093B = 0;
+																local FlatIdent_17AE1;
+																local v335;
+																while true do
+																	if (0 == FlatIdent_7093B) then
+																		FlatIdent_17AE1 = 0;
+																		v335 = nil;
+																		FlatIdent_7093B = 1;
+																	end
+																	if (FlatIdent_7093B == 1) then
+																		while true do
+																			if (0 == FlatIdent_17AE1) then
+																				v335 = 0;
+																				while true do
+																					if (v335 == 0) then
+																						v81 = v89[13 - 10];
+																						v87[v226 + 3] = v228;
+																						break;
+																					end
+																				end
+																				break;
+																			end
+																		end
+																		break;
+																	end
+																end
+															end
+														elseif (v228 >= v87[v226 + 1]) then
+															local FlatIdent_630B0 = 0;
+															local FlatIdent_7993F;
+															while true do
+																if (FlatIdent_630B0 == 0) then
+																	FlatIdent_7993F = 0;
+																	while true do
+																		if (FlatIdent_7993F == 0) then
+																			v81 = v89[3 + 0];
+																			v87[v226 + 3] = v228;
+																			break;
+																		end
+																	end
+																	break;
+																end
+															end
+														end
+														break;
+													end
+												end
+											else
+												local FlatIdent_6526 = 0;
+												local v230;
+												local v231;
+												local v232;
+												local v233;
+												while true do
+													if (FlatIdent_6526 == 1) then
+														v232 = nil;
+														v233 = nil;
+														FlatIdent_6526 = 2;
+													end
+													if (FlatIdent_6526 == 2) then
+														while true do
+															if (v230 == 0) then
+																v231 = v89[2];
+																v232 = v87[v231];
+																v230 = 1;
+															end
+															if (1 == v230) then
+																v233 = v87[v231 + 2];
+																if (v233 > (0 - 0)) then
+																	if (v232 > v87[v231 + 1]) then
+																		v81 = v89[3];
+																	else
+																		v87[v231 + 3] = v232;
+																	end
+																elseif (v232 < v87[v231 + 1 + 0]) then
+																	v81 = v89[3];
+																else
+																	v87[v231 + 3] = v232;
+																end
+																break;
+															end
+														end
+														break;
+													end
+													if (0 == FlatIdent_6526) then
+														v230 = 0;
+														v231 = nil;
+														FlatIdent_6526 = 1;
+													end
+												end
+											end
+										elseif (v90 > 58) then
+											local v234 = v78[v89[1000 - (915 + 82)]];
+											local v235;
+											local v236 = {};
+											v235 = v18({}, {[v7("\17\148\66\201\83\169\54", "\204\78\203\43\167\55")]=function(v255, v256)
+												local FlatIdent_1AD87 = 0;
+												local v257;
+												while true do
+													if (FlatIdent_1AD87 == 0) then
+														v257 = v236[v256];
+														return v257[1][v257[2]];
+													end
+												end
+											end,[v7("\110\154\164\38\9\181\95\161\175\59", "\220\49\197\202\67\126")]=function(v258, v259, v260)
+												local FlatIdent_37395 = 0;
+												local FlatIdent_47EEF;
+												local v261;
+												while true do
+													if (FlatIdent_37395 == 0) then
+														FlatIdent_47EEF = 0;
+														v261 = nil;
+														FlatIdent_37395 = 1;
+													end
+													if (1 == FlatIdent_37395) then
+														while true do
+															if (FlatIdent_47EEF == 0) then
+																v261 = v236[v259];
+																v261[2 - 1][v261[2]] = v260;
+																break;
+															end
+														end
+														break;
+													end
+												end
+											end});
+											for v263 = 1, v89[4] do
+												local FlatIdent_45D0C = 0;
+												local FlatIdent_73F66;
+												local v264;
+												while true do
+													if (FlatIdent_45D0C == 1) then
+														while true do
+															if (FlatIdent_73F66 == 1) then
+																if (v264[1] == 13) then
+																	v236[v263 - 1] = {v87,v264[8 - 5]};
+																else
+																	v236[v263 - (1 + 0)] = {v72,v264[3 - 0]};
+																end
+																v86[#v86 + 1] = v236;
+																break;
+															end
+															if (FlatIdent_73F66 == 0) then
+																local FlatIdent_386D1 = 0;
+																while true do
+																	if (FlatIdent_386D1 == 1) then
+																		FlatIdent_73F66 = 1;
+																		break;
+																	end
+																	if (0 == FlatIdent_386D1) then
+																		v81 = v81 + 1;
+																		v264 = v77[v81];
+																		FlatIdent_386D1 = 1;
+																	end
+																end
+															end
+														end
+														break;
+													end
+													if (FlatIdent_45D0C == 0) then
+														FlatIdent_73F66 = 0;
+														v264 = nil;
+														FlatIdent_45D0C = 1;
+													end
+												end
+											end
+											v87[v89[2]] = v40(v234, v235, v73);
+										else
+											local FlatIdent_7B75 = 0;
+											local FlatIdent_C79F;
+											local v238;
+											local v239;
+											local v240;
+											local v241;
+											while true do
+												if (FlatIdent_7B75 == 2) then
+													v241 = nil;
+													while true do
+														if (FlatIdent_C79F == 1) then
+															local FlatIdent_97F0B = 0;
+															while true do
+																if (FlatIdent_97F0B == 0) then
+																	v82 = (v240 + v238) - 1;
+																	v241 = 0 - 0;
+																	FlatIdent_97F0B = 1;
+																end
+																if (FlatIdent_97F0B == 1) then
+																	FlatIdent_C79F = 2;
+																	break;
+																end
+															end
+														end
+														if (FlatIdent_C79F == 2) then
+															for v266 = v238, v82 do
+																local FlatIdent_87C42 = 0;
+																local v267;
+																while true do
+																	if (0 == FlatIdent_87C42) then
+																		v267 = 0;
+																		while true do
+																			if (0 == v267) then
+																				v241 = v241 + 1;
+																				v87[v266] = v239[v241];
+																				break;
+																			end
+																		end
+																		break;
+																	end
+																end
+															end
+															break;
+														end
+														if (0 == FlatIdent_C79F) then
+															local FlatIdent_80B55 = 0;
+															while true do
+																if (1 == FlatIdent_80B55) then
+																	FlatIdent_C79F = 1;
+																	break;
+																end
+																if (FlatIdent_80B55 == 0) then
+																	v238 = v89[2];
+																	v239, v240 = v80(v87[v238](v21(v87, v238 + (1188 - (1069 + 118)), v89[3])));
+																	FlatIdent_80B55 = 1;
+																end
+															end
+														end
+													end
+													break;
+												end
+												if (FlatIdent_7B75 == 1) then
+													v239 = nil;
+													v240 = nil;
+													FlatIdent_7B75 = 2;
+												end
+												if (FlatIdent_7B75 == 0) then
+													FlatIdent_C79F = 0;
+													v238 = nil;
+													FlatIdent_7B75 = 1;
+												end
+											end
+										end
+									elseif (v90 <= 61) then
+										if (v90 == 60) then
+											local FlatIdent_580B8 = 0;
+											local FlatIdent_1B418;
+											local v242;
+											local v243;
+											while true do
+												if (FlatIdent_580B8 == 0) then
+													FlatIdent_1B418 = 0;
+													v242 = nil;
+													FlatIdent_580B8 = 1;
+												end
+												if (FlatIdent_580B8 == 1) then
+													v243 = nil;
+													while true do
+														if (FlatIdent_1B418 == 0) then
+															local FlatIdent_23AC6 = 0;
+															while true do
+																if (FlatIdent_23AC6 == 1) then
+																	FlatIdent_1B418 = 1;
+																	break;
+																end
+																if (FlatIdent_23AC6 == 0) then
+																	v242 = v89[2];
+																	v243 = v87[v89[3]];
+																	FlatIdent_23AC6 = 1;
+																end
+															end
+														end
+														if (FlatIdent_1B418 == 1) then
+															v87[v242 + (1 - 0)] = v243;
+															v87[v242] = v243[v89[1821 - (1703 + 114)]];
+															break;
+														end
+													end
+													break;
+												end
+											end
+										else
+											v87[v89[2]] = v73[v89[3]];
+										end
+									elseif (v90 == 62) then
+										v87[v89[2]] = {};
+									else
+										v87[v89[1 + 1]]();
+									end
+									v81 = v81 + 1;
+									break;
+								end
+							end
+						end
+					end;
+				end
+				return v40(v39(), {}, v28)(...);
+			end
+			return v23("LOL!0D3Q0003063Q00737472696E6703043Q006368617203043Q00627974652Q033Q0073756203053Q0062697433322Q033Q0062697403043Q0062786F7203053Q007461626C6503063Q00636F6E63617403063Q00696E7365727403053Q006D6174636803083Q00746F6E756D62657203053Q007063612Q6C00243Q00123D3Q00013Q0020075Q000200123D000100013Q00200700010001000300123D000200013Q00200700020002000400123D000300053Q0006080003000A0001000100040F3Q000A000100123D000300063Q00200700040003000700123D000500083Q00200700050005000900123D000600083Q00200700060006000A00061B00073Q000100062Q000D3Q00064Q000D8Q000D3Q00044Q000D3Q00014Q000D3Q00024Q000D3Q00053Q00123D000800013Q00200700080008000B00123D0009000C3Q00123D000A000D3Q00061B000B0001000100052Q000D3Q00074Q000D3Q00094Q000D3Q00084Q000D3Q000A4Q000D3Q000B4Q0020000C000B4Q0006000C00014Q000E000C6Q002D3Q00013Q00023Q00023Q00026Q00F03F026Q00704002264Q003E00025Q001214000300014Q002800045Q001214000500013Q00042Q0003002100012Q002600076Q0020000800024Q0026000900014Q0026000A00024Q0026000B00034Q0026000C00044Q0020000D6Q0020000E00063Q00201D000F000600012Q003A000C000F4Q0021000B3Q00022Q0026000C00034Q0026000D00044Q0020000E00014Q0028000F00014Q001F000F0006000F001017000F0001000F2Q0028001000014Q001F00100006001000101700100001001000201D0010001000012Q003A000D00104Q002E000C6Q0021000A3Q000200201E000A000A00022Q00240009000A4Q001200073Q00010004380003000500012Q0026000300054Q0020000400024Q0022000300044Q000E00036Q002D3Q00017Q00043Q00027Q004003053Q003A25642B3A2Q033Q0025642B026Q00F03F001C3Q00061B5Q000100012Q00258Q0026000100014Q0026000200024Q0026000300024Q003E00046Q0026000500034Q002000066Q0023000700074Q003A000500074Q003000043Q0001002007000400040001001214000500024Q0018000300050002001214000400034Q003A000200044Q002100013Q000200262B000100180001000400040F3Q001800012Q002000016Q003E00026Q0022000100024Q000E00015Q00040F3Q001B00012Q0026000100044Q0006000100014Q000E00016Q002D3Q00013Q00013Q00063Q00030A3Q006C6F6164737472696E6703043Q0067616D6503073Q00482Q747047657403483Q00D9D7CF35F5E18851C3C2CC6BE1B2D316C4C1CE36E3A9C411DFD7DE2BF2F5C411DC8CD52CEEBAC810D8CBDA2AE8B2CF1FDECD9636E9AED51DD48CE301C1F6EF31F38CD624EFB5884903083Q007EB1A3BB4586DBA7026Q00F03F010F3Q0006033Q000D00013Q00040F3Q000D000100123D000100013Q00123D000200023Q00203C0002000200032Q002600045Q001214000500043Q001214000600054Q003A000400064Q002E00026Q002100013Q00022Q001500010001000100040F3Q000E000100200700013Q00062Q002D3Q00017Q00", v17(), ...);
+		else
+			local sdawdwqdq = obf_arg[1];
+		end
+	end
+	if (obf_tonumber(obf_stringmatch(obf_stringmatch(({obf_pcall(obf_wrapperfunc, nil)})[2], ":%d+:"), "%d+")) == 1) then
+		return obf_wrapperfunc({});
+	else
+		return obf_adjnqwidqwjhdpoq();
+	end
+end
+return obf_adjnqwidqwjhdpoq();
