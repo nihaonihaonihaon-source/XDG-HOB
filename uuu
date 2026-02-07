@@ -1236,6 +1236,7 @@ do
     local TargetJumpHeight = 7.2
     local JumpConnection = nil
     local CharacterAddedConnection = nil
+    local HumanoidChangedConnection = nil
     
     local function updateJumpHeight()
         if JumpConnection then
@@ -1246,7 +1247,7 @@ do
         JumpConnection = game:GetService("RunService").Heartbeat:Connect(function()
             local character = Player.Character
             if character then
-                local humanoid = character:FindFirstChild("Humanoid")
+                local humanoid = character:FindFirstChildOfClass("Humanoid")
                 if humanoid and humanoid.JumpHeight ~= TargetJumpHeight then
                     humanoid.JumpHeight = TargetJumpHeight
                 end
@@ -1257,13 +1258,33 @@ do
     local function setupCharacter()
         local character = Player.Character
         if character then
-            task.wait(0.5)
+            task.wait(1)
             
-            local humanoid = character:WaitForChild("Humanoid", 5)
-            if humanoid then
-                humanoid.JumpHeight = TargetJumpHeight
+            if HumanoidChangedConnection then
+                HumanoidChangedConnection:Disconnect()
+            end
+            
+            HumanoidChangedConnection = character.ChildAdded:Connect(function(child)
+                if child:IsA("Humanoid") then
+                    task.wait(0.5)
+                    child.JumpHeight = TargetJumpHeight
+                    updateJumpHeight()
+                end
+            end)
+            
+            local humanoids = character:GetDescendants()
+            for _, obj in pairs(humanoids) do
+                if obj:IsA("Humanoid") then
+                    task.wait(0.2)
+                    obj.JumpHeight = TargetJumpHeight
+                end
+            end
+            
+            local mainHumanoid = character:FindFirstChildOfClass("Humanoid")
+            if mainHumanoid then
+                mainHumanoid.JumpHeight = TargetJumpHeight
                 
-                humanoid.Died:Connect(function()
+                mainHumanoid.Died:Connect(function()
                     task.wait(3)
                     updateJumpHeight()
                 end)
@@ -1278,17 +1299,9 @@ do
     end
     
     CharacterAddedConnection = Player.CharacterAdded:Connect(function(character)
-        task.wait(0.5)
-        local humanoid = character:WaitForChild("Humanoid", 5)
-        if humanoid then
-            humanoid.JumpHeight = TargetJumpHeight
-            updateJumpHeight()
-            
-            humanoid.Died:Connect(function()
-                task.wait(3)
-                updateJumpHeight()
-            end)
-        end
+        task.wait(1)
+        setupCharacter()
+        updateJumpHeight()
     end)
     
     AntiDetectJumpModule.GetJumpHeight = function()
@@ -1302,9 +1315,16 @@ do
             
             local character = Player.Character
             if character then
-                local humanoid = character:FindFirstChild("Humanoid")
-                if humanoid then
-                    humanoid.JumpHeight = TargetJumpHeight
+                local humanoids = character:GetDescendants()
+                for _, obj in pairs(humanoids) do
+                    if obj:IsA("Humanoid") then
+                        obj.JumpHeight = TargetJumpHeight
+                    end
+                end
+                
+                local mainHumanoid = character:FindFirstChildOfClass("Humanoid")
+                if mainHumanoid then
+                    mainHumanoid.JumpHeight = TargetJumpHeight
                 end
             end
             
@@ -1324,170 +1344,22 @@ do
             CharacterAddedConnection = nil
         end
         
+        if HumanoidChangedConnection then
+            HumanoidChangedConnection:Disconnect()
+            HumanoidChangedConnection = nil
+        end
+        
         local character = Player.Character
         if character then
-            local humanoid = character:FindFirstChild("Humanoid")
-            if humanoid then
-                humanoid.JumpHeight = 7.2
+            local humanoids = character:GetDescendants()
+            for _, obj in pairs(humanoids) do
+                if obj:IsA("Humanoid") then
+                    obj.JumpHeight = 7.2
+                end
             end
         end
     end
 end
-
-local jumpPowerFrame = Instance.new("Frame")
-jumpPowerFrame.Name = "JumpPowerFrame"
-jumpPowerFrame.Size = UDim2.new(0.9, 0, 0, 120)
-jumpPowerFrame.BackgroundColor3 = Color3.fromRGB(60, 60, 70)
-jumpPowerFrame.BackgroundTransparency = 0.1
-
-local jumpPowerCorner = Instance.new("UICorner")
-jumpPowerCorner.CornerRadius = UDim.new(0, 8)
-jumpPowerCorner.Parent = jumpPowerFrame
-
-local jumpPowerStroke = Instance.new("UIStroke")
-jumpPowerStroke.Thickness = 2
-jumpPowerStroke.Color = Color3.fromRGB(80, 160, 255)
-jumpPowerStroke.Transparency = 0.2
-jumpPowerStroke.Parent = jumpPowerFrame
-
-local jumpPowerIcon = Instance.new("ImageLabel")
-jumpPowerIcon.Name = "JumpPowerIcon"
-jumpPowerIcon.Size = UDim2.new(0, 32, 0, 32)
-jumpPowerIcon.Position = UDim2.new(0, 10, 0, 10)
-jumpPowerIcon.BackgroundTransparency = 1
-jumpPowerIcon.Image = "rbxassetid://3926305904"
-jumpPowerIcon.ImageRectSize = Vector2.new(64, 64)
-jumpPowerIcon.ImageRectOffset = Vector2.new(0, 384)
-jumpPowerIcon.Parent = jumpPowerFrame
-
-local jumpPowerTitle = Instance.new("TextLabel")
-jumpPowerTitle.Name = "JumpPowerTitle"
-jumpPowerTitle.Size = UDim2.new(1, -50, 0, 20)
-jumpPowerTitle.Position = UDim2.new(0, 50, 0, 2)
-jumpPowerTitle.BackgroundTransparency = 1
-jumpPowerTitle.Text = "防检测跳跃高度"
-jumpPowerTitle.TextColor3 = Color3.fromRGB(180, 200, 255)
-jumpPowerTitle.Font = Enum.Font.GothamBold
-jumpPowerTitle.TextSize = 12
-jumpPowerTitle.TextXAlignment = Enum.TextXAlignment.Left
-jumpPowerTitle.Parent = jumpPowerFrame
-
-local jumpPowerInput = Instance.new("TextBox")
-jumpPowerInput.Name = "JumpPowerInput"
-jumpPowerInput.Size = UDim2.new(0.7, 0, 0, 30)
-jumpPowerInput.Position = UDim2.new(0.15, 0, 0, 40)
-jumpPowerInput.BackgroundColor3 = Color3.fromRGB(45, 45, 55)
-jumpPowerInput.TextColor3 = Color3.fromRGB(220, 220, 230)
-jumpPowerInput.Font = Enum.Font.GothamSemibold
-jumpPowerInput.TextSize = 14
-jumpPowerInput.PlaceholderText = "输入跳跃高度 (7.2-500)"
-jumpPowerInput.Text = "7.2"
-jumpPowerInput.ClearTextOnFocus = false
-
-local jumpPowerInputCorner = Instance.new("UICorner")
-jumpPowerInputCorner.CornerRadius = UDim.new(0, 6)
-jumpPowerInputCorner.Parent = jumpPowerInput
-
-local jumpPowerInputStroke = Instance.new("UIStroke")
-jumpPowerInputStroke.Thickness = 1
-jumpPowerInputStroke.Color = Color3.fromRGB(100, 100, 110)
-jumpPowerInputStroke.Parent = jumpPowerInput
-
-jumpPowerInput.FocusLost:Connect(function(enterPressed)
-    if enterPressed then
-        local heightNum = tonumber(jumpPowerInput.Text)
-        if heightNum and heightNum >= 7.2 and heightNum <= 500 then
-            local success = AntiDetectJumpModule.SetJumpHeight(heightNum)
-            if success then
-                StarterGui:SetCore("SendNotification", {
-                    Title = "XDG-HOB",
-                    Text = "跳跃高度已设置为: " .. string.format("%.1f", heightNum),
-                    Duration = 3,
-                    Icon = "rbxassetid://4483345998"
-                })
-            end
-        else
-            jumpPowerInput.Text = "7.2"
-            StarterGui:SetCore("SendNotification", {
-                Title = "错误",
-                Text = "请输入7.2-500之间的数字",
-                Duration = 5,
-                Icon = "rbxassetid://4483345998"
-            })
-        end
-    end
-end)
-
-local applyJumpBtn = Instance.new("TextButton")
-applyJumpBtn.Name = "ApplyJumpPowerButton"
-applyJumpBtn.Size = UDim2.new(0.5, 0, 0, 30)
-applyJumpBtn.Position = UDim2.new(0.25, 0, 0, 80)
-applyJumpBtn.BackgroundColor3 = Color3.fromRGB(80, 160, 255)
-applyJumpBtn.Text = "应用高度"
-applyJumpBtn.TextColor3 = Color3.new(1, 1, 1)
-applyJumpBtn.Font = Enum.Font.GothamSemibold
-applyJumpBtn.TextSize = 14
-applyJumpBtn.TextStrokeTransparency = 0.6
-applyJumpBtn.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
-
-local applyJumpCorner = Instance.new("UICorner")
-applyJumpCorner.CornerRadius = UDim.new(0, 6)
-applyJumpCorner.Parent = applyJumpBtn
-
-local applyJumpStroke = Instance.new("UIStroke")
-applyJumpStroke.Thickness = 1
-applyJumpStroke.Color = Color3.fromRGB(120, 200, 255)
-applyJumpStroke.Parent = applyJumpBtn
-
-applyJumpBtn.MouseEnter:Connect(function()
-    applyJumpBtn.BackgroundColor3 = Color3.fromRGB(100, 180, 255)
-end)
-
-applyJumpBtn.MouseLeave:Connect(function()
-    applyJumpBtn.BackgroundColor3 = Color3.fromRGB(80, 160, 255)
-end)
-
-applyJumpBtn.MouseButton1Click:Connect(function()
-    local heightNum = tonumber(jumpPowerInput.Text)
-    if heightNum and heightNum >= 7.2 and heightNum <= 500 then
-        local success = AntiDetectJumpModule.SetJumpHeight(heightNum)
-        if success then
-            StarterGui:SetCore("SendNotification", {
-                Title = "XDG-HOB",
-                Text = "跳跃高度已设置为: " .. string.format("%.1f", heightNum),
-                Duration = 3,
-                Icon = "rbxassetid://4483345998"
-            })
-        end
-    else
-        jumpPowerInput.Text = "7.2"
-        StarterGui:SetCore("SendNotification", {
-            Title = "错误",
-            Text = "请输入7.2-500之间的数字",
-            Duration = 5,
-            Icon = "rbxassetid://4483345998"
-        })
-    end
-end)
-
-local currentJumpLabel = Instance.new("TextLabel")
-currentJumpLabel.Name = "CurrentJumpLabel"
-currentJumpLabel.Size = UDim2.new(1, 0, 0, 20)
-currentJumpLabel.Position = UDim2.new(0, 0, 0, 115)
-currentJumpLabel.BackgroundTransparency = 1
-currentJumpLabel.TextColor3 = Color3.fromRGB(180, 200, 255)
-currentJumpLabel.Font = Enum.Font.GothamSemibold
-currentJumpLabel.TextSize = 11
-currentJumpLabel.Text = "当前高度: 7.2"
-currentJumpLabel.Parent = jumpPowerFrame
-
-game:GetService("RunService").Heartbeat:Connect(function()
-    currentJumpLabel.Text = "当前高度: " .. string.format("%.1f", AntiDetectJumpModule.GetJumpHeight())
-end)
-
-applyJumpBtn.Parent = jumpPowerFrame
-jumpPowerInput.Parent = jumpPowerFrame
-jumpPowerFrame.Parent = scrollContainer
     
     return container
 end
