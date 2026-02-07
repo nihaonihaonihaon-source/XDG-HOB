@@ -1,1 +1,730 @@
-local OrionLib = loadstring(game:HttpGet('https://pastebin.com/raw/SePpsSPZ'))()local LBLG = Instance.new("ScreenGui", getParent)local LBL = Instance.new("TextLabel", getParent)local player = game.Players.LocalPlayerLBLG.Name = "LBLG"LBLG.Parent = game.CoreGuiLBLG.ZIndexBehavior = Enum.ZIndexBehavior.SiblingLBLG.Enabled = trueLBL.Name = "LBL"LBL.Parent = LBLGLBL.BackgroundColor3 = Color3.fromRGB(0, 255, 0)LBL.BackgroundTransparency = 1LBL.BorderColor3 = Color3.new(0, 0, 0)LBL.Position = UDim2.new(0.75,0,0.010,0)LBL.Size = UDim2.new(0, 133, 0, 30)LBL.Font = Enum.Font.GothamSemiboldLBL.Text = "TextLabel"LBL.TextColor3 = Color3.new(1, 1, 1)LBL.TextScaled = trueLBL.TextSize = 14LBL.TextWrapped = trueLBL.Visible = truelocal FpsLabel = LBLlocal Heartbeat = game:GetService("RunService").Heartbeatlocal LastIteration, Startlocal FrameUpdateTable = { }local function HeartbeatUpdate()	LastIteration = tick()	for Index = #FrameUpdateTable, 1, -1 do		FrameUpdateTable[Index + 1] = (FrameUpdateTable[Index] >= LastIteration - 1) and FrameUpdateTable[Index] or nil	end	FrameUpdateTable[1] = LastIteration	local CurrentFPS = (tick() - Start >= 1 and #FrameUpdateTable) or (#FrameUpdateTable / (tick() - Start))	CurrentFPS = CurrentFPS - CurrentFPS % 1	FpsLabel.Text = ("北京时间:"..os.date("%H").."时"..os.date("%M").."分"..os.date("%S"))endStart = tick()Heartbeat:Connect(HeartbeatUpdate)local Window = OrionLib:MakeWindow({Name = "大司马脚本", HidePremium = false, SaveConfig = true,IntroText = "大司马脚本", ConfigFolder = "大司马脚本"})game:GetService("StarterGui"):SetCore("SendNotification",{ Title = "欢迎使用大司马脚本"; Text ="欢迎使用大司马脚本"; Duration = 4; })local about = Window:MakeTab({    Name = "功能栏",    Icon = "rbxassetid://16060333448",    PremiumOnly = false})about:AddParagraph("作者QQ群1006551752")about:AddParagraph("qq群1006551752")about:AddParagraph("作者大司马")about:AddParagraph("快手关注XY.大司马")local Tab =Window:MakeTab({	Name = "作者QQ群这里",	Icon = "rbxassetid://16060333448",	PremiumOnly = false})Tab:AddButton({	Name = "1006551752",	Callback = function()     setclipboard("856201787")  	end})Tab:AddButton({	Name = "1006551752",	Callback = function()     setclipboard("856201787")  	end})OrionLib:MakeNotification({	Name = "大司马",	Content = "欢迎使用大司马脚本",	Image = "rbxassetid://16060333448",	Time = 2})local Tab = Window:MakeTab({    Name = "通用",    Icon = "rbxassetid://16060333448",    PremiumOnly = false})local Section = Tab:AddSection({	Name = "大司马创作"})Tab:AddSlider({	Name = "移动速度",	Min = 16,	Max = 200,	Default = 16,	Color = Color3.fromRGB(255,255,255),	Increment = 1,	ValueName = "数值",	Callback = function(Value)		game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = Value	end    })Tab:AddSlider({	Name = "跳跃",	Min = 50,	Max = 200,	Default = 50,	Color = Color3.fromRGB(255,255,255),	Increment = 1,	ValueName = "数值",	Callback = function(Value)		game.Players.LocalPlayer.Character.Humanoid.JumpPower = Value	end    })Tab:AddTextbox({	Name = "跳跃高度设置",	Default = "",	TextDisappear = true,	Callback = function(Value)		game.Players.LocalPlayer.Character.Humanoid.JumpPower = Value	end})Tab:AddTextbox({	Name = "移动速度设置",	Default = "",	TextDisappear = true,	Callback = function(Value)		game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = Value	end})Tab:AddTextbox({	Name = "重力设置",	Default = "",	TextDisappear = true,	Callback = function(Value)		game.Workspace.Gravity = Value	end})Tab:AddToggle({	Name = "夜视",	Default = false,	Callback = function(Value)		if Value then		    game.Lighting.Ambient = Color3.new(1, 1, 1)		else		    game.Lighting.Ambient = Color3.new(0, 0, 0)		end	end})Tab:AddButton({	Name = "飞行",	Callback = function()     loadstring(game:HttpGet("https://pastebin.com/raw/KiRKeTV0"))()  	end    })local Tab = Window:MakeTab({  Name = "服务器脚本",  Icon = "rbxassetid://4483345998",  PremiumOnly = false})Tab:AddButton({  Name = "巴掌模拟器",  Callback = function()    loadstring(game:HttpGet(('https://raw.githubusercontent.com/Unknownkellymc1/Unknownscripts/main/slap-battles')))()  end})Tab:AddButton({	Name = "通用脚本(xa)",	Callback = function().....6666 end})   Tab:AddButton({	Name = "汉化虚空99",	Callback = function()loadstring(game:HttpGet("https://raw.githubusercontent.com/ke9460394-dot/ugik/refs/heads/main/99%E5%A4%9C%E8%99%9A%E7%A9%BA.txt"))()end})    Tab:AddButton({  Name = "bf汉化版",  Callback = function()    loadstring(game:HttpGet("https://raw.githubusercontent.com/Dev-BlueX/BlueX-Hub/refs/heads/main/Main.lua"))()  end})Tab:AddButton({  Name = "彩虹朋友",  Callback = function()    loadstring(game:HttpGet('https://raw.githubusercontent.com/Ihaveash0rtnamefordiscord/BorkWare/main/Scripts/' .. game.GameId .. ".lua"))(' Watermelon ? ')  end})local Tab = Window:MakeTab({  Name = "通用脚本",  Icon = "rbxassetid://4483345998",  PremiumOnly = false})Tab:AddButton({  Name = "加速回血",  Callback = function()    loadstring(game:HttpGet("https://raw.githubusercontent.com/cbhlyy/lyycbh/main/nengliangtiao"))()  end})Tab:AddToggle({  Name = "夜视",  Default = false,  Callback = function(Value)    if Value then      game.Lighting.Ambient = Color3.new(1, 1, 1)     else      game.Lighting.Ambient = Color3.new(0, 0, 0)    end  end})Tab:AddButton({  Name = "阿尔宙斯UI",  Default = false,  Callback = function()    loadstring(game:HttpGet("https://raw.githubusercontent.com/AZYsGithub/chillz-workshop/main/Arceus%20X%20V3"))()  end})Tab:AddButton({	Name = "指令挂(英文)",	Callback = function()loadstring(game:HttpGet(('https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source'),true))()end})    Tab:AddButton({	Name = "调整碰撞箱(英文)",	Callback = function()loadstring(game:HttpGet("https://pastebin.com/raw/ZQMVNxkT"))()end})    Tab:AddButton({	Name = "变小15r",	Callback = function()loadstring(game:HttpGet("https://pastebin.com/raw/XV8zfvD2"))()end})    Tab:AddButton({  Name = "飞行(波奇塔汉化)",  Callback = function()    loadstring(game:HttpGet(utf8.char((function() return table.unpack({104,116,116,112,115,58,47,47,112,97,115,116,101,98,105,110,46,99,111,109,47,114,97,119,47,86,99,71,112,70,56,69,54})end)())))()  end})            Tab:AddButton({  Name = "键盘",  Default = false,  Callback = function()    loadstring(game:HttpGet("https://raw.githubusercontent.com/advxzivhsjjdhxhsidifvsh/mobkeyboard/main/main.txt", true))()  end})Tab:AddButton({	Name = "绘制透视名字显示",	Callback = function()	loadstring(game:HttpGet("https://raw.githubusercontent.com/cbhlyy/lyycbh/main/tou"))()  	end})Tab:AddButton({	Name = "飞车(搭配穿墙可DOORS快速飞行无回拉)",	Callback = function()loadstring(game:HttpGet("https://pastebin.com/raw/MHE1cbWF"))()	end})Tab:AddParagraph("光影均无法关闭","只可替换与叠加")Tab:AddButton({  Name = "光影（滤镜）",  Default = false,  Callback = function()    loadstring(game:HttpGet("https://raw.githubusercontent.com/MZEEN2424/Graphics/main/Graphics.xml"))()  end})Tab:AddButton({  Name = "美丽天空（带动态阴影）",  Callback = function()    -- Roblox Graphics Enhancher    local light = game.Lighting    for i, v in pairs(light:GetChildren()) do      v:Destroy()    end    local ter = workspace.Terrain    local color = Instance.new("ColorCorrectionEffect")    local bloom = Instance.new("BloomEffect")    local sun = Instance.new("SunRaysEffect")    local blur = Inst  end})Tab:AddButton({	Name = "超高画质",	Callback = function()loadstring(game:HttpGet("https://pastebin.com/raw/jHBfJYmS"))()end})    Tab:AddButton({  Name = "自动旋转",  Callback = function()    loadstring(game:HttpGet('https://pastebin.com/raw/r97d7dS0', true))()  end})Tab:AddButton({	Name = "修改别人收到伤害的范围",	Callback = function()loadstring(game:HttpGet("https://pastebin.com/raw/0a7cG84K"))()end})    Tab:AddTextbox({  Name = "移动速度",  Default = "",  TextDisappear = true,  Callback = function(Value) game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = Value  end})Tab:AddTextbox({  Name = "跳跃高度",  Default = "",  TextDisappear = true,  Callback = function(Value) game.Players.LocalPlayer.Character.Humanoid.JumpPower = Value  end})Tab:AddTextbox({  Name = "重力设置",  Default = "",  TextDisappear = true,  Callback = function(Value)    game.Workspace.Gravity = Value  end})Tab:AddButton({      Name = "点击传送工具",      Callback = function()      mouse = game.Players.LocalPlayer:GetMouse() tool = Instance.new("Tool") tool.RequiresHandle = false tool.Name = "[FE]点击传送" tool.Activated:connect(function() local pos = mouse.Hit+Vector3.new(0,2.5,0) pos = CFrame.new(pos.X,pos.Y,pos.Z) game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = pos end) tool.Parent = game.Players.LocalPlayer.Backpack      end})Tab:AddButton({	Name = "可以清除墙的枪(DOORS可用)",	Callback = function()	loadstring(game:HttpGet("https://raw.githubusercontent.com/K0t1n/Public/main/Laser%20Gun"))()	end})Tab:AddButton({	Name = "无敌(头会停在原地，无法复活)",	Callback = function()local lp = game:GetService "Players".LocalPlayerif lp.Character:FindFirstChild "Head" then    local char = lp.Character    char.Archivable = true    local new = char:Clone()    new.Parent = workspace    lp.Character = new    wait(2)    local oldhum = char:FindFirstChildWhichIsA "Humanoid"    local newhum = oldhum:Clone()    newhum.Parent = char    newhum.RequiresNeck = false    oldhum.Parent = nil    wait(2)    lp.Character = char    new:Destroy()    wait(1)    newhum:GetPropertyChangedSignal("Health"):Connect(        function()            if newhum.Health <= 0 then                oldhum.Parent = lp.Character                wait(1)                oldhum:Destroy()            end        end)    workspace.CurrentCamera.CameraSubject = char    if char:FindFirstChild "Animate" then        char.Animate.Disabled = true        wait(.1)        char.Animate.Disabled = false    end    lp.Character:FindFirstChild "Head":Destroy()endend})Tab:AddButton({	Name = "人物无敌",	Callback = function()     loadstring(game:HttpGet('https://pastebin.com/raw/H3RLCWWZ'))()	end    })Tab:AddButton({	Name = "跑墙",	Callback = function()loadstring(game:HttpGet("https://pastebin.com/raw/zXk4Rq2r"))()end})Tab:AddButton({	Name = "悬浮",	Callback = function()loadstring(game:HttpGet('https://raw.githubusercontent.com/GhostPlayer352/Test4/main/Float'))()	end})Tab:AddButton({	Name = "吸人",	Callback = function()     loadstring(game:HttpGet('https://pastebin.com/raw/hQSBGsw2'))()  	end    })Tab:AddButton({  Name = "隐身道具(别人可见)",  Callback = function()    loadstring(game:HttpGet("https://gist.githubusercontent.com/skid123skidlol/cd0d2dce51b3f20ad1aac941da06a1a1/raw/f58b98cce7d51e53ade94e7bb460e4f24fb7e0ff/%257BFE%257D%2520Invisible%2520Tool%2520(can%2520hold%2520tools)",true))()  end})Tab:AddToggle({  Name = "穿墙",  Default = false,  Callback = function(Value)    if Value then      Noclip = true      Stepped = game.RunService.Stepped:Connect(function()        if Noclip == true then          for a, b in pairs(game.Workspace:GetChildren()) do            if b.Name == game.Players.LocalPlayer.Name then              for i, v in pairs(game.Workspace[game.Players.LocalPlayer.Name]:GetChildren()) do                if v:IsA("BasePart") then                  v.CanCollide = false                end              end            end          end         else          Stepped:Disconnect()        end      end)     else      Noclip = false    end  end})Tab:AddButton({  Name = "不会屏蔽的消息发送器(只有自己能看见)(娱乐)",  Default = false,  Callback = function(Value)    loadstring(game:GetObjects("rbxassetid://1262435912")[1].Source)()  end})Tab:AddButton({  Name = "回满血（部分服务器无效）（可能是假血））",  Callback = function ()    FullHealth = 10000000    game.Players.LocalPlayer.Character.Humanoid.Health = FullHealth  end})Tab:AddButton({	Name = "无限跳",	Callback = function()loadstring(game:HttpGet("https://pastebin.com/raw/V5PQy3y0", true))()end})Tab:AddButton({	Name = "工具包",	Callback = function()	loadstring(game:HttpGet("https://cdn.wearedevs.net/scripts/BTools.txt"))()	  	end})local Tab = Window:MakeTab({  Name = "仅DOORS可用脚本",  Icon = "rbxassetid://7734068321",  PremiumOnly = false})Tab:AddButton({  Name = "门绘图显示",  Callback = function()    loadstring(game:HttpGet("https://raw.githubusercontent.com/cbhlyy/lyycbh/main/doors1"))()  end})Tab:AddButton({	Name = "DOORS变身脚本",	Callback = function()loadstring(game:HttpGet("https://raw.githubusercontent.com/ChronoAccelerator/Public-Scripts/main/Morphing/MorphScript.lua"))();end}) Tab:AddButton({	Name = "吸铁石",	Callback = function()loadstring(game:HttpGet("https://raw.githubusercontent.com/MrNeRD0/Doors-Hack/main/MagnetByNerd.lua"))()end})Tab:AddButton({	Name = "夜视仪",	Callback = function()   _G.UpdateStars = false -- stars disappear after picking up a book/breaker pole | false: a little lag    loadstring(game:HttpGet('https://raw.githubusercontent.com/DeividComSono/Scripts/main/Scanner.lua'))()end})    Tab:AddButton({  Name = "DOORS低回拉穿墙",  Callback = function()    loadstring(game:HttpGet("https://github.com/DXuwu/OK/raw/main/clip"))()  end})Tab:AddButton({  Name = "剪刀",  Callback = function()    loadstring(game:HttpGet("https://raw.githubusercontent.com/MrNeRD0/Doors-Hack/main/shears_done.lua"))()  end})Tab:AddButton({  Name = "骷髅钥匙",  Callback = function ()    local item = game:GetObjects("rbxassetid://11697889137")[1]item.Parent = game.Players.LocalPlayer.Backpack  end})Tab:AddButton({	Name = "神圣炸弹",    Callback = function()loadstring(game:HttpGet("https://+raw.githubusercontent.com/MrNeRD0/Doors-Hack/main/HolyGrenadeByNerd.lua"))()    end})Tab:AddButton({	Name = "能量罐）",	Callback = function()loadstring(game:HttpGet("https://raw.githubusercontent.com/cbhlyy/lyycbh/main/nengliangtiao"))()    end})   Tab:AddButton({	Name = "紫色手电筒（在电梯购买东西的时候使用）",	Callback = function()loadstring(game:HttpGet("https://raw.githubusercontent.com/K0t1n/Public/main/Purple%20Flashlight"))()end})  Tab:AddButton({	Name = "手电筒（没电会有bug）",	Callback = function()loadstring(game:HttpGet("https://raw.githubusercontent.com/K0t1n/Public/main/Normal%20Flashlight"))()end})      Tab:AddButton({  Name = "极端模式",  Callback = function()    loadstring(game:HttpGet("https://pastebin.com/raw/gNybFb2Z"))()  end})Tab:AddButton({  Name = "微山",  Callback = function()    loadstring(game:HttpGet("\104\116\116\112\115\58\47\47\112\97\115\116\101\98\105\110\46\99\111\109\47\114\97\119\47\117\72\72\112\56\102\122\83"))()  end})Tab:AddButton({  Name = "DOORS多脚本",  Callback = function()    loadstring(game:HttpGet("https://pastebin.com/raw/07P53fFE"))()  end})local Tab = Window:MakeTab({    Name = "灭霸模拟器",	Icon = "rbxassetid://4483345998",	PremiumOnly = false})Tab:AddButton({      Name = "出生/复活的地方",      Callback = function()        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(0,153,-20)      end    })Tab:AddButton({      Name = "刷碎片/铸造的地方",      Callback = function()        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(20,115,-695)      end   })Tab:AddButton({      Name = "商店/升级武器的地方",      Callback = function()        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-28,1061,1590)      end    })Tab:AddButton({      Name = "时间宝石的位置",      Callback = function()        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(444.5,117,443.5)      end    })Tab:AddButton({      Name = "空间宝石的位置",      Callback = function()        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-412,73,-444)      end    })Tab:AddButton({      Name = "现实宝石的位置",      Callback = function()        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-420,13,690)      end    })Tab:AddButton({      Name = "能量宝石怪的位置（建议开夜视）",      Callback = function()        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(433,55,-326)      end    })Tab:AddButton({      Name = "灭霸模拟器快速自杀",      Callback = function()        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(99999,-4985,99999)      end    })local Tab = Window:MakeTab({	Name = "忍者传奇",	Icon = "rbxassetid://7734068321",	PremiumOnly = false})autoswing = falsefunction swinging()    spawn(        function()            while autoswing == true do                task.wait()                game:GetService("Players").LocalPlayer.ninjaEvent:FireServer("swingKatana")                if not autoswing then                    break                end            end        end    )endautosell = falsefunction selling()    spawn(        function()            while autosell == true do                task.wait(.01)                if game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart") then                    game.workspace.sellAreaCircles["sellAreaCircle7"].circleInner.CFrame =                        game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").CFrame                    wait(.1)                    game.workspace.sellAreaCircles["sellAreaCircle7"].circleInner.CFrame =                        game.Workspace.Part.CFrame                    if not autosell then                        break                    end                end            end        end    )endautosellmax = falsefunction maxsell()    spawn(        function()            while autosellmax == true do                task.wait()                if game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart") then                    if game.Players.LocalPlayer.PlayerGui.gameGui.maxNinjitsuMenu.Visible == true then                        game.workspace.sellAreaCircles["sellAreaCircle7"].circleInner.CFrame =                            game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").CFrame                        task.wait()                        game.workspace.sellAreaCircles["sellAreaCircle7"].circleInner.CFrame =                            game.Workspace.Part.CFrame                    end                end                if not autosellmax then                    break                end            end        end    )endautobuyswords = falsefunction buyswords()    spawn(        function()            while autobuyswords == true do                task.wait()                if game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart") then                    local oh1 = "buyAllSwords"                    local oh2 = {                        "Ground",                        "Astral Island",                        "Space Island",                        "Tundra Island",                        "Eternal Island",                        "Sandstorm",                        "Thunderstorm",                        "Ancient Inferno Island",                        "Midnight Shadow Island",                        "Mythical Souls Island",                        "Winter Wonder Island"                    }                    for i = 1, #oh2 do                        game:GetService("Players").LocalPlayer.ninjaEvent:FireServer(oh1, oh2[i])                    end                end                if not autobuyswords then                    break                end            end        end    )endautobuybelts = falsefunction buybelts()    spawn(        function()            while autobuybelts == true do                task.wait()                if game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart") then                    local oh1 = "buyAllBelts"                    local oh2 = {                        "Ground",                        "Astral Island",                        "Space Island",                        "Tundra Island",                        "Eternal Island",                        "Sandstorm",                        "Thunderstorm",                        "Ancient Inferno Island",                        "Midnight Shadow Island",                        "Mythical Souls Island",                        "Winter Wonder Island"                    }                    for i = 1, #oh2 do                        game:GetService("Players").LocalPlayer.ninjaEvent:FireServer(oh1, oh2[i])                    end                end                if not autobuybelts then                    break                end            end        end    )endautobuyranks = falsefunction buyranks()    spawn(        function()            while autobuyranks == true do                task.wait()                if game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart") then                    local oh1 = "buyRank"                    local oh2 = game:GetService("ReplicatedStorage").Ranks.Ground:GetChildren()                    for i = 1, #oh2 do                        game:GetService("Players").LocalPlayer.ninjaEvent:FireServer(oh1, oh2[i].Name)                    end                end                if not autobuyranks then                    break                end            end        end    )endautobuyskill = falsefunction buyskill()    spawn(        function()            while autobuyskill == true do                task.wait()                if game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart") then                    local oh1 = "buyAllSkills"                    local oh2 = {                        "Ground",                        "Astral Island",                        "Space Island",                        "Tundra Island",                        "Eternal Island",                        "Sandstorm",                        "Thunderstorm",                        "Ancient Inferno Island",                        "Midnight Shadow Island",                        "Mythical Souls Island",                        "Winter Wonder Island"                    }                    for i = 1, #oh2 do                        game:GetService("Players").LocalPlayer.ninjaEvent:FireServer(oh1, oh2[i])                    end                end                if not autobuyskill then                    break                end            end        end    )endautobuyshurikens = falsefunction buyshurikens()    spawn(        function()            while autobuyshurikens == true do                task.wait()                if game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart") then                    local oh1 = "buyAllShurikens"                    local oh2 = {                        "Ground",                        "Astral Island",                        "Space Island",                        "Tundra Island",                        "Eternal Island",                        "Sandstorm",                        "Thunderstorm",                        "Ancient Inferno Island",                        "Midnight Shadow Island",                        "Mythical Souls Island",                        "Winter Wonder Island"                    }                    for i = 1, #oh2 do                        game:GetService("Players").LocalPlayer.ninjaEvent:FireServer(oh1, oh2[i])                    end                end                if not autobuyshurikens then                    break                end            end        end    )endTab:AddToggle(    {        Name = "自动挥舞",        Default = false,        Callback = function(x)            autoswing = x            if autoswing then                swinging()            end        end    })Tab:AddToggle(    {        Name = "自动售卖",        Default = false,        Callback = function(x)            autosell = x            if autosell then                selling()            end        end    })    Tab:AddToggle(    {        Name = "存满了自动售卖",        Default = false,        Callback = function(x)            autosellmax = x            if autosellmax then                maxsell()            end        end    })local Section = Tab:AddSection({	Name = "自动购买功能"})Tab:AddToggle(    {        Name = "自动购买剑",        Default = false,        Callback = function(x)            autobuyswords = x            if autobuyswords then                buyswords()            end        end    })Tab:AddToggle(    {        Name = "自动购买腰带",        Default = false,        Callback = function(x)            autobuybelts = x            if autobuybelts then                buybelts()            end        end    })Tab:AddToggle(    {        Name = "自动购买称号（等级）",        Default = false,        Callback = function(x)            autobuyranks = x            if autobuyranks then                buyranks()            end        end    })Tab:AddToggle(    {        Name = "自动购买忍术",        Default = false,        Callback = function(x)            autobuyskill = x            if autobuyskill then                buyskill()            end        end    })Tab:AddToggle(    {        Name = "自动购买（全部打开就行）",        Default = false,        Callback = function(x)            autobuyshurikens = x            if autobuyshurikens then                buyshurikens()            end        end    })Tab:AddButton(    {        Name = "解锁所有岛",        Callback = function()            for _, v in next, game.workspace.islandUnlockParts:GetChildren() do                if v then                    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = v.islandSignPart.CFrame                    wait(.5)                end            end        end    })local Tab = Window:MakeTab({	Name = "极速传奇",	Icon = "rbxassetid://7734068321",	PremiumOnly = false})local Section = Tab:AddSection({	Name = "功能"})Tab:AddButton({	Name = "开启卡宠",	Callback = function()	loadstring(game:HttpGet("https://raw.githubusercontent.com/cbhlyy/lyycbh/main/jisu1"))()		  	end})Tab:AddButton({	Name = "自动重生和自动刷等级",	Callback = function()	loadstring(game:HttpGet("https://raw.githubusercontent.com/cbhlyy/lyycbh/main/jusu2"))()          	end    })local Section = Tab:AddSection({	Name = "传送岛屿"})Tab:AddButton({	Name = "返还出生岛",	Callback = function()	game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-9682.98828125, 58.87917709350586, 3099.033935546875)        	end    })Tab:AddButton({	Name = "白雪城",	Callback = function()	game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-9676.138671875, 58.87917709350586, 3782.69384765625)     	end    })Tab:AddButton({	Name = "熔岩城",	Callback = function()	game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-11054.96875, 216.83917236328125, 4898.62841796875)         	end    })Tab:AddButton({	Name = "传奇公路",	Callback = function()    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-13098.87109375, 216.83917236328125, 5907.6279296875)      	end    })local Tab = Window:MakeTab({	Name = "造船寻宝",	Icon = "rbxassetid://7734068321",	PremiumOnly = false})local Section = Tab:AddSection({	Name = "功能"})Tab:AddButton({	Name = "自动刷金条",	Callback = function()	loadstring(game:HttpGet("https://raw.githubusercontent.com/cbhlyy/lyycbh/main/zaochuan1"))()  	end})local Tab = Window:MakeTab({	Name = "监狱人生",	Icon = "rbxassetid://7734068321",	PremiumOnly = false})Tab:AddButton({	Name = "变车模型",	Callback = function()	loadstring(game:HttpGet("https://raw.githubusercontent.com/cbhlyy/lyycbh/main/bianche"))()  	end})Tab:AddButton({	Name = "手里剑（秒杀）",	Callback = function()	loadstring(game:HttpGet("https://raw.githubusercontent.com/cbhlyy/lyycbh/main/jianyu1"))()  	end})Tab:AddButton({	Name = "杀死全部（新版重复杀）",	Callback = function()	loadstring(game:HttpGet("https://raw.githubusercontent.com/cbhlyy/lyycbh/main/jianyu2"))()  	end})Tab:AddButton({	Name = "无敌模式（别人可见）",	Callback = function()	loadstring(game:HttpGet("https://raw.githubusercontent.com/cbhlyy/lyycbh/main/jianyu4"))()  	end})Tab:AddButton({	Name = "手拿电锯",	Callback = function()	loadstring(game:HttpGet("https://raw.githubusercontent.com/cbhlyy/lyycbh/main/jianyu3", true))()  	end})Tab:AddToggle({	Name = "穿墙",	Default = false,	Callback = function(Value)		if Value then		    Noclip = true		    Stepped = game.RunService.Stepped:Connect(function()			    if Noclip == true then				    for a, b in pairs(game.Workspace:GetChildren()) do                        if b.Name == game.Players.LocalPlayer.Name then                            for i, v in pairs(game.Workspace[game.Players.LocalPlayer.Name]:GetChildren()) do                                if v:IsA("BasePart") then                                    v.CanCollide = false                                end                            end                        end                    end			    else				    Stepped:Disconnect()			    end		    end)	    else		    Noclip = false	    end	end})local Section = Tab:AddSection({	Name = "传送位置"})Tab:AddButton({	Name = "警卫室",	Callback = function()	game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(847.7261352539062, 98.95999908447266, 2267.387451171875)  	end})Tab:AddButton({	Name = "监狱室内",	Callback = function()	game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(919.2575073242188, 98.95999908447266, 2379.74169921875)  	end})Tab:AddButton({	Name = "罪犯复活点",	Callback = function()	game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-937.5891723632812, 93.09876251220703, 2063.031982421875)  	end})Tab:AddButton({	Name = "监狱室外",	Callback = function()	game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(760.6033325195312, 96.96992492675781, 2475.405029296875)  	end})local Tab = Window:MakeTab({	Name = "法宝模拟器",	Icon = "rbxassetid://7734068321",	PremiumOnly = false})local Section = Tab:AddSection({	Name = "功能"})Tab:AddButton({	Name = "法宝自动刷（任何地方）",	Callback = function()	loadstring(game:HttpGet("https://raw.githubusercontent.com/cbhlyy/lyycbh/main/fabao"))()  	end})local Tab = Window:MakeTab({  Name = "脚本集(会覆盖)",  Icon = "rbxassetid://4483345998",  PremiumOnly = false})Tab:AddButton({  Name = "龙脚本",  Callback = function()    getgenv().long = "龙脚本，加载时间长请耐心"loadstring("\108\111\97\100\115\116\114\105\110\103\40\103\97\109\101\58\72\116\116\112\71\101\116\40\34\104\116\116\112\115\58\47\47\114\97\119\46\103\105\116\104\117\98\117\115\101\114\99\111\110\116\101\110\116\46\99\111\109\47\108\121\121\97\105\110\105\47\108\111\110\47\109\97\105\110\47\108\105\115\119\109\34\41\41\40\41")()  end})Tab:AddButton({	Name = "ato",	Callback = function()loadstring(game:HttpGet("https://raw.githubusercontent.com/atoyayaya/jiaoben/main/jiamilist"))()end})Tab:AddButton({  Name = "USA（卡密：USA AER）",  Callback = function()    getgenv().USA="作者莫羽免费请勿倒卖"loadstring(game:HttpGet("https://raw.githubusercontent.com/boyscp/beta/main/USA.lua"))()  end})Tab:AddButton({	Name = "波奇塔自制脚本",	Callback = function()loadstring(game:HttpGet(utf8.char((function() return table.unpack({104,116,116,112,115,58,47,47,112,97,115,116,101,98,105,110,46,99,111,109,47,114,97,119,47,113,109,55,76,121,119,82,117})end)())))()end})    Tab:AddButton({  Name = "脚本中心",  Callback = function()    loadstring(game:HttpGet("\104\116\116\112\115\58\47\47\112\97\115\116\101\98\105\110\46\99\111\109\47\114\97\119\47\103\101\109\120\72\119\65\49"))()  end})Tab:AddButton({  Name = "MSDOORS2.4(纯英文)",  Callback = function()    loadstring(game:HttpGet("\104\116\116\112\115\58\47\47\112\97\115\116\101\98\105\110\46\99\111\109\47\114\97\119\47\103\101\109\120\72\119\65\49"))()  end})local Tab = Window:MakeTab({  Name = "DOORS娱乐十字架(只对自己召唤的怪有用)",  Icon = "rbxassetid://4483345998",  PremiumOnly = false})Tab:AddButton({  Name = "刷怪菜单",  Callback = function ()    loadstring(game:HttpGet("https://raw.githubusercontent.com/cbhlyy/lyycbh/main/shuaguai"))()  end})Tab:AddButton({  Name = "耶稣十字架",  Callback = function ()    loadstring(game:HttpGet("https://raw.githubusercontent.com/cbhlyy/lyycbh/main/shizi2"))()  end})Tab:AddButton({  Name = "紫光十字架",  Callback = function ()    loadstring(game:HttpGet("https://raw.githubusercontent.com/cbhlyy/lyycbh/main/shizi3"))()  end})Tab:AddButton({  Name = "万圣节十字架",  Callback = function ()    loadstring(game:HttpGet("https://raw.githubusercontent.com/cbhlyy/lyycbh/main/shizi4"))()  end})Tab:AddButton({  Name = "普通十字架",  Callback = function ()    loadstring(game:HttpGet("https://raw.githubusercontent.com/cbhlyy/lyycbh/main/shizizhen"))()  end})local Tab = Window:MakeTab({	Name = "FE脚本(英文)",	Icon = "rbxassetid://4483345998",	PremiumOnly = false})Tab:AddButton({	Name = "C00lgui",	Callback = function()     loadstring(game:GetObjects("rbxassetid://8127297852")[1].Source)()  	end    })Tab:AddButton({	Name = "1x1x1x1",	Callback = function()     loadstring(game:HttpGet(('https://pastebin.com/raw/JipYNCht'),true))()  	end    })Tab:AddButton({	Name = "变玩家（R6）",	Callback = function()     loadstring(game:HttpGet("https://pastebin.com/raw/XR4sGcgJ"))()  	end    })Tab:AddButton({	Name = "动画中心",	Callback = function()     loadstring(game:HttpGet("https://raw.githubusercontent.com/GamingScripter/Animation-Hub/main/Animation%20Gui", true))()  	end    })
+--[[
+ .____                  ________ ___.    _____                           __                
+ |    |    __ _______   \_____  \\_ |___/ ____\_ __  ______ ____ _____ _/  |_  ___________ 
+ |    |   |  |  \__  \   /   |   \| __ \   __\  |  \/  ___// ___\\__  \\   __\/  _ \_  __ \
+ |    |___|  |  // __ \_/    |    \ \_\ \  | |  |  /\___ \\  \___ / __ \|  | (  <_> )  | \/
+ |_______ \____/(____  /\_______  /___  /__| |____//____  >\___  >____  /__|  \____/|__|   
+         \/          \/         \/    \/                \/     \/     \/                   
+          \_Welcome to LuaObfuscator.com   (Alpha 0.10.9) ~  Much Love, Ferib 
+
+]]--
+
+bit32 = {};
+local v0 = 32;
+local v1 = 2 ^ v0;
+bit32.bnot = function(v25)
+	v25 = v25 % v1;
+	return (v1 - 1) - v25;
+end;
+bit32.band = function(v26, v27)
+	if (v27 == 255) then
+		return v26 % 256;
+	end
+	if (v27 == 65535) then
+		return v26 % 65536;
+	end
+	if (v27 == 4294967295) then
+		return v26 % 4294967296;
+	end
+	v26, v27 = v26 % v1, v27 % v1;
+	local v28 = 0;
+	local v29 = 1;
+	for v58 = 1, v0 do
+		local v59, v60 = v26 % 2, v27 % 2;
+		v26, v27 = math.floor(v26 / 2), math.floor(v27 / 2);
+		if ((v59 + v60) == 2) then
+			v28 = v28 + v29;
+		end
+		v29 = 2 * v29;
+	end
+	return v28;
+end;
+bit32.bor = function(v30, v31)
+	if (v31 == 255) then
+		return (v30 - (v30 % 256)) + 255;
+	end
+	if (v31 == 65535) then
+		return (v30 - (v30 % 65536)) + 65535;
+	end
+	if (v31 == 4294967295) then
+		return 4294967295;
+	end
+	v30, v31 = v30 % v1, v31 % v1;
+	local v32 = 0;
+	local v33 = 1;
+	for v61 = 1, v0 do
+		local v62, v63 = v30 % 2, v31 % 2;
+		v30, v31 = math.floor(v30 / 2), math.floor(v31 / 2);
+		if ((v62 + v63) >= 1) then
+			v32 = v32 + v33;
+		end
+		v33 = 2 * v33;
+	end
+	return v32;
+end;
+bit32.bxor = function(v34, v35)
+	v34, v35 = v34 % v1, v35 % v1;
+	local v36 = 0;
+	local v37 = 1;
+	for v64 = 1, v0 do
+		local v65, v66 = v34 % 2, v35 % 2;
+		v34, v35 = math.floor(v34 / 2), math.floor(v35 / 2);
+		if ((v65 + v66) == 1) then
+			v36 = v36 + v37;
+		end
+		v37 = 2 * v37;
+	end
+	return v36;
+end;
+bit32.lshift = function(v38, v39)
+	if (math.abs(v39) >= v0) then
+		return 0;
+	end
+	v38 = v38 % v1;
+	if (v39 < 0) then
+		return math.floor(v38 * (2 ^ v39));
+	else
+		return (v38 * (2 ^ v39)) % v1;
+	end
+end;
+bit32.rshift = function(v40, v41)
+	if (math.abs(v41) >= v0) then
+		return 0;
+	end
+	v40 = v40 % v1;
+	if (v41 > 0) then
+		return math.floor(v40 * (2 ^ -v41));
+	else
+		return (v40 * (2 ^ -v41)) % v1;
+	end
+end;
+bit32.arshift = function(v42, v43)
+	if (math.abs(v43) >= v0) then
+		return 0;
+	end
+	v42 = v42 % v1;
+	if (v43 > 0) then
+		local v100 = 0;
+		if (v42 >= (v1 / 2)) then
+			v100 = v1 - (2 ^ (v0 - v43));
+		end
+		return math.floor(v42 * (2 ^ -v43)) + v100;
+	else
+		return (v42 * (2 ^ -v43)) % v1;
+	end
+end;
+local v9 = tonumber;
+local v10 = string.byte;
+local v11 = string.char;
+local v12 = string.sub;
+local v13 = string.gsub;
+local v14 = string.rep;
+local v15 = table.concat;
+local v16 = table.insert;
+local v17 = math.ldexp;
+local v18 = getfenv or function()
+	return _ENV;
+end;
+local v19 = setmetatable;
+local v20 = pcall;
+local v21 = select;
+local v22 = unpack or table.unpack;
+local v23 = tonumber;
+local function v24(v44, v45, ...)
+	local v46 = 2 - 1;
+	local v47;
+	v44 = v13(v12(v44, 5), "..", function(v67)
+		if (v10(v67, 2) == 81) then
+			v47 = v9(v12(v67, 2 - 1, 1 - 0));
+			return "";
+		else
+			local v125 = v11(v9(v67, 41 - 25));
+			if v47 then
+				local v135 = v14(v125, v47);
+				v47 = nil;
+				return v135;
+			else
+				return v125;
+			end
+		end
+	end);
+	local function v48(v68, v69, v70)
+		if v70 then
+			local v126 = (v68 / ((621 - (555 + 64)) ^ (v69 - (932 - (857 + 74))))) % ((570 - (367 + 201)) ^ (((v70 - 1) - (v69 - (928 - (214 + 713)))) + 1));
+			return v126 - (v126 % (1 + 0));
+		else
+			local v127 = (1 + 1) ^ (v69 - (878 - (282 + 595)));
+			return (((v68 % (v127 + v127)) >= v127) and 1) or (1637 - (1523 + 114));
+		end
+	end
+	local function v49()
+		local v71 = v10(v44, v46, v46);
+		v46 = v46 + 1 + 0;
+		return v71;
+	end
+	local function v50()
+		local v72, v73 = v10(v44, v46, v46 + 2);
+		v46 = v46 + (2 - 0);
+		return (v73 * 256) + v72;
+	end
+	local function v51()
+		local v74, v75, v76, v77 = v10(v44, v46, v46 + (1068 - (68 + 997)));
+		v46 = v46 + 4;
+		return (v77 * (16778486 - (226 + 1044))) + (v76 * (285370 - 219834)) + (v75 * 256) + v74;
+	end
+	local function v52()
+		local v78 = v51();
+		local v79 = v51();
+		local v80 = 118 - (32 + 85);
+		local v81 = (v48(v79, 1 + 0, 5 + 15) * (2 ^ (989 - (892 + 65)))) + v78;
+		local v82 = v48(v79, 49 - 28, 31);
+		local v83 = ((v48(v79, 32) == (1 - 0)) and -1) or (1 - 0);
+		if (v82 == 0) then
+			if (v81 == 0) then
+				return v83 * (350 - (87 + 263));
+			else
+				v82 = 181 - (67 + 113);
+				v80 = 0;
+			end
+		elseif (v82 == 2047) then
+			return ((v81 == 0) and (v83 * ((1 + 0) / (0 - 0)))) or (v83 * NaN);
+		end
+		return v17(v83, v82 - (753 + 270)) * (v80 + (v81 / ((7 - 5) ^ (1004 - (802 + 150)))));
+	end
+	local function v53(v84)
+		local v85;
+		if not v84 then
+			v84 = v51();
+			if (v84 == (0 - 0)) then
+				return "";
+			end
+		end
+		v85 = v12(v44, v46, (v46 + v84) - 1);
+		v46 = v46 + v84;
+		local v86 = {};
+		for v101 = 1 - 0, #v85 do
+			v86[v101] = v11(v10(v12(v85, v101, v101)));
+		end
+		return v15(v86);
+	end
+	local v54 = v51;
+	local function v55(...)
+		return {...}, v21("#", ...);
+	end
+	local function v56()
+		local v87 = {};
+		local v88 = {};
+		local v89 = {};
+		local v90 = {v87,v88,nil,v89};
+		local v91 = v51();
+		local v92 = {};
+		for v103 = 2 - 1, v91 do
+			local v104 = v49();
+			local v105;
+			if (v104 == 1) then
+				v105 = v49() ~= 0;
+			elseif (v104 == 2) then
+				v105 = v52();
+			elseif (v104 == (2 + 1)) then
+				v105 = v53();
+			end
+			v92[v103] = v105;
+		end
+		v90[3] = v49();
+		for v107 = 1, v51() do
+			local v108 = v49();
+			if (v48(v108, 1 - 0, 1) == (1187 - (1069 + 118))) then
+				local v131 = v48(v108, 2, 6 - 3);
+				local v132 = v48(v108, 8 - 4, 2 + 4);
+				local v133 = {v50(),v50(),nil,nil};
+				if (v131 == (791 - (368 + 423))) then
+					v133[9 - 6] = v50();
+					v133[4] = v50();
+				elseif (v131 == (19 - (10 + 8))) then
+					v133[11 - 8] = v51();
+				elseif (v131 == 2) then
+					v133[3] = v51() - (2 ^ 16);
+				elseif (v131 == (445 - (416 + 26))) then
+					v133[9 - 6] = v51() - (2 ^ 16);
+					v133[2 + 2] = v50();
+				end
+				if (v48(v132, 1 - 0, 439 - (145 + 293)) == 1) then
+					v133[2] = v92[v133[432 - (44 + 386)]];
+				end
+				if (v48(v132, 2, 1488 - (998 + 488)) == (1 + 0)) then
+					v133[3] = v92[v133[3]];
+				end
+				if (v48(v132, 3, 3 + 0) == (773 - (201 + 571))) then
+					v133[4] = v92[v133[4]];
+				end
+				v87[v107] = v133;
+			end
+		end
+		for v109 = 1, v51() do
+			v88[v109 - (1139 - (116 + 1022))] = v56();
+		end
+		return v90;
+	end
+	local function v57(v94, v95, v96)
+		local v97 = v94[1];
+		local v98 = v94[8 - 6];
+		local v99 = v94[2 + 1];
+		return function(...)
+			local v111 = v97;
+			local v112 = v98;
+			local v113 = v99;
+			local v114 = v55;
+			local v115 = 1;
+			local v116 = -(3 - 2);
+			local v117 = {};
+			local v118 = {...};
+			local v119 = v21("#", ...) - (3 - 2);
+			local v120 = {};
+			local v121 = {};
+			for v128 = 859 - (814 + 45), v119 do
+				if (v128 >= v113) then
+					v117[v128 - v113] = v118[v128 + 1];
+				else
+					v121[v128] = v118[v128 + 1];
+				end
+			end
+			local v122 = (v119 - v113) + (2 - 1);
+			local v123;
+			local v124;
+			while true do
+				v123 = v111[v115];
+				v124 = v123[1];
+				if (v124 <= 38) then
+					if (v124 <= (1 + 17)) then
+						if (v124 <= 8) then
+							if (v124 <= (2 + 1)) then
+								if (v124 <= 1) then
+									if (v124 == 0) then
+										v121[v123[2]] = v121[v123[3]] + v123[4];
+									else
+										v121[v123[2]][v123[3]] = v123[889 - (261 + 624)];
+									end
+								elseif (v124 == 2) then
+									if (v123[2] == v121[v123[6 - 2]]) then
+										v115 = v115 + 1;
+									else
+										v115 = v123[3];
+									end
+								else
+									local v155 = v123[2];
+									v121[v155] = v121[v155](v22(v121, v155 + 1, v116));
+								end
+							elseif (v124 <= 5) then
+								if (v124 > 4) then
+									local v157 = v123[2];
+									local v158 = v121[v123[1083 - (1020 + 60)]];
+									v121[v157 + 1] = v158;
+									v121[v157] = v158[v123[1427 - (630 + 793)]];
+								else
+									v121[v123[2]]();
+								end
+							elseif (v124 <= (19 - 13)) then
+								if (v121[v123[9 - 7]] == v123[2 + 2]) then
+									v115 = v115 + (3 - 2);
+								else
+									v115 = v123[1750 - (760 + 987)];
+								end
+							elseif (v124 > (1920 - (1789 + 124))) then
+								local v280 = v112[v123[769 - (745 + 21)]];
+								local v281;
+								local v282 = {};
+								v281 = v19({}, {__index=function(v334, v335)
+									local v336 = v282[v335];
+									return v336[1][v336[2]];
+								end,__newindex=function(v337, v338, v339)
+									local v340 = v282[v338];
+									v340[1 + 0][v340[2]] = v339;
+								end});
+								for v342 = 2 - 1, v123[4] do
+									v115 = v115 + (3 - 2);
+									local v343 = v111[v115];
+									if (v343[1] == 65) then
+										v282[v342 - 1] = {v121,v343[3 + 0]};
+									else
+										v282[v342 - (1056 - (87 + 968))] = {v95,v343[3]};
+									end
+									v120[#v120 + 1] = v282;
+								end
+								v121[v123[4 - 2]] = v57(v280, v281, v96);
+							else
+								v121[v123[2]] = v95[v123[3]];
+							end
+						elseif (v124 <= 13) then
+							if (v124 <= (1423 - (447 + 966))) then
+								if (v124 > 9) then
+									local v162 = v123[2];
+									v121[v162](v121[v162 + (2 - 1)]);
+								else
+									local v163 = v123[1819 - (1703 + 114)];
+									v121[v163](v121[v163 + 1]);
+								end
+							elseif (v124 <= (712 - (376 + 325))) then
+								do
+									return;
+								end
+							elseif (v124 > 12) then
+								v121[v123[2 - 0]][v123[3]] = v123[12 - 8];
+							elseif (v121[v123[2]] <= v121[v123[2 + 2]]) then
+								v115 = v115 + (2 - 1);
+							else
+								v115 = v123[17 - (9 + 5)];
+							end
+						elseif (v124 <= 15) then
+							if (v124 == 14) then
+								v121[v123[378 - (85 + 291)]] = v123[3] ~= (1265 - (243 + 1022));
+							else
+								for v237 = v123[2], v123[11 - 8] do
+									v121[v237] = nil;
+								end
+							end
+						elseif (v124 <= (14 + 2)) then
+							v121[v123[1182 - (1123 + 57)]] = {};
+						elseif (v124 == 17) then
+							local v288 = v123[2 + 0];
+							local v289 = {v121[v288](v121[v288 + 1])};
+							local v290 = 1930 - (1869 + 61);
+							for v345 = v288, v123[4] do
+								v290 = v290 + 1;
+								v121[v345] = v289[v290];
+							end
+						else
+							v121[v123[2]] = v95[v123[1 + 2]];
+						end
+					elseif (v124 <= 28) then
+						if (v124 <= 23) then
+							if (v124 <= 20) then
+								if (v124 > (66 - 47)) then
+									local v166 = v123[2];
+									local v167 = v121[v166];
+									for v239 = v166 + 1, v116 do
+										v16(v167, v121[v239]);
+									end
+								else
+									local v168 = v123[2];
+									v121[v168](v22(v121, v168 + 1, v116));
+								end
+							elseif (v124 <= 21) then
+								local v169 = v123[2];
+								local v170, v171 = v114(v121[v169](v121[v169 + 1]));
+								v116 = (v171 + v169) - (1 - 0);
+								local v172 = 0 + 0;
+								for v240 = v169, v116 do
+									v172 = v172 + 1;
+									v121[v240] = v170[v172];
+								end
+							elseif (v124 > 22) then
+								local v293 = v123[2 - 0];
+								v121[v293] = v121[v293](v22(v121, v293 + 1, v116));
+							elseif (v121[v123[2]] == v121[v123[4]]) then
+								v115 = v115 + 1;
+							else
+								v115 = v123[3];
+							end
+						elseif (v124 <= 25) then
+							if (v124 == 24) then
+								if (v121[v123[2]] == v121[v123[4 + 0]]) then
+									v115 = v115 + 1;
+								else
+									v115 = v123[1477 - (1329 + 145)];
+								end
+							else
+								v121[v123[2]] = v57(v112[v123[3]], nil, v96);
+							end
+						elseif (v124 <= 26) then
+							v121[v123[2]] = v121[v123[974 - (140 + 831)]][v121[v123[1854 - (1409 + 441)]]];
+						elseif (v124 > (745 - (15 + 703))) then
+							v121[v123[1 + 1]] = v123[3];
+						else
+							local v298 = v123[440 - (262 + 176)];
+							v121[v298] = v121[v298](v121[v298 + 1]);
+						end
+					elseif (v124 <= 33) then
+						if (v124 <= (1751 - (345 + 1376))) then
+							if (v124 > 29) then
+								local v176 = v123[2];
+								local v177 = v121[v176];
+								local v178 = v123[691 - (198 + 490)];
+								for v243 = 4 - 3, v178 do
+									v177[v243] = v121[v176 + v243];
+								end
+							else
+								v115 = v123[6 - 3];
+							end
+						elseif (v124 <= 31) then
+							local v180 = v123[1208 - (696 + 510)];
+							local v181 = {v121[v180](v121[v180 + (1263 - (1091 + 171))])};
+							local v182 = 0;
+							for v246 = v180, v123[4] do
+								v182 = v182 + 1;
+								v121[v246] = v181[v182];
+							end
+						elseif (v124 > (6 + 26)) then
+							v121[v123[6 - 4]] = #v121[v123[3]];
+						else
+							local v301 = v123[6 - 4];
+							v121[v301] = v121[v301](v22(v121, v301 + 1, v123[3]));
+						end
+					elseif (v124 <= 35) then
+						if (v124 == 34) then
+							local v183 = v123[2];
+							v121[v183](v22(v121, v183 + 1, v123[3]));
+						elseif (v121[v123[376 - (123 + 251)]] < v121[v123[4]]) then
+							v115 = v115 + (4 - 3);
+						else
+							v115 = v123[701 - (208 + 490)];
+						end
+					elseif (v124 <= (4 + 32)) then
+						local v184 = v123[1 + 1];
+						local v185 = v121[v184];
+						local v186 = v123[3];
+						for v249 = 1, v186 do
+							v185[v249] = v121[v184 + v249];
+						end
+					elseif (v124 == 37) then
+						if (v121[v123[838 - (660 + 176)]] == v123[1 + 3]) then
+							v115 = v115 + 1;
+						else
+							v115 = v123[205 - (14 + 188)];
+						end
+					else
+						v121[v123[2]] = v96[v123[678 - (534 + 141)]];
+					end
+				elseif (v124 <= 58) then
+					if (v124 <= (20 + 28)) then
+						if (v124 <= 43) then
+							if (v124 <= (36 + 4)) then
+								if (v124 == 39) then
+									for v252 = v123[2 + 0], v123[3] do
+										v121[v252] = nil;
+									end
+								else
+									local v187 = v123[2];
+									local v188, v189 = v114(v121[v187](v22(v121, v187 + 1, v123[6 - 3])));
+									v116 = (v189 + v187) - 1;
+									local v190 = 0 - 0;
+									for v254 = v187, v116 do
+										v190 = v190 + 1;
+										v121[v254] = v188[v190];
+									end
+								end
+							elseif (v124 <= (114 - 73)) then
+								local v191 = v123[2];
+								local v192 = v123[4];
+								local v193 = v191 + 2;
+								local v194 = {v121[v191](v121[v191 + 1], v121[v193])};
+								for v257 = 1 + 0, v192 do
+									v121[v193 + v257] = v194[v257];
+								end
+								local v195 = v194[1];
+								if v195 then
+									v121[v193] = v195;
+									v115 = v123[3];
+								else
+									v115 = v115 + 1 + 0;
+								end
+							elseif (v124 == (438 - (115 + 281))) then
+								v121[v123[2]][v123[6 - 3]] = v121[v123[4 + 0]];
+							else
+								local v310 = v123[4 - 2];
+								local v311 = {v121[v310](v22(v121, v310 + 1, v116))};
+								local v312 = 0 - 0;
+								for v348 = v310, v123[4] do
+									v312 = v312 + 1;
+									v121[v348] = v311[v312];
+								end
+							end
+						elseif (v124 <= (912 - (550 + 317))) then
+							if (v124 > (62 - 18)) then
+								if (v121[v123[2]] < v121[v123[4 - 0]]) then
+									v115 = v115 + 1;
+								else
+									v115 = v123[8 - 5];
+								end
+							else
+								v121[v123[287 - (134 + 151)]][v123[1668 - (970 + 695)]] = v121[v123[4]];
+							end
+						elseif (v124 <= (87 - 41)) then
+							v121[v123[1992 - (582 + 1408)]] = v57(v112[v123[10 - 7]], nil, v96);
+						elseif (v124 > (58 - 11)) then
+							v121[v123[7 - 5]] = v123[3] ~= (1824 - (1195 + 629));
+						else
+							local v315 = v123[2 - 0];
+							local v316 = {v121[v315](v22(v121, v315 + 1, v116))};
+							local v317 = 0;
+							for v351 = v315, v123[245 - (187 + 54)] do
+								v317 = v317 + (781 - (162 + 618));
+								v121[v351] = v316[v317];
+							end
+						end
+					elseif (v124 <= (38 + 15)) then
+						if (v124 <= (34 + 16)) then
+							if (v124 > (104 - 55)) then
+								local v199 = v123[2 - 0];
+								local v200, v201 = v114(v121[v199](v121[v199 + 1]));
+								v116 = (v201 + v199) - (1 + 0);
+								local v202 = 0;
+								for v260 = v199, v116 do
+									v202 = v202 + 1;
+									v121[v260] = v200[v202];
+								end
+							else
+								v95[v123[3]] = v121[v123[1638 - (1373 + 263)]];
+							end
+						elseif (v124 <= 51) then
+							v115 = v123[3];
+						elseif (v124 == 52) then
+							if (v121[v123[2]] <= v121[v123[4]]) then
+								v115 = v115 + (1001 - (451 + 549));
+							else
+								v115 = v123[3];
+							end
+						else
+							v121[v123[1 + 1]] = v121[v123[4 - 1]][v121[v123[6 - 2]]];
+						end
+					elseif (v124 <= (1439 - (746 + 638))) then
+						if (v124 > (21 + 33)) then
+							local v206 = v123[2 - 0];
+							v121[v206](v22(v121, v206 + (342 - (218 + 123)), v123[3]));
+						else
+							v121[v123[1583 - (1535 + 46)]] = v121[v123[3]][v123[4]];
+						end
+					elseif (v124 <= 56) then
+						local v209 = v112[v123[3]];
+						local v210;
+						local v211 = {};
+						v210 = v19({}, {__index=function(v263, v264)
+							local v265 = v211[v264];
+							return v265[1 + 0][v265[2]];
+						end,__newindex=function(v266, v267, v268)
+							local v269 = v211[v267];
+							v269[1 + 0][v269[562 - (306 + 254)]] = v268;
+						end});
+						for v271 = 1, v123[1 + 3] do
+							v115 = v115 + (1 - 0);
+							local v272 = v111[v115];
+							if (v272[1] == (1532 - (899 + 568))) then
+								v211[v271 - 1] = {v121,v272[3]};
+							else
+								v211[v271 - (2 - 1)] = {v95,v272[575 - (426 + 146)]};
+							end
+							v120[#v120 + 1 + 0] = v211;
+						end
+						v121[v123[2]] = v57(v209, v210, v96);
+					elseif (v124 > (1513 - (282 + 1174))) then
+						if v121[v123[2]] then
+							v115 = v115 + 1;
+						else
+							v115 = v123[814 - (569 + 242)];
+						end
+					else
+						local v320 = v123[5 - 3];
+						local v321 = v123[4];
+						local v322 = v320 + 2;
+						local v323 = {v121[v320](v121[v320 + (1025 - (706 + 318))], v121[v322])};
+						for v356 = 1, v321 do
+							v121[v322 + v356] = v323[v356];
+						end
+						local v324 = v323[1252 - (721 + 530)];
+						if v324 then
+							v121[v322] = v324;
+							v115 = v123[1274 - (945 + 326)];
+						else
+							v115 = v115 + 1;
+						end
+					end
+				elseif (v124 <= (169 - 101)) then
+					if (v124 <= (57 + 6)) then
+						if (v124 <= (760 - (271 + 429))) then
+							if (v124 > (55 + 4)) then
+								local v213 = v123[2];
+								local v214 = v121[v213];
+								for v274 = v213 + 1, v123[1503 - (1408 + 92)] do
+									v16(v214, v121[v274]);
+								end
+							else
+								v121[v123[1088 - (461 + 625)]] = v121[v123[3]];
+							end
+						elseif (v124 <= (1349 - (993 + 295))) then
+							local v217 = v123[1 + 1];
+							v121[v217](v22(v121, v217 + 1, v116));
+						elseif (v124 == (1233 - (418 + 753))) then
+							v121[v123[2]] = #v121[v123[2 + 1]];
+						else
+							local v326 = v123[1 + 1];
+							v121[v326] = v121[v326](v22(v121, v326 + 1 + 0, v123[3]));
+						end
+					elseif (v124 <= 65) then
+						if (v124 == (17 + 47)) then
+							v121[v123[531 - (406 + 123)]] = {};
+						else
+							v121[v123[1771 - (1749 + 20)]] = v121[v123[1 + 2]];
+						end
+					elseif (v124 <= 66) then
+						v121[v123[1324 - (1249 + 73)]] = v96[v123[3]];
+					elseif (v124 > 67) then
+						local v328 = v123[2];
+						v121[v328] = v121[v328](v121[v328 + 1 + 0]);
+					else
+						v121[v123[1147 - (466 + 679)]]();
+					end
+				elseif (v124 <= 73) then
+					if (v124 <= (168 - 98)) then
+						if (v124 > 69) then
+							local v223 = v123[5 - 3];
+							local v224, v225 = v114(v121[v223](v22(v121, v223 + (1901 - (106 + 1794)), v123[1 + 2])));
+							v116 = (v225 + v223) - (1 + 0);
+							local v226 = 0;
+							for v275 = v223, v116 do
+								v226 = v226 + 1;
+								v121[v275] = v224[v226];
+							end
+						else
+							v121[v123[5 - 3]] = v123[7 - 4];
+						end
+					elseif (v124 <= (185 - (4 + 110))) then
+						v121[v123[586 - (57 + 527)]] = v121[v123[1430 - (41 + 1386)]] + v123[107 - (17 + 86)];
+					elseif (v124 > (49 + 23)) then
+						if v121[v123[2]] then
+							v115 = v115 + (1 - 0);
+						else
+							v115 = v123[8 - 5];
+						end
+					else
+						v121[v123[168 - (122 + 44)]] = v121[v123[5 - 2]][v123[4]];
+					end
+				elseif (v124 <= (248 - 173)) then
+					if (v124 > (61 + 13)) then
+						v95[v123[1 + 2]] = v121[v123[3 - 1]];
+					else
+						local v232 = v123[67 - (30 + 35)];
+						local v233 = v121[v123[3]];
+						v121[v232 + 1 + 0] = v233;
+						v121[v232] = v233[v123[1261 - (1043 + 214)]];
+					end
+				elseif (v124 <= 76) then
+					do
+						return;
+					end
+				elseif (v124 == 77) then
+					local v332 = v123[2];
+					local v333 = v121[v332];
+					for v359 = v332 + (3 - 2), v116 do
+						v16(v333, v121[v359]);
+					end
+				elseif (v123[1214 - (323 + 889)] == v121[v123[4]]) then
+					v115 = v115 + 1;
+				else
+					v115 = v123[3];
+				end
+				v115 = v115 + 1;
+			end
+		end;
+	end
+	return v57(v56(), {}, v45)(...);
+end
+return v24("LOL!733Q0003083Q00496E7374616E63652Q033Q006E657703093Q005363722Q656E47756903043Q004E616D6503193Q00436172644B6579566572696669636174696F6E53797374656D03063Q00506172656E7403043Q0067616D6503073Q00506C6179657273030B3Q004C6F63616C506C61796572030C3Q0057616974466F724368696C6403093Q00506C61796572477569030B3Q00713134373235383033363903093Q006A696168616F393438030C3Q002Q73647866672Q646766796403063Q00697061697273030A3Q00476574506C6179657273028Q00026Q00F03F03093Q00546578744C6162656C03113Q00584447446574656374696F6E4C6162656C03043Q0053697A6503053Q005544696D32026Q006940026Q003E4003083Q00506F736974696F6E026Q0024C0026Q002440027Q0040026Q001040030F3Q00584447446574656374696F6E477569030C3Q0052657365744F6E537061776E0100030B3Q00416E63686F72506F696E7403073Q00566563746F723203163Q004261636B67726F756E645472616E73706172656E637903043Q005465787403123Q00E6A380E6B58BE588B0584447E69CACE42QBA03043Q00466F6E7403043Q00456E756D030A3Q00476F7468616D426F6C64026Q00084003083Q005465787453697A65026Q003040030A3Q0054657874436F6C6F723303063Q00436F6C6F723303073Q0066726F6D524742025Q00E06F40026Q00E03F025Q00C062C0026Q0039C003103Q004261636B67726F756E64436F6C6F7233026Q003940029A5Q99C93F03163Q00546578745374726F6B655472616E73706172656E6379026Q001840026Q003240032E3Q00E6A380E6B58BE588B0E4BD9CE88085E68896E4BD9CE88085E5A5BDE58F8B0AE8B7B3E8BF87E9AA8CE8AF813Q2E026Q00144003043Q0077616974030A3Q006C6F6164737472696E6703073Q00482Q747047657403513Q00682Q7470733A2Q2F7261772E67697468756275736572636F6E74656E742E636F6D2F6E6968616F6E6968616F6E6968616F6E2D736F757263652F5844472D484F422F6D61696E2F584447484F422E6C756103073Q0044657374726F7903123Q00417574686F724E6F74696669636174696F6E025Q00C07240026Q00494003083Q005549436F726E6572030C3Q00436F726E657252616469757303043Q005544696D026Q00204003113Q00484F424A4B2Q73647866672Q6467667964030E3Q00484F427131343732353830333639030C3Q00484F426A696168616F39343703093Q0033363130393732333203053Q004672616D6503093Q004D61696E4672616D65026Q007940026Q0069C0030F3Q00426F7264657253697A65506978656C03083Q005469746C65426172026Q004440026Q002E40030A3Q005465787442752Q746F6E030B3Q00436C6F736542752Q746F6E025Q008041C0026Q004E4003013Q0058030A3Q005469746C654C6162656C026Q0049C003193Q005844472D484F42E58DA1E5AF86E9AA8CE8AF81E7B3BBE7BB9F026Q003440030A3Q00496E7075744672616D65029A5Q99E93F03073Q0054657874426F7803083Q004B6579496E707574026Q0034C0034Q00030F3Q00506C616365686F6C64657254657874030F3Q00E8AFB7E8BE93E585A5E58DA1E5AF8603063Q00476F7468616D03103Q00436C656172546578744F6E466F637573030C3Q0056657269667942752Q746F6E0200344Q33E33F026Q66E63F026Q005E40025Q00E06A40030C3Q00E6A0B8E5AFB9E58DA1E5AF86030C3Q004D652Q736167654C6162656C026Q33EB3F026Q002C4003073Q0056697369626C6503113Q004D6F75736542752Q746F6E31436C69636B03073Q00436F2Q6E656374030A3Q004D6F757365456E746572030A3Q004D6F7573654C656176650082022Q0012263Q00013Q0020365Q000200121C000100034Q001B3Q0002000200300D3Q00040005001226000100073Q00203600010001000800203600010001000900204A00010001000A00121C0003000B4Q002000010003000200102A3Q000600012Q0040000100033Q00121C0002000C3Q00121C0003000D3Q00121C0004000E4Q001E000100030001001226000200073Q0020360002000200080020360002000200090020360002000200042Q003000035Q0012260004000F4Q003B000500014Q00110004000200060004333Q001E00010006160002001E000100080004333Q001E00012Q0030000300013Q0004333Q002000010006290004001A000100020004333Q001A00012Q003000045Q0012260005000F3Q001226000600073Q00203600060006000800204A0006000600102Q0015000600074Q002F00053Q00070004333Q002D0001002036000A00090004002625000A002D0001000C0004333Q002D00012Q0030000400013Q0004333Q002F000100062900050028000100020004333Q002800010006490004008100013Q0004333Q0081000100121C000500114Q0027000600083Q0026250005004C000100120004333Q004C0001001226000900013Q00203600090009000200121C000A00134Q001B0009000200022Q003B000700093Q00300D000700040014001226000900163Q00203600090009000200121C000A00113Q00121C000B00173Q00121C000C00113Q00121C000D00184Q00200009000D000200102A000700150009001226000900163Q00203600090009000200121C000A00123Q00121C000B001A3Q00121C000C00113Q00121C000D001B4Q00200009000D000200102A00070019000900121C0005001C3Q002625000500530001001D0004333Q0053000100022E00086Q003B000900084Q003B000A00074Q00090009000200010004333Q0081000100262500050064000100110004333Q00640001001226000900013Q00203600090009000200121C000A00034Q001B0009000200022Q003B000600093Q00300D00060004001E00300D0006001F0020001226000900073Q00203600090009000800203600090009000900204A00090009000A00121C000B000B4Q00200009000B000200102A00060006000900121C000500123Q002625000500730001001C0004333Q00730001001226000900223Q00203600090009000200121C000A00123Q00121C000B00114Q00200009000B000200102A00070021000900300D00070023001200300D000700240025001226000900273Q00203600090009002600203600090009002800102A00070026000900121C000500293Q00262500050033000100290004333Q0033000100300D0007002A002B0012260009002D3Q00203600090009002E00121C000A002F3Q00121C000B00113Q00121C000C00114Q00200009000C000200102A0007002C000900102A0007000600062Q0027000800083Q00121C0005001D3Q0004333Q00330001000649000300F800013Q0004333Q00F8000100121C000500114Q0027000600073Q000E0200120098000100050004333Q00980001001226000800163Q00203600080008000200121C000900303Q00121C000A00313Q00121C000B00303Q00121C000C00324Q00200008000C000200102A0006001900080012260008002D3Q00203600080008002E00121C000900343Q00121C000A00343Q00121C000B00344Q00200008000B000200102A00060033000800300D00060023003500121C0005001C3Q000E02002900A4000100050004333Q00A400010012260008002D3Q00203600080008002E00121C000900113Q00121C000A002F3Q00121C000B00114Q00200008000B000200102A0006002C000800300D00060036003000102A000600063Q00121C0005001D3Q002625000500A7000100370004333Q00A700012Q000B3Q00013Q002625000500B80001001C0004333Q00B8000100121C000800113Q002625000800AF000100120004333Q00AF000100300D0006002A003800121C000500293Q0004333Q00B80001002625000800AA000100110004333Q00AA000100300D000600240039001226000900273Q00203600090009002600203600090009002800102A00060026000900121C000800123Q0004333Q00AA0001002625000500CF0001003A0004333Q00CF000100121C000800113Q002625000800C8000100110004333Q00C800010012260009003B3Q00121C000A001C4Q00090009000200010012260009003C3Q001226000A00073Q00204A000A000A003D00121C000C003E4Q0028000A000C4Q000300093Q00022Q004300090001000100121C000800123Q002625000800BB000100120004333Q00BB000100204A00093Q003F2Q000900090002000100121C000500373Q0004333Q00CF00010004333Q00BB0001002625000500E0000100110004333Q00E00001001226000800013Q00203600080008000200121C000900134Q001B0008000200022Q003B000600083Q00300D000600040040001226000800163Q00203600080008000200121C000900113Q00121C000A00413Q00121C000B00113Q00121C000C00424Q00200008000C000200102A00060015000800121C000500123Q002625000500850001001D0004333Q0085000100121C000800113Q002625000800E8000100120004333Q00E8000100102A00070006000600121C0005003A3Q0004333Q00850001002625000800E3000100110004333Q00E30001001226000900013Q00203600090009000200121C000A00434Q001B0009000200022Q003B000700093Q001226000900453Q00203600090009000200121C000A00113Q00121C000B00464Q00200009000B000200102A00070044000900121C000800123Q0004333Q00E300010004333Q008500012Q0040000500043Q00121C000600473Q00121C000700483Q00121C000800493Q00121C0009004A4Q001E00050004000100121C000600113Q00121C000700293Q001226000800013Q00203600080008000200121C0009004B4Q001B00080002000200300D00080004004C001226000900163Q00203600090009000200121C000A00113Q00121C000B004D3Q00121C000C00113Q00121C000D00414Q00200009000D000200102A000800150009001226000900163Q00203600090009000200121C000A00303Q00121C000B004E3Q00121C000C00303Q00121C000D00314Q00200009000D000200102A0008001900090012260009002D3Q00203600090009002E00121C000A00343Q00121C000B00343Q00121C000C00344Q00200009000C000200102A00080033000900300D0008004F001100102A000800063Q001226000900013Q00203600090009000200121C000A00434Q001B000900020002001226000A00453Q002036000A000A000200121C000B00113Q00121C000C00464Q0020000A000C000200102A00090044000A00102A000900060008001226000A00013Q002036000A000A000200121C000B004B4Q001B000A0002000200300D000A00040050001226000B00163Q002036000B000B000200121C000C00123Q00121C000D00113Q00121C000E00113Q00121C000F00514Q0020000B000F000200102A000A0015000B001226000B002D3Q002036000B000B002E00121C000C00523Q00121C000D00523Q00121C000E00524Q0020000B000E000200102A000A0033000B00300D000A004F001100102A000A00060008001226000B00013Q002036000B000B000200121C000C00434Q001B000B00020002001226000C00453Q002036000C000C000200121C000D00113Q00121C000E00464Q0020000C000E000200102A000B0044000C00102A000B0006000A001226000C00013Q002036000C000C000200121C000D00534Q001B000C0002000200300D000C00040054001226000D00163Q002036000D000D000200121C000E00113Q00121C000F00183Q00121C001000113Q00121C001100184Q0020000D0011000200102A000C0015000D001226000D00163Q002036000D000D000200121C000E00123Q00121C000F00553Q00121C001000113Q00121C0011003A4Q0020000D0011000200102A000C0019000D001226000D002D3Q002036000D000D002E00121C000E002F3Q00121C000F00563Q00121C001000564Q0020000D0010000200102A000C0033000D001226000D002D3Q002036000D000D002E00121C000E002F3Q00121C000F002F3Q00121C0010002F4Q0020000D0010000200102A000C002C000D00300D000C00240057001226000D00273Q002036000D000D0026002036000D000D002800102A000C0026000D00300D000C002A003800102A000C0006000A001226000D00013Q002036000D000D000200121C000E00434Q001B000D00020002001226000E00453Q002036000E000E000200121C000F00113Q00121C0010001D4Q0020000E0010000200102A000D0044000E00102A000D0006000C001226000E00013Q002036000E000E000200121C000F00134Q001B000E0002000200300D000E00040058001226000F00163Q002036000F000F000200121C001000123Q00121C001100593Q00121C001200123Q00121C001300114Q0020000F0013000200102A000E0015000F00300D000E0023001200300D000E0024005A001226000F00273Q002036000F000F0026002036000F000F002800102A000E0026000F00300D000E002A005B001226000F002D3Q002036000F000F002E00121C0010002F3Q00121C0011002F3Q00121C0012002F4Q0020000F0012000200102A000E002C000F00102A000E0006000A000608000F0001000100012Q00413Q000E4Q003B0010000F4Q0043001000010001001226001000013Q00203600100010000200121C0011004B4Q001B00100002000200300D00100004005C001226001100163Q00203600110011000200121C0012005D3Q00121C001300113Q00121C001400113Q00121C001500514Q002000110015000200102A001000150011001226001100163Q00203600110011000200121C001200303Q00121C001300113Q00121C001400303Q00121C001500114Q002000110015000200102A001000190011001226001100223Q00203600110011000200121C001200303Q00121C001300304Q002000110013000200102A0010002100110012260011002D3Q00203600110011002E00121C001200513Q00121C001300513Q00121C001400514Q002000110014000200102A00100033001100102A001000060008001226001100013Q00203600110011000200121C001200434Q001B001100020002001226001200453Q00203600120012000200121C001300113Q00121C0014001D4Q002000120014000200102A00110044001200102A001100060010001226001200013Q00203600120012000200121C0013005E4Q001B00120002000200300D00120004005F001226001300163Q00203600130013000200121C001400123Q00121C001500603Q00121C001600123Q00121C001700114Q002000130017000200102A001200150013001226001300163Q00203600130013000200121C001400113Q00121C0015001B3Q00121C001600113Q00121C001700114Q002000130017000200102A00120019001300300D00120023001200300D00120024006100300D0012006200630012260013002D3Q00203600130013002E00121C0014002F3Q00121C0015002F3Q00121C0016002F4Q002000130016000200102A0012002C0013001226001300273Q00203600130013002600203600130013006400102A00120026001300300D0012002A002B00300D00120065002000102A001200060010001226001300013Q00203600130013000200121C001400534Q001B00130002000200300D001300040066001226001400163Q00203600140014000200121C001500673Q00121C001600113Q00121C001700113Q00121C001800514Q002000140018000200102A001300150014001226001400163Q00203600140014000200121C001500303Q00121C001600113Q00121C001700683Q00121C001800114Q002000140018000200102A001300190014001226001400223Q00203600140014000200121C001500303Q00121C001600304Q002000140016000200102A0013002100140012260014002D3Q00203600140014002E00121C001500113Q00121C001600693Q00121C0017006A4Q002000140017000200102A0013003300140012260014002D3Q00203600140014002E00121C0015002F3Q00121C0016002F3Q00121C0017002F4Q002000140017000200102A0013002C001400300D00130024006B001226001400273Q00203600140014002600203600140014002800102A00130026001400300D0013002A003800102A001300060008001226001400013Q00203600140014000200121C001500434Q001B001400020002001226001500453Q00203600150015000200121C001600113Q00121C0017001D4Q002000150017000200102A00140044001500102A001400060013001226001500013Q00203600150015000200121C001600134Q001B00150002000200300D00150004006C001226001600163Q00203600160016000200121C0017005D3Q00121C001800113Q00121C001900113Q00121C001A00184Q00200016001A000200102A001500150016001226001600163Q00203600160016000200121C001700303Q00121C001800113Q00121C0019006D3Q00121C001A00114Q00200016001A000200102A001500190016001226001600223Q00203600160016000200121C001700303Q00121C001800304Q002000160018000200102A00150021001600300D00150023001200300D0015002400610012260016002D3Q00203600160016002E00121C0017002F3Q00121C001800423Q00121C001900424Q002000160019000200102A0015002C0016001226001600273Q00203600160016002600203600160016006400102A00150026001600300D0015002A006E00300D0015006F002000102A0015000600080020360016000C007000204A00160016007100060800180002000100012Q00418Q003700160018000100060800160003000100012Q00413Q00153Q00060800170004000100012Q00413Q00153Q00203600180013007000204A001800180071000608001A0005000100072Q00413Q00054Q00418Q00413Q00064Q00413Q00164Q00413Q00074Q00413Q00174Q00413Q00124Q00370018001A000100203600180013007200204A001800180071000608001A0006000100012Q00413Q00134Q00370018001A000100203600180013007300204A001800180071000608001A0007000100012Q00413Q00134Q00370018001A00010020360018000C007200204A001800180071000608001A0008000100012Q00413Q000C4Q00370018001A00010020360018000C007300204A001800180071000608001A0009000100012Q00413Q000C4Q00370018001A00012Q000B3Q00013Q000A3Q000A3Q00028Q00026Q00F03F03063Q00436F6C6F723303073Q0066726F6D524742025Q00E06F40025Q00C05F40025Q00C05240025Q00406040025Q00E0614003053Q00737061776E01503Q00121C000100014Q0027000200043Q00262500010007000100010004333Q0007000100121C000200014Q0027000300033Q00121C000100023Q00262500010002000100020004333Q000200012Q0027000400043Q00262500020043000100010004333Q0043000100121C000500013Q000E0200020011000100050004333Q0011000100121C000200023Q0004333Q004300010026250005000D000100010004333Q000D00012Q0040000600063Q001226000700033Q00203600070007000400121C000800053Q00121C000900013Q00121C000A00014Q00200007000A0002001226000800033Q00203600080008000400121C000900053Q00121C000A00063Q00121C000B00014Q00200008000B0002001226000900033Q00203600090009000400121C000A00053Q00121C000B00053Q00121C000C00014Q00200009000C0002001226000A00033Q002036000A000A000400121C000B00013Q00121C000C00053Q00121C000D00014Q0020000A000D0002001226000B00033Q002036000B000B000400121C000C00013Q00121C000D00013Q00121C000E00054Q0020000B000E0002001226000C00033Q002036000C000C000400121C000D00073Q00121C000E00013Q00121C000F00084Q0020000C000F0002001226000D00033Q002036000D000D000400121C000E00093Q00121C000F00013Q00121C001000054Q0028000D00104Q001400063Q00012Q003B000300063Q00121C000400023Q00121C000500023Q0004333Q000D00010026250002000A000100020004333Q000A00010012260005000A3Q00060800063Q000100032Q00418Q00413Q00034Q00413Q00044Q00090005000200010004333Q004F00010004333Q000A00010004333Q004F00010004333Q000200012Q000B3Q00013Q00013Q00053Q0003063Q00506172656E74030A3Q0054657874436F6C6F7233026Q00F03F03043Q0077616974026Q33D33F001B4Q00077Q0006493Q001A00013Q0004333Q001A00012Q00077Q0020365Q00010006493Q001A00013Q0004333Q001A00012Q00078Q0007000100014Q0007000200024Q001A00010001000200102A3Q000200012Q00073Q00023Q00206Q00032Q00313Q00024Q00073Q00024Q0007000100014Q0021000100013Q0006230001001600013Q0004333Q0016000100121C3Q00034Q00313Q00023Q0012263Q00043Q00121C000100054Q00093Q000200010004335Q00012Q000B3Q00017Q000A3Q00028Q00026Q00F03F03053Q00737061776E03063Q00436F6C6F723303073Q0066726F6D524742025Q00E06F40025Q00C05F40025Q00C05240025Q00406040025Q00E0614000463Q00121C3Q00014Q0027000100023Q0026253Q000B000100020004333Q000B0001001226000300033Q00060800043Q000100032Q00128Q00413Q00024Q00413Q00014Q00090003000200010004333Q004500010026253Q0002000100010004333Q0002000100121C000300013Q0026250003003F000100010004333Q003F00012Q0040000400063Q001226000500043Q00203600050005000500121C000600063Q00121C000700013Q00121C000800014Q0020000500080002001226000600043Q00203600060006000500121C000700063Q00121C000800073Q00121C000900014Q0020000600090002001226000700043Q00203600070007000500121C000800063Q00121C000900063Q00121C000A00014Q00200007000A0002001226000800043Q00203600080008000500121C000900013Q00121C000A00063Q00121C000B00014Q00200008000B0002001226000900043Q00203600090009000500121C000A00013Q00121C000B00013Q00121C000C00064Q00200009000C0002001226000A00043Q002036000A000A000500121C000B00083Q00121C000C00013Q00121C000D00094Q0020000A000D0002001226000B00043Q002036000B000B000500121C000C000A3Q00121C000D00013Q00121C000E00064Q0028000B000E4Q001400043Q00012Q003B000100043Q00121C000200023Q00121C000300023Q0026250003000E000100020004333Q000E000100121C3Q00023Q0004333Q000200010004333Q000E00010004333Q000200012Q000B3Q00013Q00013Q00063Q0003063Q00506172656E74028Q00026Q00F03F03043Q0077616974026Q00E03F030A3Q0054657874436F6C6F723300234Q00077Q0006493Q002200013Q0004333Q002200012Q00077Q0020365Q00010006493Q002200013Q0004333Q0022000100121C3Q00023Q0026253Q0015000100030004333Q001500012Q0007000100014Q0007000200024Q0021000200023Q00062300020011000100010004333Q0011000100121C000100034Q0031000100013Q001226000100043Q00121C000200054Q00090001000200010004335Q00010026253Q0008000100020004333Q000800012Q000700016Q0007000200024Q0007000300014Q001A00020002000300102A0001000600022Q0007000100013Q00202Q0001000100032Q0031000100013Q00121C3Q00033Q0004333Q000800010004335Q00012Q000B3Q00017Q00013Q0003073Q0044657374726F7900044Q00077Q00204A5Q00012Q00093Q000200012Q000B3Q00017Q00043Q0003043Q0054657874030A3Q0054657874436F6C6F723303073Q0056697369626C652Q0102074Q000700025Q00102A000200014Q000700025Q00102A0002000200012Q000700025Q00300D0002000300042Q000B3Q00017Q00023Q0003073Q0056697369626C65012Q00034Q00077Q00300D3Q000100022Q000B3Q00017Q00113Q00028Q00026Q00F03F03063Q0069706169727303073Q0044657374726F79030A3Q006C6F6164737472696E6703043Q0067616D6503073Q00482Q747047657403513Q00682Q7470733A2Q2F7261772E67697468756275736572636F6E74656E742E636F6D2F6E6968616F6E6968616F6E6968616F6E2D736F757263652F5844472D484F422F6D61696E2F584447484F422E6C7561030F3Q00E58DA1E5AF86E4B88DE6ADA3E7A1AE03063Q00436F6C6F723303073Q0066726F6D524742025Q00E06F40026Q00494003043Q0077616974026Q00E03F026Q00084003043Q005465787400623Q00121C3Q00014Q0027000100033Q0026253Q005B000100020004333Q005B00012Q0027000300033Q00262500010053000100020004333Q00530001001226000400034Q000700056Q00110004000200060004333Q000F00010006160002000F000100080004333Q000F00012Q0030000300013Q0004333Q001100010006290004000B000100020004333Q000B00010006490003002300013Q0004333Q0023000100121C000400013Q00262500040014000100010004333Q001400012Q0007000500013Q00204A0005000500042Q0009000500020001001226000500053Q001226000600063Q00204A00060006000700121C000800084Q0028000600084Q000300053Q00022Q00430005000100010004333Q006100010004333Q001400010004333Q0061000100121C000400013Q00262500040034000100010004333Q003400012Q0007000500023Q00202Q00050005000200202Q0005000500012Q0031000500024Q0007000500033Q00121C000600093Q0012260007000A3Q00203600070007000B00121C0008000C3Q00121C0009000D3Q00121C000A000D4Q00280007000A4Q001300053Q000100121C000400023Q00262500040024000100020004333Q002400012Q0007000500024Q0007000600043Q00060C00060046000100050004333Q0046000100121C000500013Q0026250005003B000100010004333Q003B00010012260006000E3Q00121C0007000F4Q00090006000200012Q0007000600013Q00204A0006000600042Q00090006000200010004333Q006100010004333Q003B00010004333Q0061000100121C000500013Q00262500050047000100010004333Q004700010012260006000E3Q00121C000700104Q00090006000200012Q0007000600054Q00430006000100010004333Q006100010004333Q004700010004333Q006100010004333Q002400010004333Q00610001000E0200010005000100010004333Q000500012Q0007000400063Q0020360002000400112Q003000035Q00121C000100023Q0004333Q000500010004333Q006100010026253Q0002000100010004333Q0002000100121C000100014Q0027000200023Q00121C3Q00023Q0004333Q000200012Q000B3Q00017Q00063Q0003103Q004261636B67726F756E64436F6C6F723303063Q00436F6C6F723303073Q0066726F6D524742028Q00025Q00806140025Q00E06F4000094Q00077Q001226000100023Q00203600010001000300121C000200043Q00121C000300053Q00121C000400064Q002000010004000200102A3Q000100012Q000B3Q00017Q00063Q0003103Q004261636B67726F756E64436F6C6F723303063Q00436F6C6F723303073Q0066726F6D524742028Q00026Q005E40025Q00E06A4000094Q00077Q001226000100023Q00203600010001000300121C000200043Q00121C000300053Q00121C000400064Q002000010004000200102A3Q000100012Q000B3Q00017Q00053Q0003103Q004261636B67726F756E64436F6C6F723303063Q00436F6C6F723303073Q0066726F6D524742025Q00E06F40026Q00544000094Q00077Q001226000100023Q00203600010001000300121C000200043Q00121C000300053Q00121C000400054Q002000010004000200102A3Q000100012Q000B3Q00017Q00053Q0003103Q004261636B67726F756E64436F6C6F723303063Q00436F6C6F723303073Q0066726F6D524742025Q00E06F40026Q004E4000094Q00077Q001226000100023Q00203600010001000300121C000200043Q00121C000300053Q00121C000400054Q002000010004000200102A3Q000100012Q000B3Q00017Q00", v18(), ...);
