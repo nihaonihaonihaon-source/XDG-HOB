@@ -1229,7 +1229,7 @@ local function createFunctionContainer()
     
     speedFrame.Parent = scrollContainer
     
-local AntiDetectJumpModule = {}
+    local AntiDetectJumpModule = {}
 
 do
     local Player = game:GetService("Players").LocalPlayer
