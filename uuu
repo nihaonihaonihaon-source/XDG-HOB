@@ -1229,7 +1229,7 @@ local function createFunctionContainer()
     
     speedFrame.Parent = scrollContainer
     
-    local AntiDetectJumpModule = {}
+local AntiDetectJumpModule = {}
 
 do
     local Player = game:GetService("Players").LocalPlayer
@@ -1360,6 +1360,8 @@ do
         end
     end
 end
+
+local sg = Instance.new("ScreenGui")
 
 local jumpPowerFrame = Instance.new("Frame")
 jumpPowerFrame.Name = "JumpPowerFrame"
