@@ -26,7 +26,7 @@ local function detectExecutor()
         end
     end
     
-    return "忍者注入器"
+    return "未知注入器"
 end
 
 local executorName = detectExecutor()
@@ -94,25 +94,6 @@ do
     end
     
     local function SetupPropertyProtection()
-        local mt = {
-            __index = function(self, key)
-                if key == "WalkSpeed" then
-                    return GetRealSpeed()
-                end
-                return Humanoid[key]
-            end,
-            __newindex = function(self, key, value)
-                if key == "WalkSpeed" then
-                    SetRealSpeed(value)
-                    return
-                end
-                Humanoid[key] = value
-            end
-        }
-        
-        local ProxyHumanoid = setmetatable({}, mt)
-        
-        local OldWalkSpeed = Humanoid.WalkSpeed
         Humanoid:GetPropertyChangedSignal("WalkSpeed"):Connect(function()
             if Humanoid.WalkSpeed ~= GetRealSpeed() then
                 task.wait(math.random(5, 15) / 100)
@@ -298,6 +279,253 @@ contentFrameStroke.Color = Color3.fromRGB(60, 60, 70)
 contentFrameStroke.Transparency = 0.5
 contentFrameStroke.Parent = contentFrame
 
+local WallWalkModule = {
+    Enabled = false,
+    Connection = nil,
+    Speed = 26,
+    LastUpdate = 0,
+    NoClipParts = {},
+    CharacterAddedConnection = nil
+}
+
+function WallWalkModule:Toggle()
+    self.Enabled = not self.Enabled
+    if self.Enabled then
+        self:Start()
+    else
+        self:Stop()
+    end
+    return self.Enabled
+end
+
+function WallWalkModule:Start()
+    local plr = game:GetService("Players").LocalPlayer
+    
+    self.NoClipParts = {}
+    
+    if plr.Character then
+        self:SetupCharacter(plr.Character)
+    end
+    
+    self.CharacterAddedConnection = plr.CharacterAdded:Connect(function(char)
+        self:SetupCharacter(char)
+    end)
+    
+    self.Connection = game:GetService("RunService").Heartbeat:Connect(function(dt)
+        if not self.Enabled or tick() - self.LastUpdate < 0.05 then return end
+        self.LastUpdate = tick()
+        
+        local char = plr.Character
+        if not char then return end
+        
+        local root = char:FindFirstChild("HumanoidRootPart")
+        if not root then return end
+        
+        local UIS = game:GetService("UserInputService")
+        local dir = Vector3.zero
+        local cf = root.CFrame
+        
+        if UIS:IsKeyDown(Enum.KeyCode.W) then dir = dir + cf.LookVector end
+        if UIS:IsKeyDown(Enum.KeyCode.S) then dir = dir - cf.LookVector end
+        if UIS:IsKeyDown(Enum.KeyCode.A) then dir = dir - cf.RightVector end
+        if UIS:IsKeyDown(Enum.KeyCode.D) then dir = dir + cf.RightVector end
+        if UIS:IsKeyDown(Enum.KeyCode.Space) then dir = dir + Vector3.new(0, 1, 0) end
+        if UIS:IsKeyDown(Enum.KeyCode.LeftControl) then dir = dir + Vector3.new(0, -1, 0) end
+        
+        if dir.Magnitude > 0 then
+            dir = dir.Unit
+            local speed = self.Speed * (0.9 + math.random() * 0.2)
+            root.CFrame = root.CFrame + (dir * speed * dt)
+        end
+    end)
+end
+
+function WallWalkModule:SetupCharacter(char)
+    task.wait(0.2)
+    
+    for _, part in pairs(char:GetDescendants()) do
+        if part:IsA("BasePart") then
+            part.CanCollide = false
+            table.insert(self.NoClipParts, part)
+        end
+    end
+    
+    char.DescendantAdded:Connect(function(descendant)
+        if descendant:IsA("BasePart") then
+            task.wait(0.1)
+            descendant.CanCollide = false
+            table.insert(self.NoClipParts, descendant)
+        end
+    end)
+    
+    local humanoid = char:WaitForChild("Humanoid")
+    humanoid.StateChanged:Connect(function(oldState, newState)
+        if newState == Enum.HumanoidStateType.Jumping then
+            task.wait(0.05)
+            for _, part in pairs(char:GetDescendants()) do
+                if part:IsA("BasePart") then
+                    part.CanCollide = false
+                end
+            end
+        end
+    end)
+end
+
+function WallWalkModule:Stop()
+    if self.Connection then 
+        self.Connection:Disconnect() 
+        self.Connection = nil
+    end
+    
+    if self.CharacterAddedConnection then
+        self.CharacterAddedConnection:Disconnect()
+        self.CharacterAddedConnection = nil
+    end
+    
+    local plr = game:GetService("Players").LocalPlayer
+    if plr.Character then
+        for _, part in pairs(self.NoClipParts) do
+            if part and part.Parent then
+                part.CanCollide = true
+            end
+        end
+    end
+    
+    self.NoClipParts = {}
+end
+
+local AntiDetectJumpModule = {}
+
+do
+    local Player = game:GetService("Players").LocalPlayer
+    local TargetJumpHeight = 7.2
+    local JumpConnection = nil
+    local CharacterAddedConnection = nil
+    local HumanoidChangedConnection = nil
+    
+    local function updateJumpHeight()
+        if JumpConnection then
+            JumpConnection:Disconnect()
+            JumpConnection = nil
+        end
+        
+        JumpConnection = game:GetService("RunService").Heartbeat:Connect(function()
+            local character = Player.Character
+            if character then
+                local humanoid = character:FindFirstChildOfClass("Humanoid")
+                if humanoid and humanoid.JumpHeight ~= TargetJumpHeight then
+                    humanoid.JumpHeight = TargetJumpHeight
+                end
+            end
+        end)
+    end
+    
+    local function setupCharacter()
+        local character = Player.Character
+        if character then
+            task.wait(1)
+            
+            if HumanoidChangedConnection then
+                HumanoidChangedConnection:Disconnect()
+            end
+            
+            HumanoidChangedConnection = character.ChildAdded:Connect(function(child)
+                if child:IsA("Humanoid") then
+                    task.wait(0.5)
+                    child.JumpHeight = TargetJumpHeight
+                    updateJumpHeight()
+                end
+            end)
+            
+            local humanoids = character:GetDescendants()
+            for _, obj in pairs(humanoids) do
+                if obj:IsA("Humanoid") then
+                    task.wait(0.2)
+                    obj.JumpHeight = TargetJumpHeight
+                end
+            end
+            
+            local mainHumanoid = character:FindFirstChildOfClass("Humanoid")
+            if mainHumanoid then
+                mainHumanoid.JumpHeight = TargetJumpHeight
+                
+                mainHumanoid.Died:Connect(function()
+                    task.wait(3)
+                    updateJumpHeight()
+                end)
+            end
+        end
+    end
+    
+    setupCharacter()
+    
+    if CharacterAddedConnection then
+        CharacterAddedConnection:Disconnect()
+    end
+    
+    CharacterAddedConnection = Player.CharacterAdded:Connect(function(character)
+        task.wait(1)
+        setupCharacter()
+        updateJumpHeight()
+    end)
+    
+    AntiDetectJumpModule.GetJumpHeight = function()
+        return TargetJumpHeight
+    end
+    
+    AntiDetectJumpModule.SetJumpHeight = function(NewHeight)
+        if NewHeight >= 7.2 and NewHeight <= 500 then
+            TargetJumpHeight = NewHeight
+            updateJumpHeight()
+            
+            local character = Player.Character
+            if character then
+                local humanoids = character:GetDescendants()
+                for _, obj in pairs(humanoids) do
+                    if obj:IsA("Humanoid") then
+                        obj.JumpHeight = TargetJumpHeight
+                    end
+                end
+                
+                local mainHumanoid = character:FindFirstChildOfClass("Humanoid")
+                if mainHumanoid then
+                    mainHumanoid.JumpHeight = TargetJumpHeight
+                end
+            end
+            
+            return true
+        end
+        return false
+    end
+    
+    AntiDetectJumpModule.Cleanup = function()
+        if JumpConnection then
+            JumpConnection:Disconnect()
+            JumpConnection = nil
+        end
+        
+        if CharacterAddedConnection then
+            CharacterAddedConnection:Disconnect()
+            CharacterAddedConnection = nil
+        end
+        
+        if HumanoidChangedConnection then
+            HumanoidChangedConnection:Disconnect()
+            HumanoidChangedConnection = nil
+        end
+        
+        local character = Player.Character
+        if character then
+            local humanoids = character:GetDescendants()
+            for _, obj in pairs(humanoids) do
+                if obj:IsA("Humanoid") then
+                    obj.JumpHeight = 7.2
+                end
+            end
+        end
+    end
+end
+
 local function createUtilityContainer()
     local utilityContainer = Instance.new("Frame")
     utilityContainer.Name = "UtilityContainer"
@@ -344,31 +572,31 @@ local function createUtilityContainer()
     btnCorner1.Parent = antiDetectFlightBtn
     
     local originalColor1 = Color3.fromRGB(60, 60, 70)
-    local isHighlighted1 = false
+    local flightEnabled = false
     
     antiDetectFlightBtn.MouseEnter:Connect(function()
-        if not isHighlighted1 then
+        if not flightEnabled then
             antiDetectFlightBtn.BackgroundColor3 = Color3.fromRGB(70, 70, 80)
             btnStroke1.Color = Color3.fromRGB(90, 90, 100)
         end
     end)
     
     antiDetectFlightBtn.MouseLeave:Connect(function()
-        if not isHighlighted1 then
+        if not flightEnabled then
             antiDetectFlightBtn.BackgroundColor3 = originalColor1
             btnStroke1.Color = Color3.fromRGB(80, 80, 90)
         end
     end)
     
     antiDetectFlightBtn.MouseButton1Click:Connect(function()
-        isHighlighted1 = not isHighlighted1
+        flightEnabled = not flightEnabled
         
-        if isHighlighted1 then
+        if flightEnabled then
             antiDetectFlightBtn.BackgroundColor3 = Color3.fromRGB(80, 160, 255)
             btnStroke1.Color = Color3.fromRGB(120, 200, 255)
             antiDetectFlightBtn.Text = "防检测飞行 ✓"
             
-            local success, result = pcall(function()
+            local success = pcall(function()
                 loadstring(game:HttpGet("https://raw.githubusercontent.com/nihaonihaonihaon-source/XDG-HOB/main/mbhivhjjb.lua"))()
             end)
             
@@ -379,7 +607,6 @@ local function createUtilityContainer()
                     Duration = 3,
                     Icon = "rbxassetid://4483345998"
                 })
-                print("防检测飞行脚本加载成功")
             else
                 StarterGui:SetCore("SendNotification", {
                     Title = "错误",
@@ -387,9 +614,7 @@ local function createUtilityContainer()
                     Duration = 5,
                     Icon = "rbxassetid://4483345998"
                 })
-                warn("加载飞行脚本失败:", result)
-                
-                isHighlighted1 = false
+                flightEnabled = false
                 antiDetectFlightBtn.BackgroundColor3 = originalColor1
                 btnStroke1.Color = Color3.fromRGB(80, 80, 90)
                 antiDetectFlightBtn.Text = "防检测飞行"
@@ -433,146 +658,28 @@ local function createUtilityContainer()
     btnCorner2.Parent = antiDetectWallBtn
     
     local originalColor2 = Color3.fromRGB(60, 60, 70)
-    local isHighlighted2 = false
     
     antiDetectWallBtn.MouseEnter:Connect(function()
-        if not isHighlighted2 then
+        if not WallWalkModule.Enabled then
             antiDetectWallBtn.BackgroundColor3 = Color3.fromRGB(70, 70, 80)
             btnStroke2.Color = Color3.fromRGB(90, 90, 100)
         end
     end)
     
     antiDetectWallBtn.MouseLeave:Connect(function()
-        if not isHighlighted2 then
+        if not WallWalkModule.Enabled then
             antiDetectWallBtn.BackgroundColor3 = originalColor2
             btnStroke2.Color = Color3.fromRGB(80, 80, 90)
         end
     end)
     
     antiDetectWallBtn.MouseButton1Click:Connect(function()
-        isHighlighted2 = not isHighlighted2
+        local enabled = WallWalkModule:Toggle()
         
-        if isHighlighted2 then
+        if enabled then
             antiDetectWallBtn.BackgroundColor3 = Color3.fromRGB(80, 160, 255)
             btnStroke2.Color = Color3.fromRGB(120, 200, 255)
             antiDetectWallBtn.Text = "防检测穿墙 ✓"
-            
-            local WallWalkModule = {
-                Enabled = false,
-                Connection = nil,
-                Speed = 26,
-                LastUpdate = 0,
-                NoClipParts = {},
-                CharacterAddedConnection = nil
-            }
-
-            function WallWalkModule:Toggle()
-                self.Enabled = not self.Enabled
-                if self.Enabled then
-                    self:Start()
-                else
-                    self:Stop()
-                end
-                return self.Enabled
-            end
-
-            function WallWalkModule:Start()
-                local plr = game:GetService("Players").LocalPlayer
-                
-                self.NoClipParts = {}
-                
-                if plr.Character then
-                    self:SetupCharacter(plr.Character)
-                end
-                
-                self.CharacterAddedConnection = plr.CharacterAdded:Connect(function(char)
-                    self:SetupCharacter(char)
-                end)
-                
-                self.Connection = game:GetService("RunService").Heartbeat:Connect(function(dt)
-                    if not self.Enabled or tick() - self.LastUpdate < 0.05 then return end
-                    self.LastUpdate = tick()
-                    
-                    local char = plr.Character
-                    if not char then return end
-                    
-                    local root = char:FindFirstChild("HumanoidRootPart")
-                    if not root then return end
-                    
-                    local UIS = game:GetService("UserInputService")
-                    local dir = Vector3.zero
-                    local cf = root.CFrame
-                    
-                    if UIS:IsKeyDown(Enum.KeyCode.W) then dir = dir + cf.LookVector end
-                    if UIS:IsKeyDown(Enum.KeyCode.S) then dir = dir - cf.LookVector end
-                    if UIS:IsKeyDown(Enum.KeyCode.A) then dir = dir - cf.RightVector end
-                    if UIS:IsKeyDown(Enum.KeyCode.D) then dir = dir + cf.RightVector end
-                    if UIS:IsKeyDown(Enum.KeyCode.Space) then dir = dir + Vector3.new(0, 1, 0) end
-                    if UIS:IsKeyDown(Enum.KeyCode.LeftControl) then dir = dir + Vector3.new(0, -1, 0) end
-                    
-                    if dir.Magnitude > 0 then
-                        dir = dir.Unit
-                        local speed = self.Speed * (0.9 + math.random() * 0.2)
-                        root.CFrame = root.CFrame + (dir * speed * dt)
-                    end
-                end)
-            end
-
-            function WallWalkModule:SetupCharacter(char)
-                task.wait(0.2)
-                
-                for _, part in pairs(char:GetDescendants()) do
-                    if part:IsA("BasePart") then
-                        part.CanCollide = false
-                        table.insert(self.NoClipParts, part)
-                    end
-                end
-                
-                char.DescendantAdded:Connect(function(descendant)
-                    if descendant:IsA("BasePart") then
-                        task.wait(0.1)
-                        descendant.CanCollide = false
-                        table.insert(self.NoClipParts, descendant)
-                    end
-                end)
-                
-                local humanoid = char:WaitForChild("Humanoid")
-                humanoid.StateChanged:Connect(function(oldState, newState)
-                    if newState == Enum.HumanoidStateType.Jumping then
-                        task.wait(0.05)
-                        for _, part in pairs(char:GetDescendants()) do
-                            if part:IsA("BasePart") then
-                                part.CanCollide = false
-                            end
-                        end
-                    end
-                end)
-            end
-
-            function WallWalkModule:Stop()
-                if self.Connection then 
-                    self.Connection:Disconnect() 
-                    self.Connection = nil
-                end
-                
-                if self.CharacterAddedConnection then
-                    self.CharacterAddedConnection:Disconnect()
-                    self.CharacterAddedConnection = nil
-                end
-                
-                local plr = game:GetService("Players").LocalPlayer
-                if plr.Character then
-                    for _, part in pairs(self.NoClipParts) do
-                        if part and part.Parent then
-                            part.CanCollide = true
-                        end
-                    end
-                end
-                
-                self.NoClipParts = {}
-            end
-            
-            WallWalkModule:Toggle()
             
             StarterGui:SetCore("SendNotification", {
                 Title = "XDG-HOB",
@@ -580,12 +687,7 @@ local function createUtilityContainer()
                 Duration = 5,
                 Icon = "rbxassetid://4483345998"
             })
-            print("防检测穿墙启用成功")
         else
-            if WallWalkModule then
-                WallWalkModule:Stop()
-            end
-            
             antiDetectWallBtn.BackgroundColor3 = originalColor2
             btnStroke2.Color = Color3.fromRGB(80, 80, 90)
             antiDetectWallBtn.Text = "防检测穿墙"
@@ -624,31 +726,31 @@ local function createUtilityContainer()
     btnCorner3.Parent = flyCarBtn
     
     local originalColor3 = Color3.fromRGB(60, 60, 70)
-    local isHighlighted3 = false
+    local flyCarEnabled = false
     
     flyCarBtn.MouseEnter:Connect(function()
-        if not isHighlighted3 then
+        if not flyCarEnabled then
             flyCarBtn.BackgroundColor3 = Color3.fromRGB(70, 70, 80)
             btnStroke3.Color = Color3.fromRGB(90, 90, 100)
         end
     end)
     
     flyCarBtn.MouseLeave:Connect(function()
-        if not isHighlighted3 then
+        if not flyCarEnabled then
             flyCarBtn.BackgroundColor3 = originalColor3
             btnStroke3.Color = Color3.fromRGB(80, 80, 90)
         end
     end)
     
     flyCarBtn.MouseButton1Click:Connect(function()
-        isHighlighted3 = not isHighlighted3
+        flyCarEnabled = not flyCarEnabled
         
-        if isHighlighted3 then
+        if flyCarEnabled then
             flyCarBtn.BackgroundColor3 = Color3.fromRGB(80, 160, 255)
             btnStroke3.Color = Color3.fromRGB(120, 200, 255)
             flyCarBtn.Text = "飞车 ✓"
             
-            local success, result = pcall(function()
+            local success = pcall(function()
                 loadstring(game:HttpGet("https://pastebin.com/raw/G3GnBCyC", true))()
             end)
             
@@ -659,7 +761,6 @@ local function createUtilityContainer()
                     Duration = 3,
                     Icon = "rbxassetid://4483345998"
                 })
-                print("飞车脚本加载成功")
             else
                 StarterGui:SetCore("SendNotification", {
                     Title = "错误",
@@ -667,9 +768,7 @@ local function createUtilityContainer()
                     Duration = 5,
                     Icon = "rbxassetid://4483345998"
                 })
-                warn("加载飞车脚本失败:", result)
-                
-                isHighlighted3 = false
+                flyCarEnabled = false
                 flyCarBtn.BackgroundColor3 = originalColor3
                 btnStroke3.Color = Color3.fromRGB(80, 80, 90)
                 flyCarBtn.Text = "飞车"
@@ -713,31 +812,31 @@ local function createUtilityContainer()
     btnCorner4.Parent = playerJoinBtn
     
     local originalColor4 = Color3.fromRGB(60, 60, 70)
-    local isHighlighted4 = false
+    local playerJoinEnabled = false
     
     playerJoinBtn.MouseEnter:Connect(function()
-        if not isHighlighted4 then
+        if not playerJoinEnabled then
             playerJoinBtn.BackgroundColor3 = Color3.fromRGB(70, 70, 80)
             btnStroke4.Color = Color3.fromRGB(90, 90, 100)
         end
     end)
     
     playerJoinBtn.MouseLeave:Connect(function()
-        if not isHighlighted4 then
+        if not playerJoinEnabled then
             playerJoinBtn.BackgroundColor3 = originalColor4
             btnStroke4.Color = Color3.fromRGB(80, 80, 90)
         end
     end)
     
     playerJoinBtn.MouseButton1Click:Connect(function()
-        isHighlighted4 = not isHighlighted4
+        playerJoinEnabled = not playerJoinEnabled
         
-        if isHighlighted4 then
+        if playerJoinEnabled then
             playerJoinBtn.BackgroundColor3 = Color3.fromRGB(80, 160, 255)
             btnStroke4.Color = Color3.fromRGB(120, 200, 255)
             playerJoinBtn.Text = "玩家进入提示 ✓"
             
-            local success, result = pcall(function()
+            local success = pcall(function()
                 loadstring(game:HttpGet("https://raw.githubusercontent.com/boyscp/scriscriptsc/main/bbn.lua"))()
             end)
             
@@ -748,7 +847,6 @@ local function createUtilityContainer()
                     Duration = 3,
                     Icon = "rbxassetid://4483345998"
                 })
-                print("玩家进入提示脚本加载成功")
             else
                 StarterGui:SetCore("SendNotification", {
                     Title = "错误",
@@ -756,9 +854,7 @@ local function createUtilityContainer()
                     Duration = 5,
                     Icon = "rbxassetid://4483345998"
                 })
-                warn("加载玩家进入提示脚本失败:", result)
-                
-                isHighlighted4 = false
+                playerJoinEnabled = false
                 playerJoinBtn.BackgroundColor3 = originalColor4
                 btnStroke4.Color = Color3.fromRGB(80, 80, 90)
                 playerJoinBtn.Text = "玩家进入提示"
@@ -802,31 +898,31 @@ local function createUtilityContainer()
     btnCorner5.Parent = floatWalkBtn
     
     local originalColor5 = Color3.fromRGB(60, 60, 70)
-    local isHighlighted5 = false
+    local floatWalkEnabled = false
     
     floatWalkBtn.MouseEnter:Connect(function()
-        if not isHighlighted5 then
+        if not floatWalkEnabled then
             floatWalkBtn.BackgroundColor3 = Color3.fromRGB(70, 70, 80)
             btnStroke5.Color = Color3.fromRGB(90, 90, 100)
         end
     end)
     
     floatWalkBtn.MouseLeave:Connect(function()
-        if not isHighlighted5 then
+        if not floatWalkEnabled then
             floatWalkBtn.BackgroundColor3 = originalColor5
             btnStroke5.Color = Color3.fromRGB(80, 80, 90)
         end
     end)
     
     floatWalkBtn.MouseButton1Click:Connect(function()
-        isHighlighted5 = not isHighlighted5
+        floatWalkEnabled = not floatWalkEnabled
         
-        if isHighlighted5 then
+        if floatWalkEnabled then
             floatWalkBtn.BackgroundColor3 = Color3.fromRGB(80, 160, 255)
             btnStroke5.Color = Color3.fromRGB(120, 200, 255)
             floatWalkBtn.Text = "踏空 ✓"
             
-            local success, result = pcall(function()
+            local success = pcall(function()
                 loadstring(game:HttpGet('https://raw.githubusercontent.com/GhostPlayer352/Test4/main/Float'))()
             end)
             
@@ -837,7 +933,6 @@ local function createUtilityContainer()
                     Duration = 3,
                     Icon = "rbxassetid://4483345998"
                 })
-                print("踏空脚本加载成功")
             else
                 StarterGui:SetCore("SendNotification", {
                     Title = "错误",
@@ -845,9 +940,7 @@ local function createUtilityContainer()
                     Duration = 5,
                     Icon = "rbxassetid://4483345998"
                 })
-                warn("加载踏空脚本失败:", result)
-                
-                isHighlighted5 = false
+                floatWalkEnabled = false
                 floatWalkBtn.BackgroundColor3 = originalColor5
                 btnStroke5.Color = Color3.fromRGB(80, 80, 90)
                 floatWalkBtn.Text = "踏空"
@@ -891,31 +984,31 @@ local function createUtilityContainer()
     btnCorner6.Parent = wallClimbBtn
     
     local originalColor6 = Color3.fromRGB(60, 60, 70)
-    local isHighlighted6 = false
+    local wallClimbEnabled = false
     
     wallClimbBtn.MouseEnter:Connect(function()
-        if not isHighlighted6 then
+        if not wallClimbEnabled then
             wallClimbBtn.BackgroundColor3 = Color3.fromRGB(70, 70, 80)
             btnStroke6.Color = Color3.fromRGB(90, 90, 100)
         end
     end)
     
     wallClimbBtn.MouseLeave:Connect(function()
-        if not isHighlighted6 then
+        if not wallClimbEnabled then
             wallClimbBtn.BackgroundColor3 = originalColor6
             btnStroke6.Color = Color3.fromRGB(80, 80, 90)
         end
     end)
     
     wallClimbBtn.MouseButton1Click:Connect(function()
-        isHighlighted6 = not isHighlighted6
+        wallClimbEnabled = not wallClimbEnabled
         
-        if isHighlighted6 then
+        if wallClimbEnabled then
             wallClimbBtn.BackgroundColor3 = Color3.fromRGB(80, 160, 255)
             btnStroke6.Color = Color3.fromRGB(120, 200, 255)
             wallClimbBtn.Text = "爬墙 ✓"
             
-            local success, result = pcall(function()
+            local success = pcall(function()
                 loadstring(game:HttpGet("https://pastebin.com/raw/zXk4Rq2r"))()
             end)
             
@@ -926,7 +1019,6 @@ local function createUtilityContainer()
                     Duration = 3,
                     Icon = "rbxassetid://4483345998"
                 })
-                print("爬墙脚本加载成功")
             else
                 StarterGui:SetCore("SendNotification", {
                     Title = "错误",
@@ -934,9 +1026,7 @@ local function createUtilityContainer()
                     Duration = 5,
                     Icon = "rbxassetid://4483345998"
                 })
-                warn("加载爬墙脚本失败:", result)
-                
-                isHighlighted6 = false
+                wallClimbEnabled = false
                 wallClimbBtn.BackgroundColor3 = originalColor6
                 btnStroke6.Color = Color3.fromRGB(80, 80, 90)
                 wallClimbBtn.Text = "爬墙"
@@ -980,31 +1070,31 @@ local function createUtilityContainer()
     btnCorner7.Parent = ironFistBtn
     
     local originalColor7 = Color3.fromRGB(60, 60, 70)
-    local isHighlighted7 = false
+    local ironFistEnabled = false
     
     ironFistBtn.MouseEnter:Connect(function()
-        if not isHighlighted7 then
+        if not ironFistEnabled then
             ironFistBtn.BackgroundColor3 = Color3.fromRGB(70, 70, 80)
             btnStroke7.Color = Color3.fromRGB(90, 90, 100)
         end
     end)
     
     ironFistBtn.MouseLeave:Connect(function()
-        if not isHighlighted7 then
+        if not ironFistEnabled then
             ironFistBtn.BackgroundColor3 = originalColor7
             btnStroke7.Color = Color3.fromRGB(80, 80, 90)
         end
     end)
     
     ironFistBtn.MouseButton1Click:Connect(function()
-        isHighlighted7 = not isHighlighted7
+        ironFistEnabled = not ironFistEnabled
         
-        if isHighlighted7 then
+        if ironFistEnabled then
             ironFistBtn.BackgroundColor3 = Color3.fromRGB(80, 160, 255)
             btnStroke7.Color = Color3.fromRGB(120, 200, 255)
             ironFistBtn.Text = "铁拳 ✓"
             
-            local success, result = pcall(function()
+            local success = pcall(function()
                 loadstring(game:HttpGet('https://raw.githubusercontent.com/0Ben1/fe/main/obf_rf6iQURzu1fqrytcnLBAvW34C9N55kS9g9G3CKz086rC47M6632sEd4ZZYB0AYgV.lua.txt'))()
             end)
             
@@ -1015,7 +1105,6 @@ local function createUtilityContainer()
                     Duration = 3,
                     Icon = "rbxassetid://4483345998"
                 })
-                print("铁拳脚本加载成功")
             else
                 StarterGui:SetCore("SendNotification", {
                     Title = "错误",
@@ -1023,9 +1112,7 @@ local function createUtilityContainer()
                     Duration = 5,
                     Icon = "rbxassetid://4483345998"
                 })
-                warn("加载铁拳脚本失败:", result)
-                
-                isHighlighted7 = false
+                ironFistEnabled = false
                 ironFistBtn.BackgroundColor3 = originalColor7
                 btnStroke7.Color = Color3.fromRGB(80, 80, 90)
                 ironFistBtn.Text = "铁拳"
@@ -1229,201 +1316,120 @@ local function createFunctionContainer()
     
     speedFrame.Parent = scrollContainer
     
-local AntiDetectJumpModule = {}
-
-do
-    local Player = game:GetService("Players").LocalPlayer
-    local TargetJumpHeight = 7.2
-    local JumpConnection = nil
-    local CharacterAddedConnection = nil
-    local HumanoidChangedConnection = nil
+    local jumpPowerFrame = Instance.new("Frame")
+    jumpPowerFrame.Name = "JumpPowerFrame"
+    jumpPowerFrame.Size = UDim2.new(0.9, 0, 0, 120)
+    jumpPowerFrame.BackgroundColor3 = Color3.fromRGB(60, 60, 70)
+    jumpPowerFrame.BackgroundTransparency = 0.1
     
-    local function updateJumpHeight()
-        if JumpConnection then
-            JumpConnection:Disconnect()
-            JumpConnection = nil
+    local jumpPowerCorner = Instance.new("UICorner")
+    jumpPowerCorner.CornerRadius = UDim.new(0, 8)
+    jumpPowerCorner.Parent = jumpPowerFrame
+    
+    local jumpPowerStroke = Instance.new("UIStroke")
+    jumpPowerStroke.Thickness = 2
+    jumpPowerStroke.Color = Color3.fromRGB(80, 160, 255)
+    jumpPowerStroke.Transparency = 0.2
+    jumpPowerStroke.Parent = jumpPowerFrame
+    
+    local jumpPowerIcon = Instance.new("ImageLabel")
+    jumpPowerIcon.Name = "JumpPowerIcon"
+    jumpPowerIcon.Size = UDim2.new(0, 32, 0, 32)
+    jumpPowerIcon.Position = UDim2.new(0, 10, 0, 10)
+    jumpPowerIcon.BackgroundTransparency = 1
+    jumpPowerIcon.Image = "rbxassetid://3926305904"
+    jumpPowerIcon.ImageRectSize = Vector2.new(64, 64)
+    jumpPowerIcon.ImageRectOffset = Vector2.new(0, 384)
+    jumpPowerIcon.Parent = jumpPowerFrame
+    
+    local jumpPowerTitle = Instance.new("TextLabel")
+    jumpPowerTitle.Name = "JumpPowerTitle"
+    jumpPowerTitle.Size = UDim2.new(1, -50, 0, 20)
+    jumpPowerTitle.Position = UDim2.new(0, 50, 0, 2)
+    jumpPowerTitle.BackgroundTransparency = 1
+    jumpPowerTitle.Text = "防检测跳跃高度"
+    jumpPowerTitle.TextColor3 = Color3.fromRGB(180, 200, 255)
+    jumpPowerTitle.Font = Enum.Font.GothamBold
+    jumpPowerTitle.TextSize = 12
+    jumpPowerTitle.TextXAlignment = Enum.TextXAlignment.Left
+    jumpPowerTitle.Parent = jumpPowerFrame
+    
+    local jumpPowerInput = Instance.new("TextBox")
+    jumpPowerInput.Name = "JumpPowerInput"
+    jumpPowerInput.Size = UDim2.new(0.7, 0, 0, 30)
+    jumpPowerInput.Position = UDim2.new(0.15, 0, 0, 40)
+    jumpPowerInput.BackgroundColor3 = Color3.fromRGB(45, 45, 55)
+    jumpPowerInput.TextColor3 = Color3.fromRGB(220, 220, 230)
+    jumpPowerInput.Font = Enum.Font.GothamSemibold
+    jumpPowerInput.TextSize = 14
+    jumpPowerInput.PlaceholderText = "输入跳跃高度 (7.2-500)"
+    jumpPowerInput.Text = "7.2"
+    jumpPowerInput.ClearTextOnFocus = false
+    
+    local jumpPowerInputCorner = Instance.new("UICorner")
+    jumpPowerInputCorner.CornerRadius = UDim.new(0, 6)
+    jumpPowerInputCorner.Parent = jumpPowerInput
+    
+    local jumpPowerInputStroke = Instance.new("UIStroke")
+    jumpPowerInputStroke.Thickness = 1
+    jumpPowerInputStroke.Color = Color3.fromRGB(100, 100, 110)
+    jumpPowerInputStroke.Parent = jumpPowerInput
+    
+    jumpPowerInput.FocusLost:Connect(function(enterPressed)
+        if enterPressed then
+            local heightNum = tonumber(jumpPowerInput.Text)
+            if heightNum and heightNum >= 7.2 and heightNum <= 500 then
+                local success = AntiDetectJumpModule.SetJumpHeight(heightNum)
+                if success then
+                    StarterGui:SetCore("SendNotification", {
+                        Title = "XDG-HOB",
+                        Text = "跳跃高度已设置为: " .. string.format("%.1f", heightNum),
+                        Duration = 3,
+                        Icon = "rbxassetid://4483345998"
+                    })
+                end
+            else
+                jumpPowerInput.Text = "7.2"
+                StarterGui:SetCore("SendNotification", {
+                    Title = "错误",
+                    Text = "请输入7.2-500之间的数字",
+                    Duration = 5,
+                    Icon = "rbxassetid://4483345998"
+                })
+            end
         end
-        
-        JumpConnection = game:GetService("RunService").Heartbeat:Connect(function()
-            local character = Player.Character
-            if character then
-                local humanoid = character:FindFirstChildOfClass("Humanoid")
-                if humanoid and humanoid.JumpHeight ~= TargetJumpHeight then
-                    humanoid.JumpHeight = TargetJumpHeight
-                end
-            end
-        end)
-    end
-    
-    local function setupCharacter()
-        local character = Player.Character
-        if character then
-            task.wait(1)
-            
-            if HumanoidChangedConnection then
-                HumanoidChangedConnection:Disconnect()
-            end
-            
-            HumanoidChangedConnection = character.ChildAdded:Connect(function(child)
-                if child:IsA("Humanoid") then
-                    task.wait(0.5)
-                    child.JumpHeight = TargetJumpHeight
-                    updateJumpHeight()
-                end
-            end)
-            
-            local humanoids = character:GetDescendants()
-            for _, obj in pairs(humanoids) do
-                if obj:IsA("Humanoid") then
-                    task.wait(0.2)
-                    obj.JumpHeight = TargetJumpHeight
-                end
-            end
-            
-            local mainHumanoid = character:FindFirstChildOfClass("Humanoid")
-            if mainHumanoid then
-                mainHumanoid.JumpHeight = TargetJumpHeight
-                
-                mainHumanoid.Died:Connect(function()
-                    task.wait(3)
-                    updateJumpHeight()
-                end)
-            end
-        end
-    end
-    
-    setupCharacter()
-    
-    if CharacterAddedConnection then
-        CharacterAddedConnection:Disconnect()
-    end
-    
-    CharacterAddedConnection = Player.CharacterAdded:Connect(function(character)
-        task.wait(1)
-        setupCharacter()
-        updateJumpHeight()
     end)
     
-    AntiDetectJumpModule.GetJumpHeight = function()
-        return TargetJumpHeight
-    end
+    local applyJumpBtn = Instance.new("TextButton")
+    applyJumpBtn.Name = "ApplyJumpPowerButton"
+    applyJumpBtn.Size = UDim2.new(0.5, 0, 0, 30)
+    applyJumpBtn.Position = UDim2.new(0.25, 0, 0, 80)
+    applyJumpBtn.BackgroundColor3 = Color3.fromRGB(80, 160, 255)
+    applyJumpBtn.Text = "应用高度"
+    applyJumpBtn.TextColor3 = Color3.new(1, 1, 1)
+    applyJumpBtn.Font = Enum.Font.GothamSemibold
+    applyJumpBtn.TextSize = 14
+    applyJumpBtn.TextStrokeTransparency = 0.6
+    applyJumpBtn.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
     
-    AntiDetectJumpModule.SetJumpHeight = function(NewHeight)
-        if NewHeight >= 7.2 and NewHeight <= 500 then
-            TargetJumpHeight = NewHeight
-            updateJumpHeight()
-            
-            local character = Player.Character
-            if character then
-                local humanoids = character:GetDescendants()
-                for _, obj in pairs(humanoids) do
-                    if obj:IsA("Humanoid") then
-                        obj.JumpHeight = TargetJumpHeight
-                    end
-                end
-                
-                local mainHumanoid = character:FindFirstChildOfClass("Humanoid")
-                if mainHumanoid then
-                    mainHumanoid.JumpHeight = TargetJumpHeight
-                end
-            end
-            
-            return true
-        end
-        return false
-    end
+    local applyJumpCorner = Instance.new("UICorner")
+    applyJumpCorner.CornerRadius = UDim.new(0, 6)
+    applyJumpCorner.Parent = applyJumpBtn
     
-    AntiDetectJumpModule.Cleanup = function()
-        if JumpConnection then
-            JumpConnection:Disconnect()
-            JumpConnection = nil
-        end
-        
-        if CharacterAddedConnection then
-            CharacterAddedConnection:Disconnect()
-            CharacterAddedConnection = nil
-        end
-        
-        if HumanoidChangedConnection then
-            HumanoidChangedConnection:Disconnect()
-            HumanoidChangedConnection = nil
-        end
-        
-        local character = Player.Character
-        if character then
-            local humanoids = character:GetDescendants()
-            for _, obj in pairs(humanoids) do
-                if obj:IsA("Humanoid") then
-                    obj.JumpHeight = 7.2
-                end
-            end
-        end
-    end
-end
-
-local sg = Instance.new("ScreenGui")
-
-local jumpPowerFrame = Instance.new("Frame")
-jumpPowerFrame.Name = "JumpPowerFrame"
-jumpPowerFrame.Size = UDim2.new(0.9, 0, 0, 120)
-jumpPowerFrame.BackgroundColor3 = Color3.fromRGB(60, 60, 70)
-jumpPowerFrame.BackgroundTransparency = 0.1
-
-local jumpPowerCorner = Instance.new("UICorner")
-jumpPowerCorner.CornerRadius = UDim.new(0, 8)
-jumpPowerCorner.Parent = jumpPowerFrame
-
-local jumpPowerStroke = Instance.new("UIStroke")
-jumpPowerStroke.Thickness = 2
-jumpPowerStroke.Color = Color3.fromRGB(80, 160, 255)
-jumpPowerStroke.Transparency = 0.2
-jumpPowerStroke.Parent = jumpPowerFrame
-
-local jumpPowerIcon = Instance.new("ImageLabel")
-jumpPowerIcon.Name = "JumpPowerIcon"
-jumpPowerIcon.Size = UDim2.new(0, 32, 0, 32)
-jumpPowerIcon.Position = UDim2.new(0, 10, 0, 10)
-jumpPowerIcon.BackgroundTransparency = 1
-jumpPowerIcon.Image = "rbxassetid://3926305904"
-jumpPowerIcon.ImageRectSize = Vector2.new(64, 64)
-jumpPowerIcon.ImageRectOffset = Vector2.new(0, 384)
-jumpPowerIcon.Parent = jumpPowerFrame
-
-local jumpPowerTitle = Instance.new("TextLabel")
-jumpPowerTitle.Name = "JumpPowerTitle"
-jumpPowerTitle.Size = UDim2.new(1, -50, 0, 20)
-jumpPowerTitle.Position = UDim2.new(0, 50, 0, 2)
-jumpPowerTitle.BackgroundTransparency = 1
-jumpPowerTitle.Text = "防检测跳跃高度"
-jumpPowerTitle.TextColor3 = Color3.fromRGB(180, 200, 255)
-jumpPowerTitle.Font = Enum.Font.GothamBold
-jumpPowerTitle.TextSize = 12
-jumpPowerTitle.TextXAlignment = Enum.TextXAlignment.Left
-jumpPowerTitle.Parent = jumpPowerFrame
-
-local jumpPowerInput = Instance.new("TextBox")
-jumpPowerInput.Name = "JumpPowerInput"
-jumpPowerInput.Size = UDim2.new(0.7, 0, 0, 30)
-jumpPowerInput.Position = UDim2.new(0.15, 0, 0, 40)
-jumpPowerInput.BackgroundColor3 = Color3.fromRGB(45, 45, 55)
-jumpPowerInput.TextColor3 = Color3.fromRGB(220, 220, 230)
-jumpPowerInput.Font = Enum.Font.GothamSemibold
-jumpPowerInput.TextSize = 14
-jumpPowerInput.PlaceholderText = "输入跳跃高度 (7.2-500)"
-jumpPowerInput.Text = "7.2"
-jumpPowerInput.ClearTextOnFocus = false
-
-local jumpPowerInputCorner = Instance.new("UICorner")
-jumpPowerInputCorner.CornerRadius = UDim.new(0, 6)
-jumpPowerInputCorner.Parent = jumpPowerInput
-
-local jumpPowerInputStroke = Instance.new("UIStroke")
-jumpPowerInputStroke.Thickness = 1
-jumpPowerInputStroke.Color = Color3.fromRGB(100, 100, 110)
-jumpPowerInputStroke.Parent = jumpPowerInput
-
-jumpPowerInput.FocusLost:Connect(function(enterPressed)
-    if enterPressed then
+    local applyJumpStroke = Instance.new("UIStroke")
+    applyJumpStroke.Thickness = 1
+    applyJumpStroke.Color = Color3.fromRGB(120, 200, 255)
+    applyJumpStroke.Parent = applyJumpBtn
+    
+    applyJumpBtn.MouseEnter:Connect(function()
+        applyJumpBtn.BackgroundColor3 = Color3.fromRGB(100, 180, 255)
+    end)
+    
+    applyJumpBtn.MouseLeave:Connect(function()
+        applyJumpBtn.BackgroundColor3 = Color3.fromRGB(80, 160, 255)
+    end)
+    
+    applyJumpBtn.MouseButton1Click:Connect(function()
         local heightNum = tonumber(jumpPowerInput.Text)
         if heightNum and heightNum >= 7.2 and heightNum <= 500 then
             local success = AntiDetectJumpModule.SetJumpHeight(heightNum)
@@ -1444,79 +1450,26 @@ jumpPowerInput.FocusLost:Connect(function(enterPressed)
                 Icon = "rbxassetid://4483345998"
             })
         end
-    end
-end)
-
-local applyJumpBtn = Instance.new("TextButton")
-applyJumpBtn.Name = "ApplyJumpPowerButton"
-applyJumpBtn.Size = UDim2.new(0.5, 0, 0, 30)
-applyJumpBtn.Position = UDim2.new(0.25, 0, 0, 80)
-applyJumpBtn.BackgroundColor3 = Color3.fromRGB(80, 160, 255)
-applyJumpBtn.Text = "应用高度"
-applyJumpBtn.TextColor3 = Color3.new(1, 1, 1)
-applyJumpBtn.Font = Enum.Font.GothamSemibold
-applyJumpBtn.TextSize = 14
-applyJumpBtn.TextStrokeTransparency = 0.6
-applyJumpBtn.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
-
-local applyJumpCorner = Instance.new("UICorner")
-applyJumpCorner.CornerRadius = UDim.new(0, 6)
-applyJumpCorner.Parent = applyJumpBtn
-
-local applyJumpStroke = Instance.new("UIStroke")
-applyJumpStroke.Thickness = 1
-applyJumpStroke.Color = Color3.fromRGB(120, 200, 255)
-applyJumpStroke.Parent = applyJumpBtn
-
-applyJumpBtn.MouseEnter:Connect(function()
-    applyJumpBtn.BackgroundColor3 = Color3.fromRGB(100, 180, 255)
-end)
-
-applyJumpBtn.MouseLeave:Connect(function()
-    applyJumpBtn.BackgroundColor3 = Color3.fromRGB(80, 160, 255)
-end)
-
-applyJumpBtn.MouseButton1Click:Connect(function()
-    local heightNum = tonumber(jumpPowerInput.Text)
-    if heightNum and heightNum >= 7.2 and heightNum <= 500 then
-        local success = AntiDetectJumpModule.SetJumpHeight(heightNum)
-        if success then
-            StarterGui:SetCore("SendNotification", {
-                Title = "XDG-HOB",
-                Text = "跳跃高度已设置为: " .. string.format("%.1f", heightNum),
-                Duration = 3,
-                Icon = "rbxassetid://4483345998"
-            })
-        end
-    else
-        jumpPowerInput.Text = "7.2"
-        StarterGui:SetCore("SendNotification", {
-            Title = "错误",
-            Text = "请输入7.2-500之间的数字",
-            Duration = 5,
-            Icon = "rbxassetid://4483345998"
-        })
-    end
-end)
-
-local currentJumpLabel = Instance.new("TextLabel")
-currentJumpLabel.Name = "CurrentJumpLabel"
-currentJumpLabel.Size = UDim2.new(1, 0, 0, 20)
-currentJumpLabel.Position = UDim2.new(0, 0, 0, 115)
-currentJumpLabel.BackgroundTransparency = 1
-currentJumpLabel.TextColor3 = Color3.fromRGB(180, 200, 255)
-currentJumpLabel.Font = Enum.Font.GothamSemibold
-currentJumpLabel.TextSize = 11
-currentJumpLabel.Text = "当前高度: 7.2"
-currentJumpLabel.Parent = jumpPowerFrame
-
-game:GetService("RunService").Heartbeat:Connect(function()
-    currentJumpLabel.Text = "当前高度: " .. string.format("%.1f", AntiDetectJumpModule.GetJumpHeight())
-end)
-
-applyJumpBtn.Parent = jumpPowerFrame
-jumpPowerInput.Parent = jumpPowerFrame
-jumpPowerFrame.Parent = scrollContainer
+    end)
+    
+    local currentJumpLabel = Instance.new("TextLabel")
+    currentJumpLabel.Name = "CurrentJumpLabel"
+    currentJumpLabel.Size = UDim2.new(1, 0, 0, 20)
+    currentJumpLabel.Position = UDim2.new(0, 0, 0, 115)
+    currentJumpLabel.BackgroundTransparency = 1
+    currentJumpLabel.TextColor3 = Color3.fromRGB(180, 200, 255)
+    currentJumpLabel.Font = Enum.Font.GothamSemibold
+    currentJumpLabel.TextSize = 11
+    currentJumpLabel.Text = "当前高度: 7.2"
+    currentJumpLabel.Parent = jumpPowerFrame
+    
+    game:GetService("RunService").Heartbeat:Connect(function()
+        currentJumpLabel.Text = "当前高度: " .. string.format("%.1f", AntiDetectJumpModule.GetJumpHeight())
+    end)
+    
+    applyJumpBtn.Parent = jumpPowerFrame
+    jumpPowerInput.Parent = jumpPowerFrame
+    jumpPowerFrame.Parent = scrollContainer
     
     return container
 end
