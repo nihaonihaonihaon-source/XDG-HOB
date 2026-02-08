@@ -6,6 +6,22 @@ local RunService = game:GetService("RunService")
 
 StarterGui:SetCore("SendNotification", {Title = "XDG-HOB", Text = "欢迎使用XDG-HOB", Duration = 5})
 print("欢迎使用XDG-HOB")
+
+task.spawn(function()
+    task.wait(1)
+    local success = pcall(function()
+        setclipboard("作者QQ361097232")
+    end)
+    if success then
+        StarterGui:SetCore("SendNotification", {
+            Title = "XDG-HOB",
+            Text = "作者QQ已复制到剪贴板: 361097232",
+            Duration = 5,
+            Icon = "rbxassetid://4483345998"
+        })
+    end
+end)
+
 task.wait(0.5)
 
 local function detectExecutor()
@@ -1800,15 +1816,536 @@ local function createOtherScriptsContainer()
     container.Visible = false
     container.Parent = contentFrame
     
-    local label = Instance.new("TextLabel")
-    label.Size = UDim2.new(1, 0, 1, 0)
-    label.Position = UDim2.new(0, 0, 0, 0)
-    label.BackgroundTransparency = 1
-    label.Text = "其他脚本区内容"
-    label.TextColor3 = Color3.fromRGB(200, 200, 210)
-    label.Font = Enum.Font.Gotham
-    label.TextSize = 16
-    label.Parent = container
+    local scrollContainer = Instance.new("ScrollingFrame")
+    scrollContainer.Name = "OtherScriptsScroll"
+    scrollContainer.Size = UDim2.new(1, -20, 1, -20)
+    scrollContainer.Position = UDim2.new(0, 10, 0, 10)
+    scrollContainer.BackgroundTransparency = 1
+    scrollContainer.ScrollBarThickness = 6
+    scrollContainer.ScrollBarImageColor3 = Color3.fromRGB(100, 100, 110)
+    scrollContainer.CanvasSize = UDim2.new(0, 0, 0, 650)
+    scrollContainer.Parent = container
+    
+    local scriptLayout = Instance.new("UIListLayout")
+    scriptLayout.Parent = scrollContainer
+    scriptLayout.Padding = UDim.new(0, 12)
+    scriptLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+    
+    local voidChinese99NightBtn = Instance.new("TextButton")
+    voidChinese99NightBtn.Name = "VoidChinese99Night"
+    voidChinese99NightBtn.Size = UDim2.new(0.9, 0, 0, 40)
+    voidChinese99NightBtn.Text = "虚空汉化99夜"
+    voidChinese99NightBtn.BackgroundColor3 = Color3.fromRGB(60, 60, 70)
+    voidChinese99NightBtn.TextColor3 = Color3.new(1, 1, 1)
+    voidChinese99NightBtn.Font = Enum.Font.GothamSemibold
+    voidChinese99NightBtn.TextSize = 15
+    voidChinese99NightBtn.TextStrokeTransparency = 0.5
+    voidChinese99NightBtn.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
+    voidChinese99NightBtn.AutoButtonColor = false
+    
+    local btnStroke1 = Instance.new("UIStroke")
+    btnStroke1.Thickness = 2
+    btnStroke1.Color = Color3.fromRGB(80, 80, 90)
+    btnStroke1.Transparency = 0.3
+    btnStroke1.Parent = voidChinese99NightBtn
+    
+    local btnCorner1 = Instance.new("UICorner")
+    btnCorner1.CornerRadius = UDim.new(0, 8)
+    btnCorner1.Parent = voidChinese99NightBtn
+    
+    local originalColor1 = Color3.fromRGB(60, 60, 70)
+    local voidChinese99NightEnabled = false
+    
+    voidChinese99NightBtn.MouseEnter:Connect(function()
+        if not voidChinese99NightEnabled then
+            voidChinese99NightBtn.BackgroundColor3 = Color3.fromRGB(70, 70, 80)
+            btnStroke1.Color = Color3.fromRGB(90, 90, 100)
+        end
+    end)
+    
+    voidChinese99NightBtn.MouseLeave:Connect(function()
+        if not voidChinese99NightEnabled then
+            voidChinese99NightBtn.BackgroundColor3 = originalColor1
+            btnStroke1.Color = Color3.fromRGB(80, 80, 90)
+        end
+    end)
+    
+    voidChinese99NightBtn.MouseButton1Click:Connect(function()
+        voidChinese99NightEnabled = not voidChinese99NightEnabled
+        
+        if voidChinese99NightEnabled then
+            voidChinese99NightBtn.BackgroundColor3 = Color3.fromRGB(80, 160, 255)
+            btnStroke1.Color = Color3.fromRGB(120, 200, 255)
+            voidChinese99NightBtn.Text = "虚空汉化99夜 ✓"
+            
+            local success = pcall(function()
+                loadstring(game:HttpGet("https://raw.githubusercontent.com/ke9460394-dot/ugik/refs/heads/main/99%E5%A4%9C%E8%99%9A%E7%A9%BA.txt"))()
+            end)
+            
+            if success then
+                StarterGui:SetCore("SendNotification", {
+                    Title = "XDG-HOB",
+                    Text = "虚空汉化99夜脚本已加载",
+                    Duration = 3,
+                    Icon = "rbxassetid://4483345998"
+                })
+            else
+                StarterGui:SetCore("SendNotification", {
+                    Title = "错误",
+                    Text = "加载虚空汉化99夜脚本失败",
+                    Duration = 5,
+                    Icon = "rbxassetid://4483345998"
+                })
+                voidChinese99NightEnabled = false
+                voidChinese99NightBtn.BackgroundColor3 = originalColor1
+                btnStroke1.Color = Color3.fromRGB(80, 80, 90)
+                voidChinese99NightBtn.Text = "虚空汉化99夜"
+            end
+        else
+            voidChinese99NightBtn.BackgroundColor3 = originalColor1
+            btnStroke1.Color = Color3.fromRGB(80, 80, 90)
+            voidChinese99NightBtn.Text = "虚空汉化99夜"
+            
+            StarterGui:SetCore("SendNotification", {
+                Title = "XDG-HOB",
+                Text = "虚空汉化99夜脚本已卸载",
+                Duration = 3,
+                Icon = "rbxassetid://4483345998"
+            })
+        end
+    end)
+    
+    voidChinese99NightBtn.Parent = scrollContainer
+    
+    local skyboxBugBtn = Instance.new("TextButton")
+    skyboxBugBtn.Name = "SkyboxBug"
+    skyboxBugBtn.Size = UDim2.new(0.9, 0, 0, 40)
+    skyboxBugBtn.Text = "天空盒子bug(只能在特定服务器使用)"
+    skyboxBugBtn.BackgroundColor3 = Color3.fromRGB(60, 60, 70)
+    skyboxBugBtn.TextColor3 = Color3.new(1, 1, 1)
+    skyboxBugBtn.Font = Enum.Font.GothamSemibold
+    skyboxBugBtn.TextSize = 13
+    skyboxBugBtn.TextStrokeTransparency = 0.5
+    skyboxBugBtn.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
+    skyboxBugBtn.AutoButtonColor = false
+    
+    local btnStroke2 = Instance.new("UIStroke")
+    btnStroke2.Thickness = 2
+    btnStroke2.Color = Color3.fromRGB(80, 80, 90)
+    btnStroke2.Transparency = 0.3
+    btnStroke2.Parent = skyboxBugBtn
+    
+    local btnCorner2 = Instance.new("UICorner")
+    btnCorner2.CornerRadius = UDim.new(0, 8)
+    btnCorner2.Parent = skyboxBugBtn
+    
+    local originalColor2 = Color3.fromRGB(60, 60, 70)
+    local skyboxBugEnabled = false
+    
+    skyboxBugBtn.MouseEnter:Connect(function()
+        if not skyboxBugEnabled then
+            skyboxBugBtn.BackgroundColor3 = Color3.fromRGB(70, 70, 80)
+            btnStroke2.Color = Color3.fromRGB(90, 90, 100)
+        end
+    end)
+    
+    skyboxBugBtn.MouseLeave:Connect(function()
+        if not skyboxBugEnabled then
+            skyboxBugBtn.BackgroundColor3 = originalColor2
+            btnStroke2.Color = Color3.fromRGB(80, 80, 90)
+        end
+    end)
+    
+    skyboxBugBtn.MouseButton1Click:Connect(function()
+        skyboxBugEnabled = not skyboxBugEnabled
+        
+        if skyboxBugEnabled then
+            skyboxBugBtn.BackgroundColor3 = Color3.fromRGB(80, 160, 255)
+            btnStroke2.Color = Color3.fromRGB(120, 200, 255)
+            skyboxBugBtn.Text = "天空盒子bug(只能在特定服务器使用) ✓"
+            
+            local success = pcall(function()
+                loadstring(game:HttpGet("https://rawscripts.net/raw/Brookhaven-RP-Skybox-Brookhaven-61921"))()
+            end)
+            
+            if success then
+                StarterGui:SetCore("SendNotification", {
+                    Title = "XDG-HOB",
+                    Text = "天空盒子bug脚本已加载",
+                    Duration = 3,
+                    Icon = "rbxassetid://4483345998"
+                })
+            else
+                StarterGui:SetCore("SendNotification", {
+                    Title = "错误",
+                    Text = "加载天空盒子bug脚本失败",
+                    Duration = 5,
+                    Icon = "rbxassetid://4483345998"
+                })
+                skyboxBugEnabled = false
+                skyboxBugBtn.BackgroundColor3 = originalColor2
+                btnStroke2.Color = Color3.fromRGB(80, 80, 90)
+                skyboxBugBtn.Text = "天空盒子bug(只能在特定服务器使用)"
+            end
+        else
+            skyboxBugBtn.BackgroundColor3 = originalColor2
+            btnStroke2.Color = Color3.fromRGB(80, 80, 90)
+            skyboxBugBtn.Text = "天空盒子bug(只能在特定服务器使用)"
+            
+            StarterGui:SetCore("SendNotification", {
+                Title = "XDG-HOB",
+                Text = "天空盒子bug脚本已卸载",
+                Duration = 3,
+                Icon = "rbxassetid://4483345998"
+            })
+        end
+    end)
+    
+    skyboxBugBtn.Parent = scrollContainer
+    
+    local stealBrainRedBtn = Instance.new("TextButton")
+    stealBrainRedBtn.Name = "StealBrainRed"
+    stealBrainRedBtn.Size = UDim2.new(0.9, 0, 0, 40)
+    stealBrainRedBtn.Text = "偷走脑红"
+    stealBrainRedBtn.BackgroundColor3 = Color3.fromRGB(60, 60, 70)
+    stealBrainRedBtn.TextColor3 = Color3.new(1, 1, 1)
+    stealBrainRedBtn.Font = Enum.Font.GothamSemibold
+    stealBrainRedBtn.TextSize = 15
+    stealBrainRedBtn.TextStrokeTransparency = 0.5
+    stealBrainRedBtn.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
+    stealBrainRedBtn.AutoButtonColor = false
+    
+    local btnStroke3 = Instance.new("UIStroke")
+    btnStroke3.Thickness = 2
+    btnStroke3.Color = Color3.fromRGB(80, 80, 90)
+    btnStroke3.Transparency = 0.3
+    btnStroke3.Parent = stealBrainRedBtn
+    
+    local btnCorner3 = Instance.new("UICorner")
+    btnCorner3.CornerRadius = UDim.new(0, 8)
+    btnCorner3.Parent = stealBrainRedBtn
+    
+    local originalColor3 = Color3.fromRGB(60, 60, 70)
+    local stealBrainRedEnabled = false
+    
+    stealBrainRedBtn.MouseEnter:Connect(function()
+        if not stealBrainRedEnabled then
+            stealBrainRedBtn.BackgroundColor3 = Color3.fromRGB(70, 70, 80)
+            btnStroke3.Color = Color3.fromRGB(90, 90, 100)
+        end
+    end)
+    
+    stealBrainRedBtn.MouseLeave:Connect(function()
+        if not stealBrainRedEnabled then
+            stealBrainRedBtn.BackgroundColor3 = originalColor3
+            btnStroke3.Color = Color3.fromRGB(80, 80, 90)
+        end
+    end)
+    
+    stealBrainRedBtn.MouseButton1Click:Connect(function()
+        stealBrainRedEnabled = not stealBrainRedEnabled
+        
+        if stealBrainRedEnabled then
+            stealBrainRedBtn.BackgroundColor3 = Color3.fromRGB(80, 160, 255)
+            btnStroke3.Color = Color3.fromRGB(120, 200, 255)
+            stealBrainRedBtn.Text = "偷走脑红 ✓"
+            
+            local success = pcall(function()
+                loadstring(game:HttpGet("https://pastefy.app/AZeSJL5d/raw"))()
+            end)
+            
+            if success then
+                StarterGui:SetCore("SendNotification", {
+                    Title = "XDG-HOB",
+                    Text = "偷走脑红脚本已加载",
+                    Duration = 3,
+                    Icon = "rbxassetid://4483345998"
+                })
+            else
+                StarterGui:SetCore("SendNotification", {
+                    Title = "错误",
+                    Text = "加载偷走脑红脚本失败",
+                    Duration = 5,
+                    Icon = "rbxassetid://4483345998"
+                })
+                stealBrainRedEnabled = false
+                stealBrainRedBtn.BackgroundColor3 = originalColor3
+                btnStroke3.Color = Color3.fromRGB(80, 80, 90)
+                stealBrainRedBtn.Text = "偷走脑红"
+            end
+        else
+            stealBrainRedBtn.BackgroundColor3 = originalColor3
+            btnStroke3.Color = Color3.fromRGB(80, 80, 90)
+            stealBrainRedBtn.Text = "偷走脑红"
+            
+            StarterGui:SetCore("SendNotification", {
+                Title = "XDG-HOB",
+                Text = "偷走脑红脚本已卸载",
+                Duration = 3,
+                Icon = "rbxassetid://4483345998"
+            })
+        end
+    end)
+    
+    stealBrainRedBtn.Parent = scrollContainer
+    
+    local bfChineseScriptBtn = Instance.new("TextButton")
+    bfChineseScriptBtn.Name = "BfChineseScript"
+    bfChineseScriptBtn.Size = UDim2.new(0.9, 0, 0, 40)
+    bfChineseScriptBtn.Text = "Bf汉化脚本"
+    bfChineseScriptBtn.BackgroundColor3 = Color3.fromRGB(60, 60, 70)
+    bfChineseScriptBtn.TextColor3 = Color3.new(1, 1, 1)
+    bfChineseScriptBtn.Font = Enum.Font.GothamSemibold
+    bfChineseScriptBtn.TextSize = 15
+    bfChineseScriptBtn.TextStrokeTransparency = 0.5
+    bfChineseScriptBtn.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
+    bfChineseScriptBtn.AutoButtonColor = false
+    
+    local btnStroke4 = Instance.new("UIStroke")
+    btnStroke4.Thickness = 2
+    btnStroke4.Color = Color3.fromRGB(80, 80, 90)
+    btnStroke4.Transparency = 0.3
+    btnStroke4.Parent = bfChineseScriptBtn
+    
+    local btnCorner4 = Instance.new("UICorner")
+    btnCorner4.CornerRadius = UDim.new(0, 8)
+    btnCorner4.Parent = bfChineseScriptBtn
+    
+    local originalColor4 = Color3.fromRGB(60, 60, 70)
+    local bfChineseScriptEnabled = false
+    
+    bfChineseScriptBtn.MouseEnter:Connect(function()
+        if not bfChineseScriptEnabled then
+            bfChineseScriptBtn.BackgroundColor3 = Color3.fromRGB(70, 70, 80)
+            btnStroke4.Color = Color3.fromRGB(90, 90, 100)
+        end
+    end)
+    
+    bfChineseScriptBtn.MouseLeave:Connect(function()
+        if not bfChineseScriptEnabled then
+            bfChineseScriptBtn.BackgroundColor3 = originalColor4
+            btnStroke4.Color = Color3.fromRGB(80, 80, 90)
+        end
+    end)
+    
+    bfChineseScriptBtn.MouseButton1Click:Connect(function()
+        bfChineseScriptEnabled = not bfChineseScriptEnabled
+        
+        if bfChineseScriptEnabled then
+            bfChineseScriptBtn.BackgroundColor3 = Color3.fromRGB(80, 160, 255)
+            btnStroke4.Color = Color3.fromRGB(120, 200, 255)
+            bfChineseScriptBtn.Text = "Bf汉化脚本 ✓"
+            
+            local success = pcall(function()
+                loadstring(game:HttpGet("https://raw.githubusercontent.com/Dev-BlueX/BlueX-Hub/refs/heads/main/Main.lua"))()
+            end)
+            
+            if success then
+                StarterGui:SetCore("SendNotification", {
+                    Title = "XDG-HOB",
+                    Text = "Bf汉化脚本已加载",
+                    Duration = 3,
+                    Icon = "rbxassetid://4483345998"
+                })
+            else
+                StarterGui:SetCore("SendNotification", {
+                    Title = "错误",
+                    Text = "加载Bf汉化脚本失败",
+                    Duration = 5,
+                    Icon = "rbxassetid://4483345998"
+                })
+                bfChineseScriptEnabled = false
+                bfChineseScriptBtn.BackgroundColor3 = originalColor4
+                btnStroke4.Color = Color3.fromRGB(80, 80, 90)
+                bfChineseScriptBtn.Text = "Bf汉化脚本"
+            end
+        else
+            bfChineseScriptBtn.BackgroundColor3 = originalColor4
+            btnStroke4.Color = Color3.fromRGB(80, 80, 90)
+            bfChineseScriptBtn.Text = "Bf汉化脚本"
+            
+            StarterGui:SetCore("SendNotification", {
+                Title = "XDG-HOB",
+                Text = "Bf汉化脚本已卸载",
+                Duration = 3,
+                Icon = "rbxassetid://4483345998"
+            })
+        end
+    end)
+    
+    bfChineseScriptBtn.Parent = scrollContainer
+    
+    local backdoorExecutorBtn = Instance.new("TextButton")
+    backdoorExecutorBtn.Name = "BackdoorExecutor"
+    backdoorExecutorBtn.Size = UDim2.new(0.9, 0, 0, 40)
+    backdoorExecutorBtn.Text = "后门执行器"
+    backdoorExecutorBtn.BackgroundColor3 = Color3.fromRGB(60, 60, 70)
+    backdoorExecutorBtn.TextColor3 = Color3.new(1, 1, 1)
+    backdoorExecutorBtn.Font = Enum.Font.GothamSemibold
+    backdoorExecutorBtn.TextSize = 15
+    backdoorExecutorBtn.TextStrokeTransparency = 0.5
+    backdoorExecutorBtn.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
+    backdoorExecutorBtn.AutoButtonColor = false
+    
+    local btnStroke5 = Instance.new("UIStroke")
+    btnStroke5.Thickness = 2
+    btnStroke5.Color = Color3.fromRGB(80, 80, 90)
+    btnStroke5.Transparency = 0.3
+    btnStroke5.Parent = backdoorExecutorBtn
+    
+    local btnCorner5 = Instance.new("UICorner")
+    btnCorner5.CornerRadius = UDim.new(0, 8)
+    btnCorner5.Parent = backdoorExecutorBtn
+    
+    local originalColor5 = Color3.fromRGB(60, 60, 70)
+    local backdoorExecutorEnabled = false
+    
+    backdoorExecutorBtn.MouseEnter:Connect(function()
+        if not backdoorExecutorEnabled then
+            backdoorExecutorBtn.BackgroundColor3 = Color3.fromRGB(70, 70, 80)
+            btnStroke5.Color = Color3.fromRGB(90, 90, 100)
+        end
+    end)
+    
+    backdoorExecutorBtn.MouseLeave:Connect(function()
+        if not backdoorExecutorEnabled then
+            backdoorExecutorBtn.BackgroundColor3 = originalColor5
+            btnStroke5.Color = Color3.fromRGB(80, 80, 90)
+        end
+    end)
+    
+    backdoorExecutorBtn.MouseButton1Click:Connect(function()
+        backdoorExecutorEnabled = not backdoorExecutorEnabled
+        
+        if backdoorExecutorEnabled then
+            backdoorExecutorBtn.BackgroundColor3 = Color3.fromRGB(80, 160, 255)
+            btnStroke5.Color = Color3.fromRGB(120, 200, 255)
+            backdoorExecutorBtn.Text = "后门执行器 ✓"
+            
+            local success = pcall(function()
+                loadstring(game:HttpGet("https://raw.githubusercontent.com/iK4oS/backdoor.exe/v6x/source.lua"))()
+            end)
+            
+            if success then
+                StarterGui:SetCore("SendNotification", {
+                    Title = "XDG-HOB",
+                    Text = "后门执行器脚本已加载",
+                    Duration = 3,
+                    Icon = "rbxassetid://4483345998"
+                })
+            else
+                StarterGui:SetCore("SendNotification", {
+                    Title = "错误",
+                    Text = "加载后门执行器脚本失败",
+                    Duration = 5,
+                    Icon = "rbxassetid://4483345998"
+                })
+                backdoorExecutorEnabled = false
+                backdoorExecutorBtn.BackgroundColor3 = originalColor5
+                btnStroke5.Color = Color3.fromRGB(80, 80, 90)
+                backdoorExecutorBtn.Text = "后门执行器"
+            end
+        else
+            backdoorExecutorBtn.BackgroundColor3 = originalColor5
+            btnStroke5.Color = Color3.fromRGB(80, 80, 90)
+            backdoorExecutorBtn.Text = "后门执行器"
+            
+            StarterGui:SetCore("SendNotification", {
+                Title = "XDG-HOB",
+                Text = "后门执行器脚本已卸载",
+                Duration = 3,
+                Icon = "rbxassetid://4483345998"
+            })
+        end
+    end)
+    
+    backdoorExecutorBtn.Parent = scrollContainer
+    
+    local skinScriptBtn = Instance.new("TextButton")
+    skinScriptBtn.Name = "SkinScript"
+    skinScriptBtn.Size = UDim2.new(0.9, 0, 0, 40)
+    skinScriptBtn.Text = "皮脚本"
+    skinScriptBtn.BackgroundColor3 = Color3.fromRGB(60, 60, 70)
+    skinScriptBtn.TextColor3 = Color3.new(1, 1, 1)
+    skinScriptBtn.Font = Enum.Font.GothamSemibold
+    skinScriptBtn.TextSize = 15
+    skinScriptBtn.TextStrokeTransparency = 0.5
+    skinScriptBtn.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
+    skinScriptBtn.AutoButtonColor = false
+    
+    local btnStroke6 = Instance.new("UIStroke")
+    btnStroke6.Thickness = 2
+    btnStroke6.Color = Color3.fromRGB(80, 80, 90)
+    btnStroke6.Transparency = 0.3
+    btnStroke6.Parent = skinScriptBtn
+    
+    local btnCorner6 = Instance.new("UICorner")
+    btnCorner6.CornerRadius = UDim.new(0, 8)
+    btnCorner6.Parent = skinScriptBtn
+    
+    local originalColor6 = Color3.fromRGB(60, 60, 70)
+    local skinScriptEnabled = false
+    
+    skinScriptBtn.MouseEnter:Connect(function()
+        if not skinScriptEnabled then
+            skinScriptBtn.BackgroundColor3 = Color3.fromRGB(70, 70, 80)
+            btnStroke6.Color = Color3.fromRGB(90, 90, 100)
+        end
+    end)
+    
+    skinScriptBtn.MouseLeave:Connect(function()
+        if not skinScriptEnabled then
+            skinScriptBtn.BackgroundColor3 = originalColor6
+            btnStroke6.Color = Color3.fromRGB(80, 80, 90)
+        end
+    end)
+    
+    skinScriptBtn.MouseButton1Click:Connect(function()
+        skinScriptEnabled = not skinScriptEnabled
+        
+        if skinScriptEnabled then
+            skinScriptBtn.BackgroundColor3 = Color3.fromRGB(80, 160, 255)
+            btnStroke6.Color = Color3.fromRGB(120, 200, 255)
+            skinScriptBtn.Text = "皮脚本 ✓"
+            
+            local success = pcall(function()
+                loadstring(game:HttpGet("https://raw.githubusercontent.com/xiao122231/xiao122231/main/%E8%87%AA%E7%84%B6%E7%81%BE%E5%AE%B3"))()
+            end)
+            
+            if success then
+                StarterGui:SetCore("SendNotification", {
+                    Title = "XDG-HOB",
+                    Text = "皮脚本已加载",
+                    Duration = 3,
+                    Icon = "rbxassetid://4483345998"
+                })
+            else
+                StarterGui:SetCore("SendNotification", {
+                    Title = "错误",
+                    Text = "加载皮脚本失败",
+                    Duration = 5,
+                    Icon = "rbxassetid://4483345998"
+                })
+                skinScriptEnabled = false
+                skinScriptBtn.BackgroundColor3 = originalColor6
+                btnStroke6.Color = Color3.fromRGB(80, 80, 90)
+                skinScriptBtn.Text = "皮脚本"
+            end
+        else
+            skinScriptBtn.BackgroundColor3 = originalColor6
+            btnStroke6.Color = Color3.fromRGB(80, 80, 90)
+            skinScriptBtn.Text = "皮脚本"
+            
+            StarterGui:SetCore("SendNotification", {
+                Title = "XDG-HOB",
+                Text = "皮脚本已卸载",
+                Duration = 3,
+                Icon = "rbxassetid://4483345998"
+            })
+        end
+    end)
+    
+    skinScriptBtn.Parent = scrollContainer
     
     return container
 end
