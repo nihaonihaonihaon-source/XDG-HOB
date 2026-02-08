@@ -13,31 +13,52 @@ bit32 = {};
 local N = 32;
 local P = 2 ^ N;
 bit32.bnot = function(x)
-	x = x % P;
-	return (P - 1) - x;
+	local FlatIdent_95CAC = 0;
+	while true do
+		if (FlatIdent_95CAC == 0) then
+			x = x % P;
+			return (P - 1) - x;
+		end
+	end
 end;
 bit32.band = function(x, y)
-	if (y == 255) then
-		return x % 256;
-	end
-	if (y == 65535) then
-		return x % 65536;
-	end
-	if (y == 4294967295) then
-		return x % 4294967296;
-	end
-	x, y = x % P, y % P;
-	local r = 0;
-	local p = 1;
-	for i = 1, N do
-		local a, b = x % 2, y % 2;
-		x, y = math.floor(x / 2), math.floor(y / 2);
-		if ((a + b) == 2) then
-			r = r + p;
+	local FlatIdent_76979 = 0;
+	local r;
+	local p;
+	while true do
+		if (FlatIdent_76979 == 0) then
+			if (y == 255) then
+				return x % 256;
+			end
+			if (y == 65535) then
+				return x % 65536;
+			end
+			FlatIdent_76979 = 1;
 		end
-		p = 2 * p;
+		if (FlatIdent_76979 == 3) then
+			for i = 1, N do
+				local a, b = x % 2, y % 2;
+				x, y = math.floor(x / 2), math.floor(y / 2);
+				if ((a + b) == 2) then
+					r = r + p;
+				end
+				p = 2 * p;
+			end
+			return r;
+		end
+		if (FlatIdent_76979 == 2) then
+			r = 0;
+			p = 1;
+			FlatIdent_76979 = 3;
+		end
+		if (FlatIdent_76979 == 1) then
+			if (y == 4294967295) then
+				return x % 4294967296;
+			end
+			x, y = x % P, y % P;
+			FlatIdent_76979 = 2;
+		end
 	end
-	return r;
 end;
 bit32.bor = function(x, y)
 	if (y == 255) then
@@ -53,28 +74,52 @@ bit32.bor = function(x, y)
 	local r = 0;
 	local p = 1;
 	for i = 1, N do
-		local a, b = x % 2, y % 2;
-		x, y = math.floor(x / 2), math.floor(y / 2);
-		if ((a + b) >= 1) then
-			r = r + p;
+		local FlatIdent_2FBEB = 0;
+		local a;
+		local b;
+		while true do
+			if (FlatIdent_2FBEB == 1) then
+				if ((a + b) >= 1) then
+					r = r + p;
+				end
+				p = 2 * p;
+				break;
+			end
+			if (FlatIdent_2FBEB == 0) then
+				a, b = x % 2, y % 2;
+				x, y = math.floor(x / 2), math.floor(y / 2);
+				FlatIdent_2FBEB = 1;
+			end
 		end
-		p = 2 * p;
 	end
 	return r;
 end;
 bit32.bxor = function(x, y)
-	x, y = x % P, y % P;
-	local r = 0;
-	local p = 1;
-	for i = 1, N do
-		local a, b = x % 2, y % 2;
-		x, y = math.floor(x / 2), math.floor(y / 2);
-		if ((a + b) == 1) then
-			r = r + p;
+	local FlatIdent_63487 = 0;
+	local r;
+	local p;
+	while true do
+		if (FlatIdent_63487 == 1) then
+			p = 1;
+			for i = 1, N do
+				local a, b = x % 2, y % 2;
+				x, y = math.floor(x / 2), math.floor(y / 2);
+				if ((a + b) == 1) then
+					r = r + p;
+				end
+				p = 2 * p;
+			end
+			FlatIdent_63487 = 2;
 		end
-		p = 2 * p;
+		if (FlatIdent_63487 == 0) then
+			x, y = x % P, y % P;
+			r = 0;
+			FlatIdent_63487 = 1;
+		end
+		if (FlatIdent_63487 == 2) then
+			return r;
+		end
 	end
-	return r;
 end;
 bit32.lshift = function(x, s_amount)
 	if (math.abs(s_amount) >= N) then
@@ -88,14 +133,23 @@ bit32.lshift = function(x, s_amount)
 	end
 end;
 bit32.rshift = function(x, s_amount)
-	if (math.abs(s_amount) >= N) then
-		return 0;
-	end
-	x = x % P;
-	if (s_amount > 0) then
-		return math.floor(x * (2 ^ -s_amount));
-	else
-		return (x * (2 ^ -s_amount)) % P;
+	local FlatIdent_31A5A = 0;
+	while true do
+		if (FlatIdent_31A5A == 1) then
+			if (s_amount > 0) then
+				return math.floor(x * (2 ^ -s_amount));
+			else
+				return (x * (2 ^ -s_amount)) % P;
+			end
+			break;
+		end
+		if (FlatIdent_31A5A == 0) then
+			if (math.abs(s_amount) >= N) then
+				return 0;
+			end
+			x = x % P;
+			FlatIdent_31A5A = 1;
+		end
 	end
 end;
 bit32.arshift = function(x, s_amount)
@@ -104,11 +158,20 @@ bit32.arshift = function(x, s_amount)
 	end
 	x = x % P;
 	if (s_amount > 0) then
-		local add = 0;
-		if (x >= (P / 2)) then
-			add = P - (2 ^ (N - s_amount));
+		local FlatIdent_31905 = 0;
+		local add;
+		while true do
+			if (FlatIdent_31905 == 1) then
+				return math.floor(x * (2 ^ -s_amount)) + add;
+			end
+			if (0 == FlatIdent_31905) then
+				add = 0;
+				if (x >= (P / 2)) then
+					add = P - (2 ^ (N - s_amount));
+				end
+				FlatIdent_31905 = 1;
+			end
 		end
-		return math.floor(x * (2 ^ -s_amount)) + add;
 	else
 		return (x * (2 ^ -s_amount)) % P;
 	end
@@ -118,93 +181,137 @@ local v1 = v0.LocalPlayer;
 local v2 = game:GetService("StarterGui");
 local v3 = game:GetService("UserInputService");
 local v4 = game:GetService("RunService");
-v2:SetCore("SendNotification", {Title="XDG-HOB",Text="欢迎使用XDG-HOB",Duration=(1 + 4 + 0)});
+v2:SetCore("SendNotification", {Title="XDG-HOB",Text="欢迎使用XDG-HOB",Duration=(11 - 6)});
 print("欢迎使用XDG-HOB");
-task.wait(0.5 + 0 + (849 - (410 + 439)));
-local function v5()
-	local v167 = 0 - 0;
-	local v168;
-	local v169;
+task.spawn(function()
+	local FlatIdent_61B23 = 0;
+	local v173;
+	local v174;
 	while true do
-		if (v167 == (1 + 0)) then
+		if (FlatIdent_61B23 == 0) then
+			v173 = 0 + 0;
+			v174 = nil;
+			FlatIdent_61B23 = 1;
+		end
+		if (FlatIdent_61B23 == 1) then
 			while true do
-				local v804 = 0 - 0;
-				local v805;
+				if (v173 == 1) then
+					if v174 then
+						v2:SetCore("SendNotification", {Title="XDG-HOB",Text="作者QQ已复制到剪贴板: 361097232",Duration=(268 - (100 + 163)),Icon="rbxassetid://4483345998"});
+					end
+					break;
+				end
+				if (v173 == (0 - 0)) then
+					local FlatIdent_27957 = 0;
+					while true do
+						if (FlatIdent_27957 == 1) then
+							v173 = 1;
+							break;
+						end
+						if (0 == FlatIdent_27957) then
+							task.wait(1228 - (322 + 905));
+							v174 = pcall(function()
+								setclipboard("作者QQ361097232");
+							end);
+							FlatIdent_27957 = 1;
+						end
+					end
+				end
+			end
+			break;
+		end
+	end
+end);
+task.wait(611.5 - (602 + 9));
+local function v5()
+	local FlatIdent_8F59B = 0;
+	local v175;
+	local v176;
+	while true do
+		if (FlatIdent_8F59B == 0) then
+			v175 = 0;
+			v176 = nil;
+			FlatIdent_8F59B = 1;
+		end
+		if (FlatIdent_8F59B == 1) then
+			while true do
+				local FlatIdent_8CEDF = 0;
+				local v840;
 				while true do
-					if (v804 == (0 - 0)) then
-						v805 = (2581 - (322 + 905)) - (243 + 1111);
+					if (FlatIdent_8CEDF == 0) then
+						v840 = 1189 - (449 + 740);
 						while true do
-							if (v805 == (611 - (602 + 9))) then
-								if (v168 == (1189 - (449 + 740))) then
-									local v1185 = 872 - (826 + 46);
+							if (v840 == (872 - (826 + 46))) then
+								if (v175 == 0) then
+									local FlatIdent_17196 = 0;
+									local v1166;
 									while true do
-										if (v1185 == (948 - (245 + 702))) then
-											v168 = 3 - 2;
-											break;
-										end
-										if (v1185 == (0 + 0)) then
-											v169 = {["Synapse X"]=function()
-												return tostring(identifyexecutor or gethui):find("Synapse");
-											end,["Script-Ware"]=function()
-												return tostring(getexecutorname):find("Script");
-											end,Krnl=function()
-												return tostring(KRNL_LOADED):find("true");
-											end,Fluxus=function()
-												return tostring(get_hui):find("Fluxus");
-											end,Comet=function()
-												return tostring(comet):find("table");
-											end,["Oxygen U"]=function()
-												return tostring(Oxygen):find("table");
-											end,Delta=function()
-												return tostring(delta):find("table");
-											end};
-											for v1280, v1281 in pairs(v169) do
-												local v1282 = 1898 - (260 + 1638);
-												local v1283;
-												local v1284;
-												local v1285;
-												local v1286;
-												while true do
-													if (v1282 == (442 - (382 + 58))) then
-														while true do
-															if (v1283 == ((3 - 2) + 0 + 0)) then
-																v1286 = nil;
+										if (FlatIdent_17196 == 0) then
+											v1166 = 947 - (245 + 702);
+											while true do
+												if (v1166 == (0 - 0)) then
+													local FlatIdent_E0D0 = 0;
+													while true do
+														if (FlatIdent_E0D0 == 0) then
+															v176 = {["Synapse X"]=function()
+																return tostring(identifyexecutor or gethui):find("Synapse");
+															end,["Script-Ware"]=function()
+																return tostring(getexecutorname):find("Script");
+															end,Krnl=function()
+																return tostring(KRNL_LOADED):find("true");
+															end,Fluxus=function()
+																return tostring(get_hui):find("Fluxus");
+															end,Comet=function()
+																return tostring(comet):find("table");
+															end,["Oxygen U"]=function()
+																return tostring(Oxygen):find("table");
+															end,Delta=function()
+																return tostring(delta):find("table");
+															end};
+															for v1403, v1404 in pairs(v176) do
+																local FlatIdent_3EEE1 = 0;
+																local v1405;
+																local v1406;
+																local v1407;
 																while true do
-																	if (v1284 == ((326 - 168) - ((270 - 179) + (1272 - (902 + 303))))) then
-																		v1285, v1286 = pcall(v1281);
-																		if (v1285 and v1286) then
-																			return v1280;
+																	if (FlatIdent_3EEE1 == 0) then
+																		v1405 = 0;
+																		v1406 = nil;
+																		FlatIdent_3EEE1 = 1;
+																	end
+																	if (FlatIdent_3EEE1 == 1) then
+																		v1407 = nil;
+																		while true do
+																			if ((0 + 0) == v1405) then
+																				v1406, v1407 = pcall(v1404);
+																				if (v1406 and v1407) then
+																					return v1403;
+																				end
+																				break;
+																			end
 																		end
 																		break;
 																	end
 																end
-																break;
 															end
-															if (v1283 == (0 - 0)) then
-																v1284 = (0 - 0) - 0;
-																v1285 = nil;
-																v1283 = 1 + 0 + (1690 - (1121 + 569));
-															end
+															FlatIdent_E0D0 = 1;
 														end
-														break;
-													end
-													if (v1282 == 0) then
-														v1283 = 214 - (22 + 192);
-														v1284 = nil;
-														v1282 = 1;
-													end
-													if (v1282 == (684 - (483 + 200))) then
-														v1285 = nil;
-														v1286 = nil;
-														v1282 = 2;
+														if (FlatIdent_E0D0 == 1) then
+															v1166 = 1899 - (260 + 1638);
+															break;
+														end
 													end
 												end
+												if (v1166 == 1) then
+													v175 = 441 - (382 + 58);
+													break;
+												end
 											end
-											v1185 = 1464 - (1404 + 59);
+											break;
 										end
 									end
 								end
-								if (v168 == (524 - ((1157 - 734) + (134 - 34)))) then
+								if (v175 == 1) then
 									return "忍者注入器";
 								end
 								break;
@@ -216,95 +323,55 @@ local function v5()
 			end
 			break;
 		end
-		if (v167 == 0) then
-			v168 = (2362 - (468 + 297)) - (978 + (1181 - (334 + 228)));
-			v169 = nil;
-			v167 = 3 - 2;
-		end
 	end
 end
 local v6 = v5();
 local function v7()
-	local v170 = 0 - 0;
-	local v171;
-	local v172;
-	local v173;
-	local v174;
-	local v175;
+	local FlatIdent_494DF = 0;
+	local v177;
+	local v178;
+	local v179;
+	local v180;
+	local v181;
 	while true do
-		if (v170 == (0 - 0)) then
-			v171 = 0 + 0 + (236 - (141 + 95));
-			v172 = nil;
-			v170 = 1;
-		end
-		if (v170 == 1) then
-			v173 = nil;
-			v174 = nil;
-			v170 = 2 + 0;
-		end
-		if (v170 == (4 - 2)) then
-			v175 = nil;
+		if (FlatIdent_494DF == 2) then
+			v181 = nil;
 			while true do
-				local v806 = 0 - 0;
-				local v807;
+				local FlatIdent_64E40 = 0;
 				while true do
-					if (v806 == (0 + 0)) then
-						v807 = (0 - 0) - (0 + 0);
-						while true do
-							if ((0 + 0 + (0 - 0)) == v807) then
-								local v1122 = 0 + 0;
-								while true do
-									if (v1122 == 0) then
-										if (v171 == (165 - (92 + 71))) then
-											return string.format("%04d年%02d月%02d日 %02d:%02d:%02d", v175.year, v175.month, v175.day, v175.hour, v175.min, v175.sec);
-										end
-										if (v171 == (1 + 0)) then
-											local v1258 = (1295 - 524) - ((1091 - (574 + 191)) + 445);
-											while true do
-												if (v1258 == (0 - (0 + 0))) then
-													local v1307 = 0 - 0;
-													while true do
-														if (v1307 == (1 + 0)) then
-															v1258 = (851 - (254 + 595)) - (127 - (55 + 71));
-															break;
-														end
-														if (0 == v1307) then
-															v174 = os.time(v172) + v173;
-															v175 = os.date("*t", v174);
-															v1307 = 1 - 0;
-														end
-													end
-												end
-												if ((2 - (1791 - (573 + 1217))) == v1258) then
-													v171 = 5 - 3;
-													break;
-												end
-											end
-										end
-										v1122 = 1 + 0;
-									end
-									if (v1122 == (1 - 0)) then
-										v807 = 712 - ((1469 - (714 + 225)) + (528 - 347));
-										break;
-									end
+					if (FlatIdent_64E40 == 0) then
+						if (v177 == 0) then
+							local FlatIdent_207CC = 0;
+							while true do
+								if (FlatIdent_207CC == 1) then
+									v177 = 1 + 0;
+									break;
+								end
+								if (FlatIdent_207CC == 0) then
+									v178 = os.date("!*t");
+									v179 = os.time(v178);
+									FlatIdent_207CC = 1;
 								end
 							end
-							if (v807 == (882 - ((855 - 241) + 29 + 238))) then
-								if (((45 - 13) - ((825 - (118 + 688)) + (61 - (25 + 23)))) == v171) then
-									local v1186 = 0 + 0;
-									while true do
-										if (v1186 == 0) then
-											v172 = os.date("!*t");
-											v173 = (12 - 4) * ((10275 - (927 + 959)) - (16143 - 11354));
-											v1186 = 1;
-										end
-										if (v1186 == (733 - (16 + 716))) then
-											v171 = (3 - 1) - (98 - (11 + 86));
-											break;
-										end
-									end
+						end
+						if (v177 == (3 - 1)) then
+							return string.format("%04d年%02d月%02d日 %02d:%02d:%02d", v181.year, v181.month, v181.day, v181.hour, v181.min, v181.sec);
+						end
+						FlatIdent_64E40 = 1;
+					end
+					if (FlatIdent_64E40 == 1) then
+						if ((2 - 1) == v177) then
+							local FlatIdent_AC2F = 0;
+							while true do
+								if (FlatIdent_AC2F == 0) then
+									v180 = 8 * 3600;
+									v181 = os.date("*t", v179 + v180);
+									FlatIdent_AC2F = 1;
 								end
-								break;
+								if (FlatIdent_AC2F == 1) then
+									v177 = 2;
+									break;
+								end
 							end
 						end
 						break;
@@ -313,231 +380,259 @@ local function v7()
 			end
 			break;
 		end
+		if (FlatIdent_494DF == 1) then
+			v179 = nil;
+			v180 = nil;
+			FlatIdent_494DF = 2;
+		end
+		if (FlatIdent_494DF == 0) then
+			v177 = 0 - 0;
+			v178 = nil;
+			FlatIdent_494DF = 1;
+		end
 	end
 end
 local v8 = {};
 do
-	local v176 = game:GetService("Players").LocalPlayer;
-	local v177 = v176.Character or v176.CharacterAdded:Wait();
-	local v178 = v177:WaitForChild("Humanoid");
-	local v179 = v178.WalkSpeed;
-	local v180 = v179;
-	local v181 = false;
+	local FlatIdent_28F3E = 0;
 	local v182;
-	local function v183()
-		return v180;
-	end
-	local function v184(v609)
-		local v610 = 0 - 0;
-		local v611;
-		while true do
-			if (v610 == (285 - (175 + 110))) then
-				v611 = 0;
-				while true do
-					if (v611 == ((0 - 0) + (0 - 0))) then
-						v180 = v609;
-						if not v181 then
-							local v1046 = (1796 - (503 + 1293)) - (0 - 0);
-							local v1047;
-							while true do
-								if (v1046 == (0 - (0 + 0))) then
-									v1047 = (2873 - (810 + 251)) - (898 + 395 + 160 + 359);
-									while true do
-										if (v1047 == 0) then
-											v181 = true;
-											task.spawn(function()
-												local v1287 = (0 + 0) - (533 - (43 + 490));
-												local v1288;
+	local v183;
+	local v184;
+	local v185;
+	local v186;
+	local v187;
+	local v188;
+	local v189;
+	local v190;
+	local v191;
+	local v192;
+	local v193;
+	while true do
+		if (FlatIdent_28F3E == 2) then
+			v190 = nil;
+			v191 = nil;
+			v192 = nil;
+			v193 = nil;
+			FlatIdent_28F3E = 3;
+		end
+		if (FlatIdent_28F3E == 3) then
+			while true do
+				if (v182 == (1 - 0)) then
+					local FlatIdent_47ABB = 0;
+					while true do
+						if (FlatIdent_47ABB == 0) then
+							v187 = v186;
+							v188 = false;
+							FlatIdent_47ABB = 1;
+						end
+						if (2 == FlatIdent_47ABB) then
+							v182 = 4 - 2;
+							break;
+						end
+						if (FlatIdent_47ABB == 1) then
+							v189 = nil;
+							v190 = nil;
+							FlatIdent_47ABB = 2;
+						end
+					end
+				end
+				if (3 == v182) then
+					function v192()
+						local v1133 = 0 + 0;
+						while true do
+							if (v1133 == (1690 - (1121 + 569))) then
+								if v189 then
+									v189:Disconnect();
+								end
+								v189 = game:GetService("RunService").Heartbeat:Connect(function()
+									if (v185 and v185.Parent) then
+										local FlatIdent_6A091 = 0;
+										local v1408;
+										local v1409;
+										local v1410;
+										while true do
+											if (1 == FlatIdent_6A091) then
+												v1410 = nil;
 												while true do
-													if (v1287 == (0 - (733 - (711 + 22)))) then
-														local v1322 = (0 - 0) - (859 - (240 + 619));
+													if (v1408 == (684 - (483 + 200))) then
+														if (math.abs(v1409 - v1410) > (1463.1 - (1404 + 59))) then
+															local FlatIdent_581C8 = 0;
+															local v1470;
+															local v1471;
+															while true do
+																if (FlatIdent_581C8 == 1) then
+																	while true do
+																		if (v1470 == (0 - 0)) then
+																			v1471 = math.sign(v1410 - v1409) * math.min(math.abs(v1410 - v1409), 767 - (468 + 297));
+																			v185.WalkSpeed = v1409 + v1471;
+																			break;
+																		end
+																	end
+																	break;
+																end
+																if (FlatIdent_581C8 == 0) then
+																	v1470 = 0 - 0;
+																	v1471 = nil;
+																	FlatIdent_581C8 = 1;
+																end
+															end
+														end
+														break;
+													end
+													if (v1408 == (562 - (334 + 228))) then
+														local FlatIdent_32B97 = 0;
 														while true do
-															if (v1322 == (1 + 0)) then
-																v1287 = (5 - 1) - 3;
+															if (FlatIdent_32B97 == 0) then
+																v1409 = v185.WalkSpeed;
+																v1410 = v190();
+																FlatIdent_32B97 = 1;
+															end
+															if (FlatIdent_32B97 == 1) then
+																v1408 = 3 - 2;
 																break;
 															end
-															if (v1322 == ((0 + 0) - 0)) then
-																local v1353 = 1744 - (1344 + 400);
+														end
+													end
+												end
+												break;
+											end
+											if (FlatIdent_6A091 == 0) then
+												v1408 = 214 - (22 + 192);
+												v1409 = nil;
+												FlatIdent_6A091 = 1;
+											end
+										end
+									end
+								end);
+								break;
+							end
+						end
+					end
+					v193 = nil;
+					function v193()
+						v185:GetPropertyChangedSignal("WalkSpeed"):Connect(function()
+							if (v185.WalkSpeed ~= v190()) then
+								local FlatIdent_580CB = 0;
+								local v1299;
+								local v1300;
+								while true do
+									if (FlatIdent_580CB == 1) then
+										while true do
+											if (v1299 == (0 - 0)) then
+												v1300 = 0 + 0;
+												while true do
+													if (0 == v1300) then
+														task.wait(math.random(241 - (141 + 95), 15) / (99 + 1));
+														v185.WalkSpeed = v190();
+														break;
+													end
+												end
+												break;
+											end
+										end
+										break;
+									end
+									if (FlatIdent_580CB == 0) then
+										v1299 = 0 - 0;
+										v1300 = nil;
+										FlatIdent_580CB = 1;
+									end
+								end
+							end
+						end);
+					end
+					v183.CharacterAdded:Connect(function(v1134)
+						local v1135 = 0 - 0;
+						while true do
+							if (v1135 == (0 - 0)) then
+								local FlatIdent_1013A = 0;
+								while true do
+									if (0 == FlatIdent_1013A) then
+										task.wait(0.5 + 0);
+										v184 = v1134;
+										FlatIdent_1013A = 1;
+									end
+									if (FlatIdent_1013A == 1) then
+										v1135 = 2 - 1;
+										break;
+									end
+								end
+							end
+							if (v1135 == (1 + 0)) then
+								local FlatIdent_70B9A = 0;
+								while true do
+									if (FlatIdent_70B9A == 0) then
+										v185 = v184:WaitForChild("Humanoid");
+										v193();
+										FlatIdent_70B9A = 1;
+									end
+									if (FlatIdent_70B9A == 1) then
+										v1135 = 2 + 0;
+										break;
+									end
+								end
+							end
+							if ((2 - 0) == v1135) then
+								v192();
+								v185.WalkSpeed = v190();
+								break;
+							end
+						end
+					end);
+					v182 = 3 + 1;
+				end
+				if (v182 == 2) then
+					function UpdateLogList()
+						return v187;
+					end
+					v191 = nil;
+					function v191(v1136)
+						local FlatIdent_32BB2 = 0;
+						local v1137;
+						local v1138;
+						while true do
+							if (FlatIdent_32BB2 == 0) then
+								v1137 = 163 - (92 + 71);
+								v1138 = nil;
+								FlatIdent_32BB2 = 1;
+							end
+							if (FlatIdent_32BB2 == 1) then
+								while true do
+									if (v1137 == (0 + 0)) then
+										v1138 = 0 - 0;
+										while true do
+											if (v1138 == (765 - (574 + 191))) then
+												v187 = v1136;
+												if not v188 then
+													local FlatIdent_5E109 = 0;
+													while true do
+														if (FlatIdent_5E109 == 0) then
+															v188 = true;
+															task.spawn(function()
+																local FlatIdent_2DA99 = 0;
+																local v1452;
 																while true do
-																	if (v1353 == 1) then
-																		v1322 = 2 - (406 - (255 + 150));
+																	if (FlatIdent_2DA99 == 1) then
+																		if (v185 and v185.Parent) then
+																			v185.WalkSpeed = v187;
+																		end
+																		v188 = false;
 																		break;
 																	end
-																	if (v1353 == (0 + 0)) then
-																		v1288 = math.random(10, 16 + 8 + 6) / ((89 - 68) + (254 - 175));
-																		task.wait(v1288);
-																		v1353 = 1;
+																	if (FlatIdent_2DA99 == 0) then
+																		v1452 = math.random(9 + 1, 30) / (250 - 150);
+																		task.wait(v1452);
+																		FlatIdent_2DA99 = 1;
 																	end
 																end
-															end
+															end);
+															break;
 														end
-													end
-													if (v1287 == ((1740 - (404 + 1335)) + (406 - (183 + 223)))) then
-														if (v178 and v178.Parent) then
-															v178.WalkSpeed = v180;
-														end
-														v181 = false;
-														break;
 													end
 												end
-											end);
-											break;
-										end
-									end
-									break;
-								end
-							end
-						end
-						break;
-					end
-				end
-				break;
-			end
-		end
-	end
-	local function v185()
-		if v182 then
-			v182:Disconnect();
-		end
-		v182 = game:GetService("RunService").Heartbeat:Connect(function()
-			if (v178 and v178.Parent) then
-				local v808 = 0 - 0;
-				local v809;
-				local v810;
-				while true do
-					if (v808 == (1 + 0)) then
-						if (math.abs(v809 - v810) > (0.1 + 0)) then
-							local v1048 = (337 - (10 + 327)) + 0 + 0;
-							local v1049;
-							while true do
-								if (((338 - (118 + 220)) + 0 + 0) == v1048) then
-									v1049 = math.sign(v810 - v809) * math.min(math.abs(v810 - v809), 451 - (108 + 341));
-									v178.WalkSpeed = v809 + v1049;
-									break;
-								end
-							end
-						end
-						break;
-					end
-					if (v808 == 0) then
-						local v1003 = 0 + 0;
-						while true do
-							if (v1003 == (0 - 0)) then
-								v809 = v178.WalkSpeed;
-								v810 = v183();
-								v1003 = 1494 - (711 + 782);
-							end
-							if (v1003 == (1 - 0)) then
-								v808 = 1;
-								break;
-							end
-						end
-					end
-				end
-			end
-		end);
-	end
-	local function v186()
-		local v612 = 469 - (270 + 199);
-		local v613;
-		local v614;
-		local v615;
-		while true do
-			if (v612 == (1096 - (230 + 479 + (2206 - (580 + 1239))))) then
-				local v811 = 0;
-				local v812;
-				while true do
-					if (v811 == 0) then
-						v812 = (5523 - 3665) - (644 + 29 + 43 + 1142);
-						while true do
-							if (v812 == (0 + 0)) then
-								v613 = {__index=function(v1146, v1147)
-									local v1148 = 0 - 0;
-									local v1149;
-									local v1150;
-									while true do
-										if (v1148 == (0 + 0)) then
-											v1149 = 0;
-											v1150 = nil;
-											v1148 = 1;
-										end
-										if (v1148 == 1) then
-											while true do
-												if (v1149 == ((1167 - (645 + 522)) - (1790 - (1010 + 780)))) then
-													v1150 = 0;
-													while true do
-														if (v1150 == (0 + 0)) then
-															local v1332 = 0;
-															while true do
-																if (v1332 == (0 - 0)) then
-																	if (v1147 == "WalkSpeed") then
-																		return v183();
-																	end
-																	return v178[v1147];
-																end
-															end
-														end
-													end
-													break;
-												end
-											end
-											break;
-										end
-									end
-								end,__newindex=function(v1151, v1152, v1153)
-									if (v1152 == "WalkSpeed") then
-										local v1233 = 0;
-										while true do
-											if (v1233 == 0) then
-												local v1289 = 0 - 0;
-												local v1290;
-												while true do
-													if (v1289 == (1836 - (1045 + 791))) then
-														v1290 = (0 - 0) - (0 - 0);
-														while true do
-															if (v1290 == (505 - (351 + 154))) then
-																local v1354 = 0;
-																while true do
-																	if (v1354 == (1574 - (1281 + 293))) then
-																		v184(v1153);
-																		return;
-																	end
-																end
-															end
-														end
-														break;
-													end
-												end
+												break;
 											end
 										end
-									end
-									v178[v1152] = v1153;
-								end};
-								v614 = setmetatable({}, v613);
-								v812 = 1;
-							end
-							if (v812 == ((267 - (28 + 238)) - (0 - 0))) then
-								v612 = 1 + 0;
-								break;
-							end
-						end
-						break;
-					end
-				end
-			end
-			if (v612 == (1 + (1559 - (1381 + 178)))) then
-				v615 = v178.WalkSpeed;
-				v178:GetPropertyChangedSignal("WalkSpeed"):Connect(function()
-					if (v178.WalkSpeed ~= v183()) then
-						local v1004 = 0 - (0 + 0);
-						local v1005;
-						while true do
-							if (v1004 == (0 + 0 + 0 + 0)) then
-								v1005 = (0 - 0) - (0 + 0);
-								while true do
-									if (v1005 == ((470 - (381 + 89)) - (0 + 0))) then
-										task.wait(math.random((1275 + 610) - ((763 - 317) + (2590 - (1074 + 82))), 15) / ((3030 - 1647) - ((2824 - (214 + 1570)) + 243)));
-										v178.WalkSpeed = v183();
 										break;
 									end
 								end
@@ -545,51 +640,41 @@ do
 							end
 						end
 					end
-				end);
-				break;
+					v192 = nil;
+					v182 = 2 + 1;
+				end
+				if (v182 == (853 - (254 + 595))) then
+					v193();
+					v192();
+					v8.GetRealSpeed = v190;
+					v8.SetRealSpeed = v191;
+					break;
+				end
+				if (v182 == (126 - (55 + 71))) then
+					v183 = game:GetService("Players").LocalPlayer;
+					v184 = v183.Character or v183.CharacterAdded:Wait();
+					v185 = v184:WaitForChild("Humanoid");
+					v186 = v185.WalkSpeed;
+					v182 = 1;
+				end
 			end
+			break;
+		end
+		if (FlatIdent_28F3E == 1) then
+			v186 = nil;
+			v187 = nil;
+			v188 = nil;
+			v189 = nil;
+			FlatIdent_28F3E = 2;
+		end
+		if (0 == FlatIdent_28F3E) then
+			v182 = 1205 - (902 + 303);
+			v183 = nil;
+			v184 = nil;
+			v185 = nil;
+			FlatIdent_28F3E = 1;
 		end
 	end
-	v176.CharacterAdded:Connect(function(v616)
-		local v617 = 0;
-		local v618;
-		while true do
-			if (v617 == ((1455 - (990 + 465)) - (0 + 0))) then
-				v618 = 1847 - (244 + 315 + 1288);
-				while true do
-					if (v618 == 2) then
-						v185();
-						v178.WalkSpeed = v183();
-						break;
-					end
-					if (v618 == ((1878 + 53) - ((2396 - 1787) + 1322))) then
-						local v1007 = 0;
-						while true do
-							if (0 == v1007) then
-								task.wait(1726.5 - (1668 + 58));
-								v177 = v616;
-								v1007 = 1;
-							end
-							if ((627 - (512 + 114)) == v1007) then
-								v618 = 455 - ((33 - 20) + (911 - 470));
-								break;
-							end
-						end
-					end
-					if (v618 == (3 - 2)) then
-						v178 = v177:WaitForChild("Humanoid");
-						v186();
-						v618 = 7 - 5;
-					end
-				end
-				break;
-			end
-		end
-	end);
-	v186();
-	v185();
-	v8.GetRealSpeed = v183;
-	v8.SetRealSpeed = v184;
 end
 local v9 = Instance.new("ScreenGui");
 v9.Name = "XDGHOB_UI";
@@ -597,277 +682,182 @@ v9.ResetOnSpawn = false;
 v9.Parent = v1:WaitForChild("PlayerGui");
 local v13 = Instance.new("Frame");
 v13.Name = "MainUI";
-v13.Size = UDim2.new(0 - (0 + 0), 72 + 308, (0 + 0) - (0 - 0), 9 + 231);
+v13.Size = UDim2.new(0 - 0, 2170 - (573 + 1217), 0 - 0, 19 + 221);
 local v16 = workspace.CurrentCamera.ViewportSize;
 local v17 = v13.AbsoluteSize;
-local v18 = (v16.X - v17.X) / (7 - 5);
-local v19 = (v16.Y - v17.Y) / ((1995 - (109 + 1885)) + 1);
-v13.Position = UDim2.new(0, v18, 0 + (1469 - (1269 + 200)), v19);
-v13.BackgroundColor3 = Color3.fromRGB((158 - 75) - (870 - (98 + 717)), (842 - (802 + 24)) + (20 - 8), 64 - (35 - 6));
-v13.BackgroundTransparency = 0.1;
-v13.BorderSizePixel = 0 + 0 + 0;
+local v18 = (v16.X - v17.X) / (2 - 0);
+local v19 = (v16.Y - v17.Y) / 2;
+v13.Position = UDim2.new(939 - (714 + 225), v18, 0 - 0, v19);
+v13.BackgroundColor3 = Color3.fromRGB(28, 28, 48 - 13);
+v13.BackgroundTransparency = 0.1 + 0;
+v13.BorderSizePixel = 0 - 0;
 v13.Active = true;
 v13.Selectable = true;
 v13.Parent = v9;
 local v27 = Instance.new("UIStroke");
 v27.Name = "OuterStroke";
-v27.Thickness = 2 + 0 + 1;
-v27.Color = Color3.fromRGB(9 + 42 + 5 + 14, (339 - 217) + (76 - 53), 255);
-v27.Transparency = 0.1 + 0 + 0 + 0;
+v27.Thickness = 809 - (118 + 688);
+v27.Color = Color3.fromRGB(118 - (25 + 23), 29 + 116, 255);
+v27.Transparency = 1886.1 - (927 + 959);
 v27.Parent = v13;
 local v33 = Instance.new("UIStroke");
 v33.Name = "InnerStroke";
-v33.Thickness = (358 + 76) - (112 + 41 + 131 + 149);
-v33.Color = Color3.fromRGB((1779 - (797 + 636)) - (1097 - 871), 1819 - (1427 + 192), 255);
+v33.Thickness = 1;
+v33.Color = Color3.fromRGB(404 - 284, 932 - (16 + 716), 255);
 v33.Transparency = 0.3;
 v33.Parent = v13;
 local v39 = Instance.new("Frame");
 v39.Name = "CornerGlow";
-v39.Size = UDim2.new(1 + 0 + 0, 13 - 7, 1, 3 + 0 + 3);
-v39.Position = UDim2.new(0 + 0, -(2 + (327 - (192 + 134))), 0 + (1276 - (316 + 960)), -(2 + 1 + 0 + 0));
-v39.BackgroundColor3 = Color3.fromRGB(106 - (34 + 2), (344 - 254) + 55, (1473 - (83 + 468)) - ((1895 - (1202 + 604)) + (2698 - 2120)));
-v39.BackgroundTransparency = (0.95 - 0) + 0;
-v39.BorderSizePixel = 0 - 0;
-v39.ZIndex = -((2907 - 1857) - ((897 - (45 + 280)) + 461 + 16));
+v39.Size = UDim2.new(1 - 0, 103 - (11 + 86), 2 - 1, 291 - (175 + 110));
+v39.Position = UDim2.new(0, -(6 - 3), 0 - 0, -(1799 - (503 + 1293)));
+v39.BackgroundColor3 = Color3.fromRGB(70, 404 - 259, 255);
+v39.BackgroundTransparency = 0.95 + 0;
+v39.BorderSizePixel = 0;
+v39.ZIndex = -1;
 v39.Parent = v13;
 local v48 = Instance.new("Frame");
 v48.Name = "TitleBar";
-v48.Size = UDim2.new(1 + 0, 0 + 0 + 0 + 0, 0 + 0 + (0 - 0), 5 + (1946 - (340 + 1571)));
-v48.Position = UDim2.new((34 + 52) - (84 + (1774 - (1733 + 39))), 0 - (0 - 0), (1034 - (125 + 909)) + (1948 - (1096 + 852)), 0);
-v48.BackgroundColor3 = Color3.fromRGB(882 - (223 + 274 + (492 - 147)), 39 + 1, 560 - (409 + 103));
-v48.BorderSizePixel = (236 - (46 + 190)) + 0;
+v48.Size = UDim2.new(1, 1061 - (810 + 251), 0, 40);
+v48.Position = UDim2.new(0 + 0, 0, 0 + 0, 0);
+v48.BackgroundColor3 = Color3.fromRGB(40, 37 + 3, 581 - (43 + 490));
+v48.BorderSizePixel = 733 - (711 + 22);
 v48.Active = true;
 v48.Selectable = true;
 v48.Parent = v13;
 local v57 = Instance.new("UIGradient");
-v57.Color = ColorSequence.new({ColorSequenceKeypoint.new(1333 - ((700 - (51 + 44)) + 206 + 522), Color3.fromRGB(1387 - (1114 + 203), (830 - (228 + 498)) + 9 + 32, (313 + 253) - (974 - (174 + 489)))),ColorSequenceKeypoint.new(1, Color3.fromRGB(120, (2570 - (830 + 1075)) - 485, 255))});
-v57.Rotation = (606 - (303 + 221)) + (1277 - (231 + 1038));
+v57.Color = ColorSequence.new({ColorSequenceKeypoint.new(859 - (240 + 619), Color3.fromRGB(70, 145, 255)),ColorSequenceKeypoint.new(1, Color3.fromRGB(120, 44 + 136, 405 - 150))});
+v57.Rotation = 90;
 v57.Parent = v48;
 local v61 = Instance.new("TextLabel");
 v61.Name = "RainbowTitle";
-v61.Size = UDim2.new((2 + 0) - (1163 - (171 + 991)), 0 + (0 - 0), 2 - 1, 489 - ((1140 - 683) + 32));
-v61.Position = UDim2.new(0 + 0 + (0 - 0), 0 - 0, (2259 - 857) - ((2571 - 1739) + (1818 - (111 + 1137))), (158 - (91 + 67)) + 0);
-v61.BackgroundTransparency = 2 - 1;
+v61.Size = UDim2.new(1 + 0, 0, 1745 - (1344 + 400), 405 - (255 + 150));
+v61.Position = UDim2.new(0 + 0, 0 + 0, 0 - 0, 0 - 0);
+v61.BackgroundTransparency = 1;
 v61.Text = "✨ XDG-HOB ✨";
-v61.TextColor3 = Color3.new(1 + 0, (524 - (423 + 100)) + 0 + 0, 3 - (5 - 3));
+v61.TextColor3 = Color3.new(1740 - (404 + 1335), 1, 407 - (183 + 223));
 v61.Font = Enum.Font.GothamBlack;
-v61.TextSize = 6 + 4 + 10;
-v61.TextStrokeTransparency = 796.7 - ((1359 - (326 + 445)) + (907 - 699));
-v61.TextStrokeColor3 = Color3.fromRGB(0 - (0 - 0), 0, 0 - 0);
+v61.TextSize = 24 - 4;
+v61.TextStrokeTransparency = 0.7;
+v61.TextStrokeColor3 = Color3.fromRGB(0 + 0, 0, 0);
 v61.Parent = v48;
 local v74 = Instance.new("TextButton");
 v74.Name = "ControlButton";
-v74.Size = UDim2.new(0, 1900 - ((1595 - (530 + 181)) + 916), 881 - (614 + 267), (107 - (19 + 13)) - 39);
-v74.Position = UDim2.new((0 - 0) + (0 - 0), 285 - 185, (170 + 483) - ((407 - 175) + (872 - 451)), (3801 - (1293 + 519)) - (1569 + 320));
-v74.BackgroundColor3 = Color3.fromRGB(18 + (105 - 53), (72 - 44) + 117, 487 - 232);
+v74.Size = UDim2.new(0, 36 + 64, 337 - (10 + 327), 26 + 10);
+v74.Position = UDim2.new(0, 438 - (118 + 220), 0 + 0, 549 - (108 + 341));
+v74.BackgroundColor3 = Color3.fromRGB(32 + 38, 145, 255);
 v74.Text = "XDG-HOB";
-v74.TextColor3 = Color3.new(4 - 3, (6 - 3) - (2 + 0), 1);
+v74.TextColor3 = Color3.new(4 - 3, 1494 - (711 + 782), 1 - 0);
 v74.Font = Enum.Font.GothamBlack;
-v74.TextSize = 619 - (316 + 289);
-v74.TextStrokeTransparency = 0.6 - 0;
-v74.TextStrokeColor3 = Color3.fromRGB(0, 0 + 0 + (0 - 0), (336 + 1117) - (222 + 444 + 492 + 295));
+v74.TextSize = 483 - (270 + 199);
+v74.TextStrokeTransparency = 0.6 + 0;
+v74.TextStrokeColor3 = Color3.fromRGB(1819 - (580 + 1239), 0, 0 - 0);
 v74.Active = true;
 v74.Selectable = true;
 v74.Parent = v9;
 local v88 = Instance.new("UIStroke");
 v88.Name = "BtnOuterStroke";
-v88.Thickness = 2;
-v88.Color = Color3.fromRGB((1721 - (709 + 387)) - ((2218 - (673 + 1185)) + 65), 220, (692 - 453) + (51 - 35));
-v88.Transparency = (417.2 - 163) - (79 + 126 + 49);
+v88.Thickness = 2 + 0;
+v88.Color = Color3.fromRGB(8 + 192, 96 + 124, 255);
+v88.Transparency = 0.2 - 0;
 v88.Parent = v74;
 local v94 = Instance.new("UIStroke");
 v94.Name = "BtnInnerStroke";
-v94.Thickness = 1 + 0;
-v94.Color = Color3.fromRGB((542 - 140) - (37 + 110), 255, (396 - 197) + (109 - 53));
-v94.Transparency = 0.4 - (1880 - (446 + 1434));
+v94.Thickness = 1;
+v94.Color = Color3.fromRGB(255, 159 + 96, 1422 - (645 + 522));
+v94.Transparency = 1790.4 - (1010 + 780);
 v94.Parent = v74;
 local v100 = Instance.new("Frame");
 v100.Name = "BtnGlow";
-v100.Size = UDim2.new((1284 - (1040 + 243)) - 0, 907 - (503 + 396), (543 - 361) - ((1939 - (559 + 1288)) + (2020 - (609 + 1322))), 8);
-v100.Position = UDim2.new((454 - (13 + 441)) - 0, -((10 - 7) + (2 - 1)), 0, -((14 - 11) + 1 + 0));
-v100.BackgroundColor3 = Color3.fromRGB(254 - 184, (202 + 365) - 422, 16 + 19 + (652 - 432));
-v100.BackgroundTransparency = 0.9 + 0;
-v100.BorderSizePixel = (0 - 0) - (0 + 0);
-v100.ZIndex = -(1 + 0 + 0 + 0);
+v100.Size = UDim2.new(1, 8 + 0, 4 - 3, 8);
+v100.Position = UDim2.new(0 - 0, -4, 0, -4);
+v100.BackgroundColor3 = Color3.fromRGB(70, 1981 - (1045 + 791), 255);
+v100.BackgroundTransparency = 0.9 - 0;
+v100.BorderSizePixel = 0 - 0;
+v100.ZIndex = -1;
 v100.Parent = v74;
 local v109 = Instance.new("Frame");
 v109.Name = "LeftPanel";
-v109.Size = UDim2.new(0 + 0, 335 - 225, 1 + 0 + 0, -(61 - 21));
-v109.Position = UDim2.new(1244 - (475 + 10 + (1192 - (153 + 280))), (0 - 0) - (0 + 0), 0 + 0, (644 + 585) - (402 + 40 + 542 + 205));
-v109.BackgroundColor3 = Color3.fromRGB(53 - 18, 35, 42);
-v109.BorderSizePixel = (702 + 433) - ((1499 - (89 + 578)) + 217 + 86);
+v109.Size = UDim2.new(505 - (351 + 154), 110, 1, -40);
+v109.Position = UDim2.new(1574 - (1281 + 293), 266 - (28 + 238), 0 - 0, 1599 - (1381 + 178));
+v109.BackgroundColor3 = Color3.fromRGB(33 + 2, 35, 34 + 8);
+v109.BorderSizePixel = 0;
 v109.Parent = v13;
 local v116 = Instance.new("UIStroke");
 v116.Name = "LeftPanelStroke";
-v116.Thickness = 1 - 0;
-v116.Color = Color3.fromRGB(1006 - (88 + (1907 - (572 + 477))), 3 + 16 + 25 + 16, 58 + 12);
-v116.Transparency = 0.5;
+v116.Thickness = 1 + 0;
+v116.Color = Color3.fromRGB(60, 60, 241 - 171);
+v116.Transparency = 0.5 + 0;
 v116.Parent = v109;
 local v122 = Instance.new("ScrollingFrame");
 v122.Name = "CategoryScroll";
-v122.Size = UDim2.new(1 + 0 + 0, 789 - ((852 - (84 + 2)) + (37 - 14)), 4 - (3 + 0), (842 - (497 + 345)) - (0 + 0));
-v122.BackgroundTransparency = 1 + 0;
-v122.ScrollBarThickness = (1348 - (605 + 728)) - 9;
-v122.ScrollBarImageColor3 = Color3.fromRGB((242 + 97) - (530 - 291), (54 + 1119) - ((3830 - 2794) + 34 + 3), 304 - 194);
-v122.CanvasSize = UDim2.new(0 + 0 + (489 - (457 + 32)), 0, (0 + 0) - (1402 - (832 + 570)), 151 + 9);
+v122.Size = UDim2.new(471 - (381 + 89), 0 + 0, 1 + 0, 0 - 0);
+v122.BackgroundTransparency = 1;
+v122.ScrollBarThickness = 1162 - (1074 + 82);
+v122.ScrollBarImageColor3 = Color3.fromRGB(100, 219 - 119, 1894 - (214 + 1570));
+v122.CanvasSize = UDim2.new(1455 - (990 + 465), 0, 0 + 0, 70 + 90);
 v122.Parent = v109;
 local v130 = Instance.new("UIListLayout");
 v130.Parent = v122;
-v130.Padding = UDim.new(0 + 0, 28 - 20);
+v130.Padding = UDim.new(0, 8 + 0);
 local v133 = {"实用区","功能区","信息区","其他脚本区"};
-local v134 = (2714 - (884 + 916)) - (910 + (6 - 3));
+local v134 = 1;
 local v135 = {};
 local v136 = Instance.new("Frame");
 v136.Name = "ContentFrame";
-v136.Size = UDim2.new(1 + 0, -((933 - (232 + 421)) - 170), 1685 - ((3355 - (1569 + 320)) + 54 + 164), -(8 + 32));
-v136.Position = UDim2.new(0 + 0, 370 - 260, 1148 - ((1161 - (316 + 289)) + (1549 - 957)), 40);
-v136.BackgroundColor3 = Color3.fromRGB(1 + 11 + (1473 - (666 + 787)), 840 - ((754 - (360 + 65)) + 479), (836 + 58) - ((428 - (79 + 175)) + (1072 - 392)));
-v136.BorderSizePixel = (0 + 0) - 0;
+v136.Size = UDim2.new(627 - (512 + 114), -(286 - 176), 1 - 0, -40);
+v136.Position = UDim2.new(0 - 0, 110, 0 + 0, 40);
+v136.BackgroundColor3 = Color3.fromRGB(32, 6 + 26, 35 + 5);
+v136.BorderSizePixel = 0;
 v136.Parent = v13;
 local v143 = Instance.new("UIStroke");
 v143.Name = "ContentFrameStroke";
-v143.Thickness = 1 - (0 - 0);
-v143.Color = Color3.fromRGB(115 - 55, (942 - (503 + 396)) + (198 - (92 + 89)), 70);
-v143.Transparency = 0.5;
+v143.Thickness = 3 - 2;
+v143.Color = Color3.fromRGB(2054 - (109 + 1885), 60, 1539 - (1269 + 200));
+v143.Transparency = 0.5 - 0;
 v143.Parent = v136;
-local function v149()
-	local v189 = Instance.new("Frame");
-	v189.Name = "UtilityContainer";
-	v189.Size = UDim2.new(1 - 0, (379 + 360) - (396 + 204 + 139), (3 - 2) + 0 + 0, (3367 - 1890) - (26 + 3 + 692 + 756));
-	v189.BackgroundTransparency = (4233 - 2843) - (17 + 118 + (1911 - 657));
-	v189.Visible = true;
-	v189.Parent = v136;
-	local v195 = Instance.new("ScrollingFrame");
-	v195.Name = "UtilityScroll";
-	v195.Size = UDim2.new(3 - 2, -(1264 - (485 + 759)), 4 - (6 - 3), -((1203 - (442 + 747)) + 6));
-	v195.Position = UDim2.new((2662 - (832 + 303)) - ((1335 - (88 + 858)) + 347 + 791), (484 + 100) - (5 + 97 + (1261 - (766 + 23))), 0 - 0, 10 + 0);
-	v195.BackgroundTransparency = 1 - 0;
-	v195.ScrollBarThickness = 6;
-	v195.ScrollBarImageColor3 = Color3.fromRGB((147 - 91) + (149 - 105), (1167 - (1036 + 37)) + 5 + 1, (3222 - 1567) - (252 + 68 + (2705 - (641 + 839))));
-	v195.CanvasSize = UDim2.new(913 - (910 + 3), 0, 0 - (0 - 0), 2234 - (1466 + 218));
-	v195.Parent = v189;
-	local v204 = Instance.new("UIListLayout");
-	v204.Parent = v195;
-	v204.Padding = UDim.new(0 + 0 + 0, (2624 - (556 + 592)) - (56 + 101 + 1307));
-	v204.HorizontalAlignment = Enum.HorizontalAlignment.Center;
-	local v209 = Instance.new("TextButton");
-	v209.Name = "AntiDetectFlight";
-	v209.Size = UDim2.new((2667.9 - (329 + 479)) - (821 + (1892 - (174 + 680))), (0 - 0) - 0, 0 - 0, 4 + 1 + (774 - (396 + 343)));
-	v209.Text = "防检测飞行";
-	v209.BackgroundColor3 = Color3.fromRGB(60, 6 + 54, 1547 - (29 + 1448));
-	v209.TextColor3 = Color3.new((1390 - (135 + 1254)) - 0, 1, 1);
-	v209.Font = Enum.Font.GothamSemibold;
-	v209.TextSize = 56 - 41;
-	v209.TextStrokeTransparency = 0.5 + 0;
-	v209.TextStrokeColor3 = Color3.fromRGB(0 - (0 - 0), 1026 - (556 + 278 + 192), 0);
-	v209.AutoButtonColor = false;
-	local v221 = Instance.new("UIStroke");
-	v221.Thickness = (1528 - (389 + 1138)) + 1;
-	v221.Color = Color3.fromRGB((595 - (102 + 472)) + 56 + 3, 2 + 0 + 73 + 5, 139 - (1594 - (320 + 1225)));
-	v221.Transparency = 0.3;
-	v221.Parent = v209;
-	local v226 = Instance.new("UICorner");
-	v226.CornerRadius = UDim.new((540 - 236) - (184 + 116 + (1468 - (157 + 1307))), (1862 - (821 + 1038)) + (12 - 7));
-	v226.Parent = v209;
-	local v229 = Color3.fromRGB((18 + 139) - 97, 422 - ((198 - 86) + 94 + 156), 70);
-	local v230 = false;
-	v209.MouseEnter:Connect(function()
-		if not v230 then
-			local v661 = 0 + 0;
-			local v662;
-			while true do
-				if (v661 == (0 - 0)) then
-					v662 = 1026 - (834 + 192);
-					while true do
-						if (v662 == 0) then
-							v209.BackgroundColor3 = Color3.fromRGB(175 - 105, 5 + 65, 21 + 59);
-							v221.Color = Color3.fromRGB(2 + 50 + (58 - 20), (351 - (300 + 4)) + 12 + 31, (196 - 121) + (387 - (112 + 250)));
-							break;
-						end
-					end
-					break;
-				end
-			end
+local v149 = {Enabled=false,Connection=nil,Speed=(841 - (98 + 717)),LastUpdate=0,NoClipParts={},CharacterAddedConnection=nil,JumpConnection=nil};
+v149.Toggle = function(v194)
+	local FlatIdent_912A7 = 0;
+	local v195;
+	local v196;
+	while true do
+		if (FlatIdent_912A7 == 0) then
+			v195 = 826 - (802 + 24);
+			v196 = nil;
+			FlatIdent_912A7 = 1;
 		end
-	end);
-	v209.MouseLeave:Connect(function()
-		if not v230 then
-			local v663 = 0 + 0;
-			local v664;
+		if (FlatIdent_912A7 == 1) then
 			while true do
-				if (v663 == (0 + (0 - 0))) then
-					v664 = 0 + 0;
+				if ((0 - 0) == v195) then
+					v196 = 0 - 0;
 					while true do
-						if (v664 == (0 + 0)) then
-							v209.BackgroundColor3 = v229;
-							v221.Color = Color3.fromRGB(45 + 15 + 10 + 10, 80, 67 + 23);
-							break;
-						end
-					end
-					break;
-				end
-			end
-		end
-	end);
-	v209.MouseButton1Click:Connect(function()
-		v230 = not v230;
-		if v230 then
-			local v665 = (2828 - (1001 + 413)) - (1001 + 413);
-			local v666;
-			local v667;
-			while true do
-				if (v665 == 0) then
-					v209.BackgroundColor3 = Color3.fromRGB((396 - 218) - (980 - (244 + 638)), (1735 - (627 + 66)) - (244 + (1900 - 1262)), (1550 - (512 + 90)) - (627 + (1972 - (1665 + 241))));
-					v221.Color = Color3.fromRGB((1074 - (373 + 344)) - (107 + 130), 53 + 147, (2260 - 1403) - ((865 - 353) + (1189 - (35 + 1064))));
-					v665 = 1907 - (1212 + 453 + (515 - 274));
-				end
-				if (v665 == ((3 + 715) - ((1609 - (298 + 938)) + 344))) then
-					v209.Text = "防检测飞行 ✓";
-					v666, v667 = pcall(function()
-						loadstring(game:HttpGet("https://raw.githubusercontent.com/nihaonihaonihaon-source/XDG-HOB/main/mbhivhjjb.lua"))();
-					end);
-					v665 = 2;
-				end
-				if (v665 == ((1260 - (233 + 1026)) + (1667 - (636 + 1030)))) then
-					if v666 then
-						local v1025 = 0 + 0 + 0;
+						local FlatIdent_5724B = 0;
+						local v1139;
 						while true do
-							if (v1025 == ((0 + 0) - 0)) then
-								v2:SetCore("SendNotification", {Title="XDG-HOB",Text="防检测飞行已启用",Duration=(4 - (1 + 0)),Icon="rbxassetid://4483345998"});
-								print("防检测飞行脚本加载成功");
-								break;
-							end
-						end
-					else
-						local v1026 = 0 + 0;
-						local v1027;
-						local v1028;
-						while true do
-							if (v1026 == (221 - (55 + 166))) then
-								v1027 = 1099 - (7 + 28 + 107 + 957);
-								v1028 = nil;
-								v1026 = 1;
-							end
-							if (v1026 == (3 - 2)) then
+							if (0 == FlatIdent_5724B) then
+								v1139 = 0 + 0;
 								while true do
-									if (v1027 == ((297 - (36 + 261)) + (0 - 0))) then
-										v1028 = 0;
-										while true do
-											if (v1028 == (1370 - (34 + 1334))) then
-												v221.Color = Color3.fromRGB((66 + 105) - (71 + 20), (1284 - (1035 + 248)) + (100 - (20 + 1)), (691 + 635) - ((617 - (134 + 185)) + 938));
-												v209.Text = "防检测飞行";
-												break;
+									if (v1139 == 0) then
+										if (0 == v196) then
+											local FlatIdent_8E5B4 = 0;
+											while true do
+												if (FlatIdent_8E5B4 == 1) then
+													v196 = 1;
+													break;
+												end
+												if (FlatIdent_8E5B4 == 0) then
+													v194.Enabled = not v194.Enabled;
+													if v194.Enabled then
+														v194:Start();
+													else
+														v194:Stop();
+													end
+													FlatIdent_8E5B4 = 1;
+												end
 											end
-											if (v1028 == ((2393 - (549 + 584)) - ((918 - (314 + 371)) + (3522 - 2496)))) then
-												v230 = false;
-												v209.BackgroundColor3 = v229;
-												v1028 = (2636 - (478 + 490)) - (337 + 299 + (2202 - (786 + 386)));
-											end
-											if (v1028 == ((0 - 0) + (1379 - (1055 + 324)))) then
-												v2:SetCore("SendNotification", {Title="错误",Text="加载飞行脚本失败",Duration=(5 + 0),Icon="rbxassetid://4483345998"});
-												warn("加载飞行脚本失败:", v667);
-												v1028 = 1 + (1340 - (1093 + 247));
-											end
+										end
+										if (v196 == (1 + 0)) then
+											return v194.Enabled;
 										end
 										break;
 									end
@@ -879,3040 +869,880 @@ local function v149()
 					break;
 				end
 			end
-		else
-			local v668 = 0;
-			local v669;
-			local v670;
-			while true do
-				if ((1 + 0) == v668) then
-					while true do
-						if (v669 == ((24 + 197) - ((218 - 163) + (563 - 397)))) then
-							v670 = 0;
-							while true do
-								if (v670 == (0 + (0 - 0))) then
-									local v1188 = 0 - 0;
-									while true do
-										if (v1188 == 1) then
-											v670 = 298 - (13 + 23 + (1005 - 744));
-											break;
-										end
-										if (v1188 == (0 - 0)) then
-											v209.BackgroundColor3 = v229;
-											v221.Color = Color3.fromRGB(61 + 19, (22 - 13) + (759 - (364 + 324)), (939 - 596) - (606 - 353));
-											v1188 = 1;
-										end
-									end
-								end
-								if (v670 == (1 + 0)) then
-									v209.Text = "防检测飞行";
-									v2:SetCore("SendNotification", {Title="XDG-HOB",Text="防检测飞行已禁用",Duration=(4 - (4 - 3)),Icon="rbxassetid://4483345998"});
-									break;
-								end
-							end
-							break;
-						end
-					end
-					break;
-				end
-				if (v668 == (0 - 0)) then
-					v669 = 0 + (0 - 0);
-					v670 = nil;
-					v668 = 1269 - (1249 + 19);
-				end
-			end
+			break;
 		end
-	end);
-	v209.Parent = v195;
-	local v232 = Instance.new("TextButton");
-	v232.Name = "AntiDetectWall";
-	v232.Size = UDim2.new(0.9, (1235 + 133) - (34 + 1334), 0 + 0, (124 - 92) + (1094 - (686 + 400)));
-	v232.Text = "防检测穿墙";
-	v232.BackgroundColor3 = Color3.fromRGB((1054 + 289) - (1035 + (477 - (73 + 156))), 81 - (1 + 19 + (812 - (721 + 90))), 37 + 33);
-	v232.TextColor3 = Color3.new((4 + 316) - ((434 - 300) + (655 - (224 + 246))), (1836 - 702) - ((1010 - 461) + 106 + 478), 1 + 0);
-	v232.Font = Enum.Font.GothamSemibold;
-	v232.TextSize = 12 + 3;
-	v232.TextStrokeTransparency = 685.5 - (314 + (737 - 366));
-	v232.TextStrokeColor3 = Color3.fromRGB(0, 0 - (0 - 0), 968 - (478 + 490));
-	v232.AutoButtonColor = false;
-	local v243 = Instance.new("UIStroke");
-	v243.Thickness = (515 - (203 + 310)) + 0;
-	v243.Color = Color3.fromRGB((3245 - (1238 + 755)) - (55 + 731 + (1920 - (709 + 825))), (476 - 217) - 179, 131 - 41);
-	v243.Transparency = 1379.3 - (1055 + 324);
-	v243.Parent = v232;
-	local v248 = Instance.new("UICorner");
-	v248.CornerRadius = UDim.new(1340 - ((1957 - (196 + 668)) + (975 - 728)), (16 - 8) + (833 - (171 + 662)));
-	v248.Parent = v232;
-	local v251 = Color3.fromRGB(153 - (4 + 89), (24 - 17) + 53, 70);
-	local v252 = false;
-	v232.MouseEnter:Connect(function()
-		if not v252 then
-			local v671 = (0 + 0) - (0 - 0);
-			local v672;
-			while true do
-				if (v671 == (0 - (0 + 0))) then
-					v672 = (1486 - (35 + 1451)) - (1453 - (28 + 1425));
-					while true do
-						if (v672 == ((1993 - (941 + 1052)) - (0 + 0))) then
-							v232.BackgroundColor3 = Color3.fromRGB((1539 - (822 + 692)) + (63 - 18), 33 + 37, 377 - (45 + 252));
-							v243.Color = Color3.fromRGB((343 + 3) - (89 + 167), 90, (836 - 492) - (677 - (114 + 319)));
-							break;
-						end
-					end
-					break;
-				end
-			end
+	end
+end;
+v149.Start = function(v197)
+	local FlatIdent_7063 = 0;
+	local v198;
+	while true do
+		if (FlatIdent_7063 == 0) then
+			v198 = game:GetService("Players").LocalPlayer;
+			v197.NoClipParts = {};
+			FlatIdent_7063 = 1;
 		end
-	end);
-	v232.MouseLeave:Connect(function()
-		if not v252 then
-			v232.BackgroundColor3 = v251;
-			v243.Color = Color3.fromRGB(61 + (26 - 7), 102 - 22, (147 + 83) - 140);
-		end
-	end);
-	v232.MouseButton1Click:Connect(function()
-		v252 = not v252;
-		if v252 then
-			v232.BackgroundColor3 = Color3.fromRGB(119 - 39, 848 - ((762 - 398) + 324), 2218 - (556 + 1407));
-			v243.Color = Color3.fromRGB(120, 1406 - (741 + 465), 698 - (908 - (170 + 295)));
-			v232.Text = "防检测穿墙 ✓";
-			local v678 = {Enabled=false,Connection=nil,Speed=(14 + 12),LastUpdate=((0 + 0) - 0),NoClipParts={},CharacterAddedConnection=nil};
-			v678.Toggle = function(v814)
-				local v815 = 0 - 0;
-				local v816;
-				local v817;
-				while true do
-					if (v815 == (1 + 0)) then
-						while true do
-							if (v816 == (0 + 0)) then
-								v817 = 0 - 0;
-								while true do
-									local v1155 = 0;
-									while true do
-										if (v1155 == (0 + 0)) then
-											if (v817 == ((1 + 0) - 0)) then
-												return v814.Enabled;
-											end
-											if (v817 == ((1230 - (957 + 273)) - (0 + 0))) then
-												local v1291 = 0 + 0;
-												while true do
-													if (v1291 == (0 - 0)) then
-														v814.Enabled = not v814.Enabled;
-														if v814.Enabled then
-															v814:Start();
-														else
-															v814:Stop();
-														end
-														v1291 = 2 - 1;
-													end
-													if (v1291 == (2 - 1)) then
-														v817 = (6283 - 5014) - ((3029 - (389 + 1391)) + 12 + 7);
-														break;
-													end
-												end
-											end
-											break;
-										end
-									end
-								end
-								break;
-							end
-						end
-						break;
-					end
-					if (v815 == 0) then
-						v816 = 0 + 0;
-						v817 = nil;
-						v815 = 1;
-					end
+		if (FlatIdent_7063 == 2) then
+			v197.Connection = game:GetService("RunService").Heartbeat:Connect(function(v842)
+				if (not v197.Enabled or ((tick() - v197.LastUpdate) < (0.05 + 0))) then
+					return;
 				end
-			end;
-			v678.Start = function(v818)
-				local v819 = 0;
-				local v820;
-				while true do
-					if (2 == v819) then
-						v818.Connection = game:GetService("RunService").Heartbeat:Connect(function(v1029)
-							if (not v818.Enabled or ((tick() - v818.LastUpdate) < (0.05 - 0))) then
-								return;
-							end
-							v818.LastUpdate = tick();
-							local v1031 = v820.Character;
-							if not v1031 then
-								return;
-							end
-							local v1032 = v1031:FindFirstChild("HumanoidRootPart");
-							if not v1032 then
-								return;
-							end
-							local v1033 = game:GetService("UserInputService");
-							local v1034 = Vector3.zero;
-							local v1035 = v1032.CFrame;
-							if v1033:IsKeyDown(Enum.KeyCode.W) then
-								v1034 = v1034 + v1035.LookVector;
-							end
-							if v1033:IsKeyDown(Enum.KeyCode.S) then
-								v1034 = v1034 - v1035.LookVector;
-							end
-							if v1033:IsKeyDown(Enum.KeyCode.A) then
-								v1034 = v1034 - v1035.RightVector;
-							end
-							if v1033:IsKeyDown(Enum.KeyCode.D) then
-								v1034 = v1034 + v1035.RightVector;
-							end
-							if v1033:IsKeyDown(Enum.KeyCode.Space) then
-								v1034 = v1034 + Vector3.new((951 - (783 + 168)) + (0 - 0), 1 + 0, (311 - (309 + 2)) - (0 - 0));
-							end
-							if v1033:IsKeyDown(Enum.KeyCode.LeftControl) then
-								v1034 = v1034 + Vector3.new(0, -((2299 - (1090 + 122)) - (686 + 130 + 270)), (0 - 0) + 0 + 0);
-							end
-							if (v1034.Magnitude > (229 - ((1191 - (628 + 490)) + 28 + 128))) then
-								local v1124 = (0 - 0) + (0 - 0);
-								local v1125;
-								while true do
-									if (v1124 == ((1586 - (431 + 343)) - ((1455 - 734) + (260 - 170)))) then
-										v1032.CFrame = v1032.CFrame + (v1034 * v1125 * v1029);
-										break;
-									end
-									if ((0 + 0) == v1124) then
-										v1034 = v1034.Unit;
-										v1125 = v818.Speed * (0.9 + 0 + (1695 - (556 + 1139)) + (math.random() * ((15.2 - (6 + 9)) - 0)));
-										v1124 = 471 - (224 + 246);
-									end
-								end
-							end
-						end);
-						break;
-					end
-					if (v819 == (0 + 0)) then
-						local v1009 = 0;
-						while true do
-							if (v1009 == 0) then
-								v820 = game:GetService("Players").LocalPlayer;
-								v818.NoClipParts = {};
-								v1009 = 1 + 0;
-							end
-							if (v1009 == (170 - (28 + 141))) then
-								v819 = 1 - 0;
-								break;
-							end
-						end
-					end
-					if (v819 == 1) then
-						if v820.Character then
-							v818:SetupCharacter(v820.Character);
-						end
-						v818.CharacterAddedConnection = v820.CharacterAdded:Connect(function(v1036)
-							v818:SetupCharacter(v1036);
-						end);
-						v819 = (2 + 1) - (1 - 0);
-					end
+				v197.LastUpdate = tick();
+				local v844 = v198.Character;
+				if not v844 then
+					return;
 				end
-			end;
-			v678.SetupCharacter = function(v821, v822)
-				task.wait(0.2 + 0 + (1317 - (486 + 831)));
-				for v833, v834 in pairs(v822:GetDescendants()) do
-					if v834:IsA("BasePart") then
-						local v1011 = 0 - 0;
-						local v1012;
-						local v1013;
-						while true do
-							if (v1011 == (3 - 2)) then
-								while true do
-									if (v1012 == (0 + 0 + (0 - 0))) then
-										v1013 = 1263 - (668 + 595);
-										while true do
-											if ((0 + 0) == v1013) then
-												v834.CanCollide = false;
-												table.insert(v821.NoClipParts, v834);
-												break;
-											end
-										end
-										break;
-									end
-								end
-								break;
-							end
-							if (v1011 == 0) then
-								v1012 = 0 + 0;
-								v1013 = nil;
-								v1011 = 2 - 1;
-							end
-						end
-					end
+				local v845 = v844:FindFirstChild("HumanoidRootPart");
+				if not v845 then
+					return;
 				end
-				v822.DescendantAdded:Connect(function(v835)
-					if v835:IsA("BasePart") then
-						task.wait(290.1 - (23 + 267));
-						v835.CanCollide = false;
-						table.insert(v821.NoClipParts, v835);
-					end
-				end);
-				local v823 = v822:WaitForChild("Humanoid");
-				v823.StateChanged:Connect(function(v836, v837)
-					if (v837 == Enum.HumanoidStateType.Jumping) then
-						local v1015 = 1944 - (1129 + 815);
-						local v1016;
-						while true do
-							if (v1015 == (387 - (371 + 16))) then
-								v1016 = 0 + (1750 - (1326 + 424));
-								while true do
-									if ((0 - 0) == v1016) then
-										task.wait(0.05 - (0 - 0));
-										for v1244, v1245 in pairs(v822:GetDescendants()) do
-											if v1245:IsA("BasePart") then
-												v1245.CanCollide = false;
-											end
-										end
-										break;
-									end
-								end
-								break;
-							end
-						end
-					end
-				end);
-			end;
-			v678.Stop = function(v824)
-				local v825 = 0 - 0;
-				local v826;
-				while true do
-					if (v825 == (118 - (88 + 30))) then
-						if v824.Connection then
-							local v1056 = (1284 - (720 + 51)) - ((451 - 248) + (2086 - (421 + 1355)));
-							local v1057;
-							while true do
-								if (v1056 == (1993 - ((2042 - 804) + 755))) then
-									v1057 = 0 + 0 + (1083 - (286 + 797));
-									while true do
-										if (v1057 == (0 - 0)) then
-											v824.Connection:Disconnect();
-											v824.Connection = nil;
-											break;
-										end
-									end
-									break;
-								end
-							end
-						end
-						if v824.CharacterAddedConnection then
-							local v1058 = 0 - 0;
-							while true do
-								if (v1058 == (439 - (397 + 42))) then
-									v824.CharacterAddedConnection:Disconnect();
-									v824.CharacterAddedConnection = nil;
-									break;
-								end
-							end
-						end
-						v825 = 1;
-					end
-					if (v825 == 1) then
-						v826 = game:GetService("Players").LocalPlayer;
-						if v826.Character then
-							for v1128, v1129 in pairs(v824.NoClipParts) do
-								if (v1129 and v1129.Parent) then
-									v1129.CanCollide = true;
-								end
-							end
-						end
-						v825 = 1 + 1;
-					end
-					if (2 == v825) then
-						v824.NoClipParts = {};
-						break;
-					end
+				local v846 = game:GetService("UserInputService");
+				local v847 = Vector3.zero;
+				local v848 = v845.CFrame;
+				if v846:IsKeyDown(Enum.KeyCode.W) then
+					v847 = v847 + v848.LookVector;
 				end
-			end;
-			v678:Toggle();
-			v2:SetCore("SendNotification", {Title="XDG-HOB",Text="防检测穿墙已启用\nWASD移动 空格上升 Ctrl下降",Duration=((2339 - (24 + 776)) - ((1091 - 382) + (1610 - (222 + 563)))),Icon="rbxassetid://4483345998"});
-			print("防检测穿墙启用成功");
-		else
-			local v683 = 0 - 0;
-			local v684;
-			local v685;
-			while true do
-				if ((0 + 0) == v683) then
-					v684 = 0;
-					v685 = nil;
-					v683 = 1;
+				if v846:IsKeyDown(Enum.KeyCode.S) then
+					v847 = v847 - v848.LookVector;
 				end
-				if (v683 == (191 - (23 + 167))) then
-					while true do
-						if (v684 == (0 - (1798 - (690 + 1108)))) then
-							v685 = 0 + 0;
-							while true do
-								if (v685 == 2) then
-									v2:SetCore("SendNotification", {Title="XDG-HOB",Text="防检测穿墙已禁用",Duration=((3 + 0) - (848 - (40 + 808))),Icon="rbxassetid://4483345998"});
-									break;
-								end
-								if ((0 + 0) == v685) then
-									local v1192 = 0;
-									while true do
-										if (v1192 == 0) then
-											if WallWalkModule then
-												WallWalkModule:Stop();
-											end
-											v232.BackgroundColor3 = v251;
-											v1192 = 1;
-										end
-										if (v1192 == (3 - 2)) then
-											v685 = 1 + 0;
-											break;
-										end
-									end
-								end
-								if (v685 == (865 - (196 + 354 + 314))) then
-									v243.Color = Color3.fromRGB(44 + 36, 315 - (806 - (47 + 524)), 186 - (63 + 33));
-									v232.Text = "防检测穿墙";
-									v685 = 835 - (171 + (1809 - 1147));
-								end
-							end
-							break;
-						end
-					end
-					break;
+				if v846:IsKeyDown(Enum.KeyCode.A) then
+					v847 = v847 - v848.RightVector;
 				end
-			end
-		end
-	end);
-	v232.Parent = v195;
-	local v254 = Instance.new("TextButton");
-	v254.Name = "FlyCar";
-	v254.Size = UDim2.new((138.9 - 45) - ((8 - 4) + 89), (1726 - (1165 + 561)) - (0 + 0), (0 - 0) + 0, (67 + 108) - (614 - (341 + 138)));
-	v254.Text = "飞车";
-	v254.BackgroundColor3 = Color3.fromRGB(60, 24 + 10 + 26, 144 - 74);
-	v254.TextColor3 = Color3.new((1813 - (89 + 237)) - (35 + (4667 - 3216)), 1 - 0, (2335 - (581 + 300)) - ((1248 - (855 + 365)) + (3384 - 1959)));
-	v254.Font = Enum.Font.GothamSemibold;
-	v254.TextSize = 2008 - (308 + 633 + (2287 - (1030 + 205)));
-	v254.TextStrokeTransparency = 0.5 + 0 + 0;
-	v254.TextStrokeColor3 = Color3.fromRGB(0, (1409 + 105) - ((1108 - (156 + 130)) + 692), 0 - (0 - 0));
-	v254.AutoButtonColor = false;
-	local v265 = Instance.new("UIStroke");
-	v265.Thickness = 2 - 0;
-	v265.Color = Color3.fromRGB((77 - 39) + 12 + 30, (220 + 157) - (45 + 252), (159 - (10 + 59)) + 0);
-	v265.Transparency = 0.3 + 0 + (0 - 0);
-	v265.Parent = v254;
-	local v270 = Instance.new("UICorner");
-	v270.CornerRadius = UDim.new((1163 - (671 + 492)) - 0, (352 + 89) - (114 + (1534 - (369 + 846))));
-	v270.Parent = v254;
-	local v273 = Color3.fromRGB(86 - (7 + 19), 76 - (14 + 2), 45 + (1970 - (1036 + 909)));
-	local v274 = false;
-	v254.MouseEnter:Connect(function()
-		if not v274 then
-			local v686 = 0 - 0;
-			local v687;
-			while true do
-				if (v686 == ((0 + 0) - 0)) then
-					v687 = 1963 - ((933 - 377) + (1610 - (11 + 192)));
-					while true do
-						if (v687 == 0) then
-							v254.BackgroundColor3 = Color3.fromRGB(70, (645 + 631) - (741 + (640 - (135 + 40))), (1320 - 775) - (103 + 67 + (649 - 354)));
-							v265.Color = Color3.fromRGB((71 - 23) + (218 - (50 + 126)), (231 - 148) + 2 + 5, (1659 - (1233 + 180)) - (1115 - (522 + 447)));
-							break;
-						end
-					end
-					break;
+				if v846:IsKeyDown(Enum.KeyCode.D) then
+					v847 = v847 + v848.RightVector;
 				end
-			end
-		end
-	end);
-	v254.MouseLeave:Connect(function()
-		if not v274 then
-			local v688 = 1421 - (107 + 1314);
-			local v689;
-			local v690;
-			while true do
-				if ((0 + 0) == v688) then
-					v689 = (0 - 0) + 0 + 0;
-					v690 = nil;
-					v688 = 1 - 0;
+				if v846:IsKeyDown(Enum.KeyCode.Space) then
+					v847 = v847 + Vector3.new(0 + 0, 2 - 1, 0 - 0);
 				end
-				if (v688 == (3 - 2)) then
-					while true do
-						if (v689 == ((1910 - (716 + 1194)) + 0 + 0)) then
-							v690 = 0 + 0 + (503 - (74 + 429));
-							while true do
-								if (v690 == ((2372 - 1142) - (475 + 482 + (624 - 351)))) then
-									v254.BackgroundColor3 = v273;
-									v265.Color = Color3.fromRGB(80, 16 + 6 + (178 - 120), 222 - 132);
-									break;
-								end
-							end
-							break;
-						end
-					end
-					break;
+				if v846:IsKeyDown(Enum.KeyCode.LeftControl) then
+					v847 = v847 + Vector3.new(0 + 0, -(1 + 0), 0 + 0);
 				end
-			end
-		end
-	end);
-	v254.MouseButton1Click:Connect(function()
-		local v619 = 433 - (279 + 154);
-		while true do
-			if (v619 == 0) then
-				v274 = not v274;
-				if v274 then
-					local v864 = (778 - (454 + 324)) + 0 + 0;
-					local v865;
-					local v866;
-					while true do
-						if (v864 == ((24 - (12 + 5)) - 5)) then
-							if v865 then
-								local v1156 = 0 + 0;
-								local v1157;
-								while true do
-									if (v1156 == (0 - 0)) then
-										v1157 = (0 + 0) - (1093 - (277 + 816));
-										while true do
-											if (v1157 == ((0 - 0) - 0)) then
-												v2:SetCore("SendNotification", {Title="XDG-HOB",Text="飞车脚本已加载",Duration=(14 - 11),Icon="rbxassetid://4483345998"});
-												print("飞车脚本加载成功");
-												break;
-											end
-										end
-										break;
-									end
-								end
-							else
-								local v1158 = 1183 - (1058 + 125);
-								local v1159;
-								local v1160;
-								while true do
-									if (v1158 == (1 + 0)) then
-										while true do
-											if (v1159 == (975 - (815 + 160))) then
-												v1160 = 0 - 0;
-												while true do
-													if (((2 - 1) + 0 + 0) == v1160) then
-														v274 = false;
-														v254.BackgroundColor3 = v273;
-														v1160 = (2 - 1) + (1899 - (41 + 1857));
-													end
-													if (v1160 == (1893 - (1222 + 671))) then
-														local v1334 = 0 - 0;
-														while true do
-															if (v1334 == 1) then
-																v1160 = 1 - 0;
-																break;
-															end
-															if (0 == v1334) then
-																v2:SetCore("SendNotification", {Title="错误",Text="加载飞车脚本失败",Duration=5,Icon="rbxassetid://4483345998"});
-																warn("加载飞车脚本失败:", v866);
-																v1334 = 1183 - (229 + 953);
-															end
-														end
-													end
-													if (v1160 == (1776 - (1111 + 663))) then
-														v265.Color = Color3.fromRGB((1761 - (874 + 705)) - (15 + 87), 80, 62 + 28);
-														v254.Text = "飞车";
-														break;
-													end
-												end
-												break;
-											end
-										end
-										break;
-									end
-									if (v1158 == (0 - 0)) then
-										v1159 = 1780 - (11 + 378 + (2070 - (642 + 37)));
-										v1160 = nil;
-										v1158 = 1;
-									end
-								end
-							end
-							break;
-						end
-						if (((218 + 734) - (783 + 27 + 141)) == v864) then
-							v254.Text = "飞车 ✓";
-							v865, v866 = pcall(function()
-								loadstring(game:HttpGet("https://pastebin.com/raw/G3GnBCyC", true))();
-							end);
-							v864 = (14 - 8) - (458 - (233 + 221));
-						end
-						if (v864 == 0) then
-							v254.BackgroundColor3 = Color3.fromRGB((182 - 103) + 1 + 0, 1701 - (718 + 823), (357 + 209) - (309 + (807 - (266 + 539))));
-							v265.Color = Color3.fromRGB(368 - 248, (3997 - 2585) - ((2315 - (636 + 589)) + (289 - 167)), 83 + 172);
-							v864 = 3 - (3 - 1);
-						end
-					end
-				else
-					local v867 = 0 + 0 + 0 + 0;
-					while true do
-						if (v867 == ((2134 - (657 + 358)) - (628 + (1297 - 807)))) then
-							v254.Text = "飞车";
-							v2:SetCore("SendNotification", {Title="XDG-HOB",Text="飞车脚本已卸载",Duration=((2 - 1) + 2),Icon="rbxassetid://4483345998"});
-							break;
-						end
-						if (v867 == (0 - (1187 - (1151 + 36)))) then
-							local v1065 = 0;
-							while true do
-								if (0 == v1065) then
-									v254.BackgroundColor3 = v273;
-									v265.Color = Color3.fromRGB(80, (353 + 12) - (75 + 210), (2580 - 1716) - (431 + 343));
-									v1065 = 1833 - (1552 + 280);
-								end
-								if (v1065 == 1) then
-									v867 = 835 - (64 + 770);
-									break;
-								end
-							end
-						end
-					end
-				end
-				break;
-			end
-		end
-	end);
-	v254.Parent = v195;
-	local v276 = Instance.new("TextButton");
-	v276.Name = "PlayerJoinNotification";
-	v276.Size = UDim2.new(0.9 - (0 + 0), 0 - 0, 0 + 0, 115 - 75);
-	v276.Text = "玩家进入提示";
-	v276.BackgroundColor3 = Color3.fromRGB(60, (1291 - (157 + 1086)) + (23 - 11), (39 - 30) + 61);
-	v276.TextColor3 = Color3.new(1696 - ((852 - 296) + (1553 - 414)), 1, (835 - (599 + 220)) - ((11 - 5) + (1940 - (1813 + 118))));
-	v276.Font = Enum.Font.GothamSemibold;
-	v276.TextSize = 11 + 4;
-	v276.TextStrokeTransparency = (1217.5 - (841 + 376)) + (0 - 0);
-	v276.TextStrokeColor3 = Color3.fromRGB(0 + 0 + 0, (461 - 292) - ((887 - (464 + 395)) + (361 - 220)), 0 + 0 + (837 - (467 + 370)));
-	v276.AutoButtonColor = false;
-	local v287 = Instance.new("UIStroke");
-	v287.Thickness = 2;
-	v287.Color = Color3.fromRGB(98 - (36 - 18), 59 + 21, (219 - 155) + 26);
-	v287.Transparency = 0.3 + 0;
-	v287.Parent = v276;
-	local v292 = Instance.new("UICorner");
-	v292.CornerRadius = UDim.new((3063 - 1746) - ((1006 - (150 + 370)) + 831), 1290 - (74 + 1208));
-	v292.Parent = v276;
-	local v295 = Color3.fromRGB((383 - 227) - 96, (1000 - 789) - (108 + 43), (404 - (14 + 376)) + (96 - 40));
-	local v296 = false;
-	v276.MouseEnter:Connect(function()
-		if not v296 then
-			local v691 = 0;
-			local v692;
-			while true do
-				if (v691 == (0 - 0)) then
-					v692 = (818 + 445) - (587 + 81 + 568 + 27);
-					while true do
-						if (v692 == 0) then
-							v276.BackgroundColor3 = Color3.fromRGB((184 - 121) + 6 + 1, (93 - (23 + 55)) + (130 - 75), 218 - (93 + 45));
-							v287.Color = Color3.fromRGB((342 + 38) - (23 + (413 - 146)), (640 + 1394) - ((2030 - (652 + 249)) + 815), (1303 - 816) - ((2239 - (708 + 1160)) + (43 - 27)));
-							break;
-						end
-					end
-					break;
-				end
-			end
-		end
-	end);
-	v276.MouseLeave:Connect(function()
-		if not v296 then
-			local v693 = 0 - 0;
-			local v694;
-			local v695;
-			while true do
-				if (v693 == (28 - (10 + 17))) then
-					while true do
-						if (v694 == ((0 + 0) - (1732 - (1400 + 332)))) then
-							v695 = 0 - (0 - 0);
-							while true do
-								if (v695 == ((2026 - (242 + 1666)) - (38 + 50 + 30))) then
-									v276.BackgroundColor3 = v295;
-									v287.Color = Color3.fromRGB(80, 30 + 50, (734 + 127) - (720 + (991 - (850 + 90))));
-									break;
-								end
-							end
-							break;
-						end
-					end
-					break;
-				end
-				if (v693 == (0 - 0)) then
-					v694 = (3140 - (360 + 1030)) - (1326 + 376 + 48);
-					v695 = nil;
-					v693 = 2 - 1;
-				end
-			end
-		end
-	end);
-	v276.MouseButton1Click:Connect(function()
-		local v620 = (0 - 0) - (1661 - (909 + 752));
-		while true do
-			if (v620 == 0) then
-				v296 = not v296;
-				if v296 then
-					local v868 = 1776 - ((1644 - (109 + 1114)) + (2480 - 1125));
-					local v869;
-					local v870;
-					while true do
-						if (v868 == (0 - 0)) then
-							local v1068 = 0 + 0;
-							while true do
-								if (v1068 == 1) then
-									v868 = 1 - 0;
-									break;
-								end
-								if (v1068 == 0) then
-									v276.BackgroundColor3 = Color3.fromRGB((282 - (6 + 236)) + 26 + 14, 160, 206 + 49);
-									v287.Color = Color3.fromRGB(283 - 163, (2240 - 957) - (286 + 797), (2065 - (1076 + 57)) - (112 + 565));
-									v1068 = 1;
-								end
-							end
-						end
-						if (v868 == (691 - (579 + 110))) then
-							if v869 then
-								local v1161 = 439 - (32 + 365 + 42);
-								local v1162;
-								while true do
-									if (v1161 == (0 + 0 + 0)) then
-										v1162 = 0;
-										while true do
-											if (v1162 == (800 - (13 + 11 + 776))) then
-												v2:SetCore("SendNotification", {Title="XDG-HOB",Text="玩家进入提示脚本已加载",Duration=(4 - (408 - (174 + 233))),Icon="rbxassetid://4483345998"});
-												print("玩家进入提示脚本加载成功");
-												break;
-											end
-										end
-										break;
-									end
-								end
-							else
-								local v1163 = 0 - 0;
-								local v1164;
-								local v1165;
-								while true do
-									if (v1163 == (1 - 0)) then
-										while true do
-											if (((0 + 0) - 0) == v1164) then
-												v1165 = (1174 - (663 + 511)) + 0;
-												while true do
-													if (v1165 == (2 + 0)) then
-														v287.Color = Color3.fromRGB((59 + 211) - ((70 - 47) + 102 + 65), 1878 - ((1624 - 934) + (2682 - 1574)), 33 + 28 + 29);
-														v276.Text = "玩家进入提示";
-														break;
-													end
-													if (v1165 == ((0 - 0) + 0 + 0)) then
-														local v1339 = 0 + 0;
-														while true do
-															if (v1339 == (722 - (478 + 244))) then
-																v2:SetCore("SendNotification", {Title="错误",Text="加载玩家进入提示脚本失败",Duration=((1370 - (440 + 77)) - (19 + 21 + 808)),Icon="rbxassetid://4483345998"});
-																warn("加载玩家进入提示脚本失败:", v870);
-																v1339 = 1;
-															end
-															if (v1339 == 1) then
-																v1165 = (3 - 2) + (1556 - (655 + 901));
-																break;
-															end
-														end
-													end
-													if (v1165 == (3 - (1 + 1))) then
-														v296 = false;
-														v276.BackgroundColor3 = v295;
-														v1165 = 2 + 0 + 0 + 0;
-													end
-												end
-												break;
-											end
-										end
-										break;
-									end
-									if (v1163 == 0) then
-										v1164 = (3162 - 2377) - (222 + 563);
-										v1165 = nil;
-										v1163 = 1446 - (695 + 750);
-									end
-								end
-							end
-							break;
-						end
-						if (((3 - 2) + (0 - 0)) == v868) then
-							v276.Text = "玩家进入提示 ✓";
-							v869, v870 = pcall(function()
-								loadstring(game:HttpGet("https://raw.githubusercontent.com/boyscp/scriscriptsc/main/bbn.lua"))();
-							end);
-							v868 = (7 - 5) + (351 - (285 + 66));
-						end
-					end
-				else
-					local v871 = 0;
-					local v872;
-					while true do
-						if (v871 == 0) then
-							v872 = 571 - ((108 - 61) + (1834 - (682 + 628)));
-							while true do
-								if (v872 == (1 + 0 + 0)) then
-									v276.Text = "玩家进入提示";
-									v2:SetCore("SendNotification", {Title="XDG-HOB",Text="玩家进入提示脚本已卸载",Duration=(8 - (304 - (176 + 123))),Icon="rbxassetid://4483345998"});
-									break;
-								end
-								if (v872 == ((0 + 0) - (0 + 0))) then
-									local v1204 = 269 - (239 + 30);
-									while true do
-										if ((0 + 0) == v1204) then
-											v276.BackgroundColor3 = v295;
-											v287.Color = Color3.fromRGB((175 + 7) - (180 - 78), (5634 - 3828) - ((1480 - (306 + 9)) + 561), 3 + 87);
-											v1204 = 1;
-										end
-										if ((3 - 2) == v1204) then
-											v872 = 1 + 0;
-											break;
-										end
-									end
-								end
-							end
-							break;
-						end
-					end
-				end
-				break;
-			end
-		end
-	end);
-	v276.Parent = v195;
-	local v298 = Instance.new("TextButton");
-	v298.Name = "FloatWalk";
-	v298.Size = UDim2.new(0.9 - (0 + 0), 0 + 0 + (0 - 0), 1375 - (1140 + 235), (331 + 188) - (341 + 127 + 11));
-	v298.Text = "踏空";
-	v298.BackgroundColor3 = Color3.fromRGB(17 + 12 + 31, 60, (196 - (33 + 19)) - (27 + 47));
-	v298.TextColor3 = Color3.new((980 - 653) - (89 + 105 + 132), 1 - 0, 1);
-	v298.Font = Enum.Font.GothamSemibold;
-	v298.TextSize = (46 + 2) - 33;
-	v298.TextStrokeTransparency = 689.5 - (586 + 103);
-	v298.TextStrokeColor3 = Color3.fromRGB(0, (0 + 0) - (0 - 0), 1488 - (1309 + 179));
-	v298.AutoButtonColor = false;
-	local v309 = Instance.new("UIStroke");
-	v309.Thickness = (1593 - 710) - (253 + 328 + (805 - 505));
-	v309.Color = Color3.fromRGB((982 + 318) - ((1816 - 961) + (727 - 362)), 190 - (719 - (295 + 314)), 30 + (147 - 87));
-	v309.Transparency = (3197.3 - (1300 + 662)) - ((3234 - 2204) + (1960 - (1178 + 577)));
-	v309.Parent = v298;
-	local v314 = Instance.new("UICorner");
-	v314.CornerRadius = UDim.new(0 + 0, 5 + 3 + (0 - 0));
-	v314.Parent = v298;
-	local v317 = Color3.fromRGB((1751 - (851 + 554)) - (138 + 18 + (360 - 230)), 130 - 70, 372 - (115 + 187));
-	local v318 = false;
-	v298.MouseEnter:Connect(function()
-		if not v318 then
-			local v696 = (0 + 0) - (0 + 0);
-			while true do
-				if (v696 == ((0 - 0) - 0)) then
-					v298.BackgroundColor3 = Color3.fromRGB((1304 - (160 + 1001)) - (64 + 9), 14 + 5 + 51, (95 - 48) + 33);
-					v309.Color = Color3.fromRGB((517 - (237 + 121)) - ((907 - (525 + 372)) + 59), 170 - 80, 29 + (233 - 162));
-					break;
-				end
-			end
-		end
-	end);
-	v298.MouseLeave:Connect(function()
-		if not v318 then
-			local v697 = 0;
-			local v698;
-			local v699;
-			while true do
-				if ((142 - (96 + 46)) == v697) then
-					v698 = (777 - (643 + 134)) - (0 + 0);
-					v699 = nil;
-					v697 = 2 - 1;
-				end
-				if (v697 == (3 - 2)) then
-					while true do
-						if (v698 == ((1116 + 47) - ((1316 - 645) + (1005 - 513)))) then
-							v699 = (719 - (316 + 403)) + 0 + 0;
-							while true do
-								if (v699 == (0 - 0)) then
-									v298.BackgroundColor3 = v317;
-									v309.Color = Color3.fromRGB((469 + 826) - ((929 - 560) + 600 + 246), 8 + 14 + 58, 311 - 221);
-									break;
-								end
-							end
-							break;
-						end
-					end
-					break;
-				end
-			end
-		end
-	end);
-	v298.MouseButton1Click:Connect(function()
-		local v621 = (0 - 0) + (0 - 0);
-		while true do
-			if (v621 == ((112 + 1833) - ((2039 - 1003) + 909))) then
-				v318 = not v318;
-				if v318 then
-					local v875 = 0 + 0 + 0;
-					local v876;
-					local v877;
-					local v878;
-					while true do
-						if (v875 == 1) then
-							v878 = nil;
-							while true do
-								if (v876 == (1 - 0)) then
-									v298.Text = "踏空 ✓";
-									v877, v878 = pcall(function()
-										loadstring(game:HttpGet("https://raw.githubusercontent.com/GhostPlayer352/Test4/main/Float"))();
-									end);
-									v876 = 2;
-								end
-								if (v876 == 0) then
-									local v1208 = 0 - 0;
-									while true do
-										if (v1208 == 1) then
-											v876 = 18 - (12 + 5);
-											break;
-										end
-										if (v1208 == (0 - 0)) then
-											v298.BackgroundColor3 = Color3.fromRGB((603 - 320) - ((23 - 12) + 192), 81 + (195 - 116), 52 + 203);
-											v309.Color = Color3.fromRGB((2268 - (1656 + 317)) - (121 + 14 + 40), (388 + 96) - (754 - 470), 1254 - 999);
-											v1208 = 355 - (5 + 349);
-										end
-									end
-								end
-								if (v876 == ((9 - 7) + (1271 - (266 + 1005)))) then
-									if v877 then
-										local v1246 = 0 + 0;
-										local v1247;
-										local v1248;
-										while true do
-											if (v1246 == 0) then
-												v1247 = (0 - 0) - (0 - 0);
-												v1248 = nil;
-												v1246 = 1;
-											end
-											if (v1246 == 1) then
-												while true do
-													if (v1247 == (1696 - (561 + 1135))) then
-														v1248 = 0 - 0;
-														while true do
-															if (v1248 == 0) then
-																v2:SetCore("SendNotification", {Title="XDG-HOB",Text="踏空脚本已加载",Duration=(4 - (3 - 2)),Icon="rbxassetid://4483345998"});
-																print("踏空脚本加载成功");
-																break;
-															end
-														end
-														break;
-													end
-												end
-												break;
-											end
-										end
-									else
-										local v1249 = (1242 - (507 + 559)) - ((125 - 75) + (389 - 263));
-										local v1250;
-										while true do
-											if (v1249 == (0 - (388 - (212 + 176)))) then
-												v1250 = 905 - (250 + 655);
-												while true do
-													if (v1250 == (1 + 1)) then
-														v309.Color = Color3.fromRGB(1493 - (1233 + (490 - 310)), (1832 - 783) - ((816 - 294) + (2403 - (1869 + 87))), 312 - 222);
-														v298.Text = "踏空";
-														break;
-													end
-													if (v1250 == ((3323 - (484 + 1417)) - ((229 - 122) + (2201 - 887)))) then
-														local v1343 = 773 - (48 + 725);
-														while true do
-															if (1 == v1343) then
-																v1250 = 2;
-																break;
-															end
-															if (0 == v1343) then
-																v318 = false;
-																v298.BackgroundColor3 = v317;
-																v1343 = 1 - 0;
-															end
-														end
-													end
-													if (v1250 == (0 + (0 - 0))) then
-														local v1344 = 0 + 0;
-														while true do
-															if (v1344 == (2 - 1)) then
-																v1250 = 1 + 0;
-																break;
-															end
-															if (v1344 == (0 + 0)) then
-																v2:SetCore("SendNotification", {Title="错误",Text="加载踏空脚本失败",Duration=(858 - (152 + 701)),Icon="rbxassetid://4483345998"});
-																warn("加载踏空脚本失败:", v878);
-																v1344 = 1;
-															end
-														end
-													end
-												end
-												break;
-											end
-										end
-									end
-									break;
-								end
-							end
-							break;
-						end
-						if (v875 == 0) then
-							local v1070 = 1311 - (430 + 881);
-							while true do
-								if (0 == v1070) then
-									v876 = 0 - (0 + 0);
-									v877 = nil;
-									v1070 = 1;
-								end
-								if (1 == v1070) then
-									v875 = 1;
-									break;
-								end
-							end
-						end
-					end
-				else
-					local v879 = 895 - (557 + 338);
-					while true do
-						if (v879 == (1 + 0)) then
-							v298.Text = "踏空";
-							v2:SetCore("SendNotification", {Title="XDG-HOB",Text="踏空脚本已卸载",Duration=(2 + (2 - 1)),Icon="rbxassetid://4483345998"});
-							break;
-						end
-						if (v879 == ((0 - 0) - 0)) then
-							v298.BackgroundColor3 = v317;
-							v309.Color = Color3.fromRGB(80, (839 - 523) - (508 - 272), (2801 - (499 + 302)) - ((1582 - (39 + 827)) + 1194));
-							v879 = 2 - 1;
-						end
-					end
-				end
-				break;
-			end
-		end
-	end);
-	v298.Parent = v195;
-	local v320 = Instance.new("TextButton");
-	v320.Name = "WallClimb";
-	v320.Size = UDim2.new((0.9 - 0) + 0, (0 - 0) + (0 - 0), 0 + 0, 117 - 77);
-	v320.Text = "爬墙";
-	v320.BackgroundColor3 = Color3.fromRGB((91 + 472) - ((116 - 42) + (533 - (103 + 1))), (669 - (475 + 79)) - (118 - 63), (112 - 77) + 5 + 30);
-	v320.TextColor3 = Color3.new(1 + 0, 2 - (1504 - (1395 + 108)), 1);
-	v320.Font = Enum.Font.GothamSemibold;
-	v320.TextSize = (31 - 20) + (1208 - (7 + 1197));
-	v320.TextStrokeTransparency = 0.5 + 0;
-	v320.TextStrokeColor3 = Color3.fromRGB((0 + 0) - 0, 0 - 0, 0);
-	v320.AutoButtonColor = false;
-	local v331 = Instance.new("UIStroke");
-	v331.Thickness = (754 - (27 + 292)) - (279 + 154);
-	v331.Color = Color3.fromRGB(858 - (454 + (949 - 625)), (79 - 16) + 17, 377 - 287);
-	v331.Transparency = (33.3 - 16) - ((22 - 10) + (144 - (43 + 96)));
-	v331.Parent = v320;
-	local v336 = Instance.new("UICorner");
-	v336.CornerRadius = UDim.new(0, 32 - 24);
-	v336.Parent = v320;
-	local v339 = Color3.fromRGB(135 - 75, 28 + 5 + 8 + 19, 70);
-	local v340 = false;
-	v320.MouseEnter:Connect(function()
-		if not v340 then
-			local v700 = 0 - (0 - 0);
-			while true do
-				if (v700 == (0 + 0 + (0 - 0))) then
-					v320.BackgroundColor3 = Color3.fromRGB(70, 23 + 47, (87 + 1086) - ((2028 - (1414 + 337)) + 816));
-					v331.Color = Color3.fromRGB(2030 - (1642 + 298), 90, 260 - 160);
-					break;
-				end
-			end
-		end
-	end);
-	v320.MouseLeave:Connect(function()
-		if not v340 then
-			local v701 = 0 - 0;
-			local v702;
-			while true do
-				if (v701 == (0 - 0)) then
-					v702 = (0 + 0) - (0 + 0);
-					while true do
-						if (v702 == ((2155 - (357 + 615)) - (1058 + 88 + 37))) then
-							v320.BackgroundColor3 = v339;
-							v331.Color = Color3.fromRGB(15 + (159 - 94), (904 + 151) - ((1746 - 931) + 160), 72 + 18);
-							break;
-						end
-					end
-					break;
-				end
-			end
-		end
-	end);
-	v320.MouseButton1Click:Connect(function()
-		local v622 = 0 - (0 + 0);
-		while true do
-			if (((0 + 0) - (1301 - (384 + 917))) == v622) then
-				v340 = not v340;
-				if v340 then
-					local v882 = 0 + 0;
-					local v883;
-					local v884;
-					while true do
-						if (v882 == ((697 - (128 + 569)) - (1543 - (1407 + 136)))) then
-							v320.BackgroundColor3 = Color3.fromRGB(1978 - ((1928 - (687 + 1200)) + (3567 - (556 + 1154))), (7222 - 5169) - (1222 + (766 - (9 + 86))), (1079 - (275 + 146)) - 403);
-							v331.Color = Color3.fromRGB(20 + 100, (351 - (29 + 35)) - 87, 1437 - ((1014 - 785) + 953));
-							v882 = (5301 - 3526) - (1111 + (2926 - 2263));
-						end
-						if (v882 == ((1030 + 551) - ((1886 - (53 + 959)) + 705))) then
-							if v883 then
-								local v1166 = 408 - (312 + 96);
-								local v1167;
-								local v1168;
-								while true do
-									if (v1166 == (0 - 0)) then
-										v1167 = 0 + (285 - (147 + 138));
-										v1168 = nil;
-										v1166 = 900 - (813 + 86);
-									end
-									if (v1166 == 1) then
-										while true do
-											if ((0 + 0 + (0 - 0)) == v1167) then
-												v1168 = 0;
-												while true do
-													if (v1168 == 0) then
-														v2:SetCore("SendNotification", {Title="XDG-HOB",Text="爬墙脚本已加载",Duration=(495 - (18 + 474)),Icon="rbxassetid://4483345998"});
-														print("爬墙脚本加载成功");
-														break;
-													end
-												end
-												break;
-											end
-										end
-										break;
-									end
-								end
-							else
-								local v1169 = 0 + 0;
-								local v1170;
-								while true do
-									if (v1169 == (0 - 0)) then
-										v1170 = 0 - 0;
-										while true do
-											if (v1170 == (1088 - (860 + 226))) then
-												v331.Color = Color3.fromRGB(3 + 77, 759 - (642 + (340 - (121 + 182))), 90);
-												v320.Text = "爬墙";
-												break;
-											end
-											if (v1170 == (0 + 0 + 0)) then
-												v2:SetCore("SendNotification", {Title="错误",Text="加载爬墙脚本失败",Duration=((1241 - (988 + 252)) + 1 + 3),Icon="rbxassetid://4483345998"});
-												warn("加载爬墙脚本失败:", v884);
-												v1170 = 1 + 0;
-											end
-											if (v1170 == ((1972 - (49 + 1921)) - 1)) then
-												v340 = false;
-												v320.BackgroundColor3 = v339;
-												v1170 = 892 - (223 + 667);
-											end
-										end
-										break;
-									end
-								end
-							end
-							break;
-						end
-						if (v882 == (53 - (51 + 1))) then
-							v320.Text = "爬墙 ✓";
-							v883, v884 = pcall(function()
-								loadstring(game:HttpGet("https://pastebin.com/raw/zXk4Rq2r"))();
-							end);
-							v882 = (784 - 328) - (233 + (473 - 252));
-						end
-					end
-				else
-					local v885 = (1125 - (146 + 979)) - (0 + 0);
-					while true do
-						if ((0 + 0) == v885) then
-							local v1079 = 0;
-							while true do
-								if (v1079 == (605 - (311 + 294))) then
-									v320.BackgroundColor3 = v339;
-									v331.Color = Color3.fromRGB(1621 - ((2002 - 1284) + 823), 22 + 29 + (1472 - (496 + 947)), 1448 - (1233 + 125));
-									v1079 = 1 + 0;
-								end
-								if (v1079 == 1) then
-									v885 = (724 + 82) - (51 + 215 + (2184 - (963 + 682)));
-									break;
-								end
-							end
-						end
-						if (v885 == ((2 + 0) - (1505 - (504 + 1000)))) then
-							v320.Text = "爬墙";
-							v2:SetCore("SendNotification", {Title="XDG-HOB",Text="爬墙脚本已卸载",Duration=((827 + 401) - (580 + 56 + 56 + 533)),Icon="rbxassetid://4483345998"});
-							break;
-						end
-					end
-				end
-				break;
-			end
-		end
-	end);
-	v320.Parent = v195;
-	local v342 = Instance.new("TextButton");
-	v342.Name = "IronFist";
-	v342.Size = UDim2.new(0.9 - 0, 0, (0 + 0) - (0 + 0), 82 - (224 - (156 + 26)));
-	v342.Text = "铁拳";
-	v342.BackgroundColor3 = Color3.fromRGB(35 + 25, 48 + 12, (39 - 13) + (208 - (149 + 15)));
-	v342.TextColor3 = Color3.new((1976 - (890 + 70)) - ((774 - (39 + 78)) + (840 - (14 + 468))), 2 - 1, (5 - 3) - 1);
-	v342.Font = Enum.Font.GothamSemibold;
-	v342.TextSize = 15;
-	v342.TextStrokeTransparency = (0.5 + 0) - (0 + 0);
-	v342.TextStrokeColor3 = Color3.fromRGB(1187 - (245 + 906 + 36), 0 + 0 + 0 + 0, (0 - 0) + 0 + 0);
-	v342.AutoButtonColor = false;
-	local v353 = Instance.new("UIStroke");
-	v353.Thickness = (17 - 12) - (1 + 2);
-	v353.Color = Color3.fromRGB((1963 - (12 + 39)) - (1444 + 108 + (866 - 586)), (3255 - 2341) - (64 + 229 + 541), 33 + 29 + 28);
-	v353.Transparency = (0.3 - 0) - (0 + 0);
-	v353.Parent = v342;
-	local v358 = Instance.new("UICorner");
-	v358.CornerRadius = UDim.new(0 - 0, 1718 - (1596 + 114));
-	v358.Parent = v342;
-	local v361 = Color3.fromRGB((28 - 17) + (762 - (164 + 549)), 1498 - (1059 + 379), 1313 - (157 + (1348 - 262)));
-	local v362 = false;
-	v342.MouseEnter:Connect(function()
-		if not v362 then
-			local v703 = (0 + 0) - 0;
-			while true do
-				if (v703 == 0) then
-					v342.BackgroundColor3 = Color3.fromRGB(12 + 58, 70, 350 - 270);
-					v353.Color = Color3.fromRGB(482 - (145 + 247), 74 + 16, 47 + 53);
-					break;
-				end
-			end
-		end
-	end);
-	v342.MouseLeave:Connect(function()
-		if not v362 then
-			local v704 = 0;
-			while true do
-				if (v704 == (0 - 0)) then
-					v342.BackgroundColor3 = v361;
-					v353.Color = Color3.fromRGB((24 + 98) - 42, (94 + 15) - (46 - 17), (1629 - (254 + 466)) - ((1159 - (544 + 16)) + (699 - 479)));
-					break;
-				end
-			end
-		end
-	end);
-	v342.MouseButton1Click:Connect(function()
-		local v623 = 628 - (294 + 334);
-		while true do
-			if (((253 - (236 + 17)) - (0 + 0)) == v623) then
-				v362 = not v362;
-				if v362 then
-					local v890 = (1504 + 427) - ((6827 - 5014) + 118);
-					local v891;
-					local v892;
-					while true do
-						if (v890 == ((0 - 0) + 0 + 0)) then
-							local v1081 = 0 + 0;
-							while true do
-								if (v1081 == (795 - (413 + 381))) then
-									v890 = (1 + 1) - (1 - 0);
-									break;
-								end
-								if (v1081 == 0) then
-									v342.BackgroundColor3 = Color3.fromRGB(80, (3576 - 2199) - ((2811 - (582 + 1388)) + (639 - 263)), 356 - 101);
-									v353.Color = Color3.fromRGB(28 + 66 + 26, (909 - (326 + 38)) - (1020 - 675), (1589 - 475) - (464 + (1015 - (47 + 573))));
-									v1081 = 1 + 0;
-								end
-							end
-						end
-						if (v890 == ((4 - 3) + (0 - 0))) then
-							local v1082 = 1664 - (1269 + 395);
-							while true do
-								if (1 == v1082) then
-									v890 = (1331 - (76 + 416)) - (467 + 370);
-									break;
-								end
-								if (v1082 == (443 - (319 + 124))) then
-									v342.Text = "铁拳 ✓";
-									v891, v892 = pcall(function()
-										loadstring(game:HttpGet("https://raw.githubusercontent.com/0Ben1/fe/main/obf_rf6iQURzu1fqrytcnLBAvW34C9N55kS9g9G3CKz086rC47M6632sEd4ZZYB0AYgV.lua.txt"))();
-									end);
-									v1082 = 2 - 1;
-								end
-							end
-						end
-						if ((1009 - (564 + 443)) == v890) then
-							if v891 then
-								local v1171 = 0 - 0;
-								while true do
-									if (v1171 == (458 - (337 + 121))) then
-										v2:SetCore("SendNotification", {Title="XDG-HOB",Text="铁拳脚本已加载",Duration=((14 - 9) - 2),Icon="rbxassetid://4483345998"});
-										print("铁拳脚本加载成功");
-										break;
-									end
-								end
-							else
-								local v1172 = 0 + (0 - 0);
-								while true do
-									if (((1917 - (1261 + 650)) - 4) == v1172) then
-										v353.Color = Color3.fromRGB(6 + 7 + 67, 186 - 106, 90);
-										v342.Text = "铁拳";
-										break;
-									end
-									if (v1172 == ((828 - 308) - ((1967 - (772 + 1045)) + 370))) then
-										v2:SetCore("SendNotification", {Title="错误",Text="加载铁拳脚本失败",Duration=(1 + 4),Icon="rbxassetid://4483345998"});
-										warn("加载铁拳脚本失败:", v892);
-										v1172 = (1427 - (102 + 42)) - (74 + (3052 - (1524 + 320)));
-									end
-									if (v1172 == ((1272 - (1049 + 221)) - (157 - (18 + 138)))) then
-										v362 = false;
-										v342.BackgroundColor3 = v361;
-										v1172 = 4 - 2;
-									end
-								end
-							end
-							break;
-						end
-					end
-				else
-					local v893 = 1102 - (67 + 1035);
+				if (v847.Magnitude > (0 + 0)) then
+					local FlatIdent_651C5 = 0;
 					local v894;
+					local v895;
 					while true do
-						if ((0 - 0) == v893) then
-							v894 = 348 - (136 + 212);
+						if (FlatIdent_651C5 == 0) then
+							v894 = 0;
+							v895 = nil;
+							FlatIdent_651C5 = 1;
+						end
+						if (FlatIdent_651C5 == 1) then
 							while true do
-								if (v894 == ((4 - 3) + 0)) then
-									v342.Text = "铁拳";
-									v2:SetCore("SendNotification", {Title="XDG-HOB",Text="铁拳脚本已卸载",Duration=(3 + 0),Icon="rbxassetid://4483345998"});
-									break;
+								if (v894 == 0) then
+									v847 = v847.Unit;
+									v895 = v197.Speed * (0.9 + 0 + (math.random() * 0.2));
+									v894 = 1;
 								end
-								if (v894 == (390 - (13 + 1 + 376))) then
-									v342.BackgroundColor3 = v361;
-									v353.Color = Color3.fromRGB((1742 - (240 + 1364)) - (1140 - (1050 + 32)), 52 + (99 - 71), 54 + 36);
-									v894 = 1056 - (331 + 724);
+								if (1 == v894) then
+									v845.CFrame = v845.CFrame + (v847 * v895 * v842);
+									break;
 								end
 							end
 							break;
 						end
 					end
 				end
-				break;
-			end
+			end);
+			break;
 		end
-	end);
-	v342.Parent = v195;
-	return v189;
-end
-local function v150()
-	local v364 = Instance.new("Frame");
-	v364.Name = "FunctionContainer";
-	v364.Size = UDim2.new(1 + 0 + (644 - (269 + 375)), 0 + (725 - (267 + 458)), (1 + 1) - (1 - 0), 0);
-	v364.BackgroundTransparency = (819 - (667 + 151)) + (1497 - (1410 + 87));
-	v364.Visible = false;
-	v364.Parent = v136;
-	local v370 = Instance.new("ScrollingFrame");
-	v370.Name = "FunctionScroll";
-	v370.Size = UDim2.new(1, -((1995 - (1504 + 393)) - ((62 - 39) + (142 - 87))), 1, -(47 - (823 - (461 + 335))));
-	v370.Position = UDim2.new(0 + 0 + 0, 1771 - (1730 + 31), 0 + 0, 1677 - (728 + 939));
-	v370.BackgroundTransparency = (3 - 2) - 0;
-	v370.ScrollBarThickness = (3 - 1) + 4;
-	v370.ScrollBarImageColor3 = Color3.fromRGB((2293 - 1292) - ((1720 - (138 + 930)) + 249), 92 + 8, 294 - (144 + 40));
-	v370.CanvasSize = UDim2.new(1868 - (607 + 101 + 1160), (0 - 0) - (1766 - (459 + 1307)), 1870 - (474 + 1396), (1272 - 543) - 329);
-	v370.Parent = v364;
-	local v379 = Instance.new("UIListLayout");
-	v379.Parent = v370;
-	v379.Padding = UDim.new(0 + 0, 39 - (1 + 9 + (48 - 31)));
-	v379.HorizontalAlignment = Enum.HorizontalAlignment.Center;
-	local v384 = Instance.new("Frame");
-	v384.Name = "SpeedFrame";
-	v384.Size = UDim2.new(0.9 + 0 + 0, 0 - 0, (7553 - 5821) - (1400 + (923 - (562 + 29))), (197 + 33) - (1529 - (374 + 1045)));
-	v384.BackgroundColor3 = Color3.fromRGB((1558 + 410) - (242 + 1666), 186 - 126, (668 - (448 + 190)) + 13 + 27);
-	v384.BackgroundTransparency = 0.1 + 0 + 0 + 0;
-	local v389 = Instance.new("UICorner");
-	v389.CornerRadius = UDim.new((0 - 0) + (0 - 0), 948 - ((2344 - (1307 + 187)) + 90));
-	v389.Parent = v384;
-	local v392 = Instance.new("UIStroke");
-	v392.Thickness = (11 - 8) - (2 - 1);
-	v392.Color = Color3.fromRGB((4507 - 3037) - ((1043 - (232 + 451)) + 984 + 46), 160, 200 + 26 + 29);
-	v392.Transparency = 0.2 - (564 - (510 + 54));
-	v392.Parent = v384;
-	local v397 = Instance.new("ImageLabel");
-	v397.Name = "SpeedIcon";
-	v397.Size = UDim2.new((0 - 0) - 0, (1729 - (13 + 23)) - ((1771 - 862) + 752), 0, 32);
-	v397.Position = UDim2.new(0, 10, 0 - 0, 1233 - ((197 - 88) + (2202 - (830 + 258))));
-	v397.BackgroundTransparency = (3 - 2) - 0;
-	v397.Image = "rbxassetid://3926305904";
-	v397.ImageRectSize = Vector2.new(41 + 23, 55 + 9);
-	v397.ImageRectOffset = Vector2.new((1441 - (860 + 581)) + 0, 128);
-	v397.Parent = v384;
-	local v406 = Instance.new("TextLabel");
-	v406.Name = "SpeedTitle";
-	v406.Size = UDim2.new(1, -50, (892 - 650) - (5 + 1 + (477 - (237 + 4))), 47 - 27);
-	v406.Position = UDim2.new((0 - 0) + 0, (77 - 36) + 8 + 1, 0, 4 - 2);
-	v406.BackgroundTransparency = (1 + 0) - (0 - 0);
-	v406.Text = "防检测速度调整";
-	v406.TextColor3 = Color3.fromRGB(180, (572 + 761) - (586 + 490 + (1483 - (85 + 1341))), 435 - 180);
-	v406.Font = Enum.Font.GothamBold;
-	v406.TextSize = 2 + (28 - 18);
-	v406.TextXAlignment = Enum.TextXAlignment.Left;
-	v406.Parent = v384;
-	local v419 = Instance.new("TextBox");
-	v419.Name = "SpeedInput";
-	v419.Size = UDim2.new((1061.7 - (45 + 327)) - ((1092 - 513) + (612 - (444 + 58))), 0 + 0 + 0 + 0, 0 + 0, 30);
-	v419.Position = UDim2.new((0.15 - 0) + (1732 - (64 + 1668)), 1973 - (1227 + 746), 0 + (0 - 0), 74 - 34);
-	v419.BackgroundColor3 = Color3.fromRGB(539 - (415 + 79), (12 + 440) - ((665 - (142 + 349)) + 100 + 133), (209 - 56) - (49 + 49));
-	v419.TextColor3 = Color3.fromRGB((272 + 114) - 166, 599 - 379, 103 + 127);
-	v419.Font = Enum.Font.GothamSemibold;
-	v419.TextSize = 1188 - ((2527 - (1710 + 154)) + (829 - (200 + 118)));
-	v419.PlaceholderText = "输入速度 (16-400)";
-	v419.Text = "16";
-	v419.ClearTextOnFocus = false;
-	local v431 = Instance.new("UICorner");
-	v431.CornerRadius = UDim.new(0 + 0, (10 - 4) + (0 - 0));
-	v431.Parent = v419;
-	local v434 = Instance.new("UIStroke");
-	v434.Thickness = 1;
-	v434.Color = Color3.fromRGB(89 + 11, 22 + 0 + 78, 60 + 50);
-	v434.Parent = v419;
-	v419.FocusLost:Connect(function(v624)
-		if v624 then
-			local v705 = tonumber(v419.Text);
-			if (v705 and (v705 >= (3 + 13)) and (v705 <= ((2670 - 1437) - 833))) then
-				local v838 = (1250 - (363 + 887)) + (0 - 0);
-				local v839;
-				while true do
-					if (v838 == ((0 - 0) - (0 + 0))) then
-						v839 = (0 - 0) - 0;
-						while true do
-							if (v839 == (0 + 0 + 0)) then
-								v8.SetRealSpeed(v705);
-								v2:SetCore("SendNotification", {Title="XDG-HOB",Text=("速度已设置为: " .. v705),Duration=3,Icon="rbxassetid://4483345998"});
-								break;
-							end
-						end
-						break;
-					end
-				end
-			else
-				local v840 = 0;
-				local v841;
-				while true do
-					if (v840 == (1664 - (674 + 990))) then
-						v841 = 0 - (0 + 0);
-						while true do
-							if (v841 == 0) then
-								v419.Text = "16";
-								v2:SetCore("SendNotification", {Title="错误",Text="请输入16-400之间的数字",Duration=(2 + 2 + (1 - 0)),Icon="rbxassetid://4483345998"});
-								break;
-							end
-						end
-						break;
-					end
-				end
+		if (FlatIdent_7063 == 1) then
+			if v198.Character then
+				v197:SetupCharacter(v198.Character);
 			end
-		end
-	end);
-	v419.Parent = v384;
-	local v439 = Instance.new("TextButton");
-	v439.Name = "ApplySpeedButton";
-	v439.Size = UDim2.new((1055.5 - (507 + 548)) + (837 - (289 + 548)), (2540 - (821 + 997)) - ((733 - (195 + 60)) + 66 + 178), 517 - (440 + 77), (1515 - (251 + 1250)) + (46 - 30));
-	v439.Position = UDim2.new((0.25 + 0) - 0, (2588 - (809 + 223)) - ((955 - 300) + (2705 - 1804)), 0 + (0 - 0), 59 + 21);
-	v439.BackgroundColor3 = Color3.fromRGB(33 + 29 + (635 - (14 + 603)), (238 - (118 + 11)) + 9 + 42, (856 + 171) - (2249 - 1477));
-	v439.Text = "应用速度";
-	v439.TextColor3 = Color3.new(950 - (551 + 398), 1446 - (695 + 474 + 276), (2 + 1) - 2);
-	v439.Font = Enum.Font.GothamSemibold;
-	v439.TextSize = 14;
-	v439.TextStrokeTransparency = (0.6 + 0) - 0;
-	v439.TextStrokeColor3 = Color3.fromRGB(0 - (0 - 0), (808 - 457) - (93 + 192 + (262 - 196)), (0 + 0) - 0);
-	local v450 = Instance.new("UICorner");
-	v450.CornerRadius = UDim.new(1310 - ((771 - (40 + 49)) + 628), (3 - 2) + (495 - (99 + 391)));
-	v450.Parent = v439;
-	local v453 = Instance.new("UIStroke");
-	v453.Thickness = (249 + 51) - (176 + (540 - 417));
-	v453.Color = Color3.fromRGB(51 + (170 - 101), 143 + 3 + (141 - 87), 1859 - (1032 + 572));
-	v453.Parent = v439;
-	v439.MouseEnter:Connect(function()
-		v439.BackgroundColor3 = Color3.fromRGB((786 - (203 + 214)) - ((2056 - (568 + 1249)) + 24 + 6), (117 - 68) + 131, (950 - 704) + (1315 - (913 + 393)));
-	end);
-	v439.MouseLeave:Connect(function()
-		v439.BackgroundColor3 = Color3.fromRGB(141 - (172 - 111), 499 - 339, 359 - 104);
-	end);
-	v439.MouseButton1Click:Connect(function()
-		local v627 = 315 - ((716 - (269 + 141)) + (19 - 10));
-		local v628;
-		while true do
-			if (v627 == ((1981 - (362 + 1619)) - (1625 - (950 + 675)))) then
-				v628 = tonumber(v419.Text);
-				if (v628 and (v628 >= (2 + 1 + (1192 - (216 + 963)))) and (v628 <= ((1533 - (485 + 802)) + 154))) then
-					local v895 = 559 - (432 + 127);
-					local v896;
-					while true do
-						if (v895 == ((1073 - (1065 + 8)) + 0 + 0)) then
-							v896 = 1601 - (635 + 966);
-							while true do
-								if (v896 == (0 - 0)) then
-									v8.SetRealSpeed(v628);
-									v2:SetCore("SendNotification", {Title="XDG-HOB",Text=("速度已设置为: " .. v628),Duration=((991 + 387) - ((1182 - (5 + 37)) + (584 - 349))),Icon="rbxassetid://4483345998"});
-									break;
-								end
-							end
-							break;
-						end
-					end
-				else
-					local v897 = 0;
-					local v898;
-					while true do
-						if ((0 + 0 + (0 - 0)) == v897) then
-							v898 = 0 + 0 + 0;
-							while true do
-								if (v898 == (0 + 0)) then
-									v419.Text = "16";
-									v2:SetCore("SendNotification", {Title="错误",Text="请输入16-400之间的数字",Duration=((118 - 61) - (33 + (71 - 52))),Icon="rbxassetid://4483345998"});
-									break;
-								end
-							end
-							break;
-						end
-					end
-				end
-				break;
-			end
-		end
-	end);
-	v439.Parent = v384;
-	local v458 = Instance.new("TextLabel");
-	v458.Name = "CurrentSpeedLabel";
-	v458.Size = UDim2.new(1 - 0, (0 - 0) + 0 + 0, 529 - (318 + 211), (290 - 231) - (1626 - (963 + 624)));
-	v458.Position = UDim2.new(0 + 0, (846 - (518 + 328)) + 0, 0 - (0 - 0), (172 - 64) + (324 - (301 + 16)));
-	v458.BackgroundTransparency = (2022 - 1332) - (586 + (288 - 185));
-	v458.TextColor3 = Color3.fromRGB(469 - 289, 18 + 1 + 103 + 78, (1675 - 890) - (319 + 211));
-	v458.Font = Enum.Font.GothamSemibold;
-	v458.TextSize = (143 + 1356) - ((4161 - 2852) + 179);
-	v458.Text = "当前速度: 16";
-	v458.Parent = v384;
-	local function v468()
-		v458.Text = "当前速度: " .. math.floor(v8.GetRealSpeed());
-	end
-	game:GetService("RunService").Heartbeat:Connect(function()
-		v468();
-	end);
-	v384.Parent = v370;
-	local v470 = {};
-	do
-		local v630 = (0 + 0) - (1019 - (829 + 190));
-		local v631;
-		local v632;
-		local v633;
-		local v634;
-		local v635;
-		local v636;
-		while true do
-			if (v630 == (1 + (3 - 2))) then
-				local v827 = 0;
-				while true do
-					if (v827 == 1) then
-						v634 = v631.CharacterAdded:Connect(function(v1037)
-							local v1038 = 0 - 0;
-							local v1039;
-							local v1040;
-							while true do
-								if ((0 - 0) == v1038) then
-									v1039 = (0 - 0) - 0;
-									v1040 = nil;
-									v1038 = 1 + 0;
-								end
-								if (v1038 == (1 + 0)) then
-									while true do
-										if (v1039 == ((2 - 1) + 0)) then
-											if v1040 then
-												local v1294 = (0 + 0) - (613 - (520 + 93));
-												while true do
-													if (v1294 == ((276 - (259 + 17)) - (0 + 0))) then
-														v1040.JumpHeight = v632;
-														v635();
-														v1294 = (220 + 390) - ((998 - 703) + (905 - (396 + 195)));
-													end
-													if (v1294 == 1) then
-														v1040.Died:Connect(function()
-															local v1345 = (0 - 0) - (1761 - (440 + 1321));
-															local v1346;
-															while true do
-																if (v1345 == 0) then
-																	v1346 = (3791 - (1059 + 770)) - ((6011 - 4711) + (1207 - (424 + 121)));
-																	while true do
-																		if (v1346 == ((0 + 0) - (1347 - (641 + 706)))) then
-																			task.wait(1758 - (467 + 711 + 577));
-																			v635();
-																			break;
-																		end
-																	end
-																	break;
-																end
-															end
-														end);
-														break;
-													end
-												end
-											end
-											break;
-										end
-										if (v1039 == ((440 - (249 + 191)) + (0 - 0))) then
-											local v1254 = 0 + 0;
-											while true do
-												if (1 == v1254) then
-													v1039 = (3 - 2) + 0;
-													break;
-												end
-												if (v1254 == 0) then
-													task.wait(0.5 - (427 - (183 + 244)));
-													v1040 = v1037:WaitForChild("Humanoid", 1410 - (42 + 809 + (1284 - (434 + 296))));
-													v1254 = 2 - 1;
-												end
-											end
-										end
-									end
-									break;
-								end
-							end
-						end);
-						v470.GetJumpHeight = function()
-							return v632;
-						end;
-						v827 = 514 - (169 + 343);
-					end
-					if (v827 == (2 + 0)) then
-						v630 = (13 - 5) - (14 - 9);
-						break;
-					end
-					if (v827 == 0) then
-						v636();
-						if v634 then
-							v634:Disconnect();
-						end
-						v827 = 1;
-					end
-				end
-			end
-			if (v630 == ((0 + 0) - (0 - 0))) then
-				local v828 = 1123 - (651 + 472);
-				while true do
-					if (v828 == (0 + 0)) then
-						v631 = game:GetService("Players").LocalPlayer;
-						v632 = 7.2;
-						v828 = 1 + 0;
-					end
-					if (v828 == (2 - 0)) then
-						v630 = 484 - (397 + 86);
-						break;
-					end
-					if ((877 - (423 + 453)) == v828) then
-						v633 = nil;
-						v634 = nil;
-						v828 = 1 + 1;
-					end
-				end
-			end
-			if (v630 == 3) then
-				v470.SetJumpHeight = function(v842)
-					local v843 = 0 + 0;
-					while true do
-						if (v843 == 0) then
-							if ((v842 >= ((270.2 + 39) - (92 + 23 + 168 + 19))) and (v842 <= (383 + (1307 - (50 + 1140))))) then
-								local v1130 = 0 + 0;
-								local v1131;
-								while true do
-									if ((0 + 0) == v1130) then
-										v632 = v842;
-										v635();
-										v1130 = 1 + 0 + 0;
-									end
-									if (v1130 == (3 - (2 - 0))) then
-										local v1237 = 0;
-										local v1238;
-										while true do
-											if ((0 + 0) == v1237) then
-												v1238 = 596 - (157 + 439);
-												while true do
-													if (v1238 == ((2020 - 858) - ((531 - 371) + (2960 - 1959)))) then
-														v1130 = 2 + (918 - (782 + 136));
-														break;
-													end
-													if (v1238 == 0) then
-														v1131 = v631.Character;
-														if v1131 then
-															local v1348 = 855 - (112 + 743);
-															local v1349;
-															local v1350;
-															while true do
-																if (1 == v1348) then
-																	while true do
-																		if (v1349 == ((1171 - (1026 + 145)) - (0 + 0))) then
-																			v1350 = v1131:FindFirstChild("Humanoid");
-																			if v1350 then
-																				v1350.JumpHeight = v632;
-																			end
-																			break;
-																		end
-																	end
-																	break;
-																end
-																if (v1348 == (718 - (493 + 225))) then
-																	v1349 = (0 - 0) + 0 + 0;
-																	v1350 = nil;
-																	v1348 = 2 - 1;
-																end
-															end
-														end
-														v1238 = 359 - (5 + 232 + (345 - 224));
-													end
-												end
-												break;
-											end
-										end
-									end
-									if (v1130 == ((262 + 637) - ((876 - 351) + 372))) then
-										return true;
-									end
-								end
-							end
-							return false;
-						end
-					end
-				end;
-				v470.Cleanup = function()
-					local v844 = 0;
-					local v845;
-					while true do
-						if (v844 == 0) then
-							if v633 then
-								local v1132 = 1595 - (210 + 1385);
-								local v1133;
-								local v1134;
-								while true do
-									if (v1132 == (1690 - (1201 + 488))) then
-										while true do
-											if (v1133 == (0 - (0 + 0))) then
-												v1134 = 0 - (0 - 0);
-												while true do
-													if (v1134 == ((253 - 111) - ((681 - (352 + 233)) + (111 - 65)))) then
-														v633:Disconnect();
-														v633 = nil;
-														break;
-													end
-												end
-												break;
-											end
-										end
-										break;
-									end
-									if (v1132 == (0 + 0)) then
-										v1133 = 0;
-										v1134 = nil;
-										v1132 = 1;
-									end
-								end
-							end
-							if v634 then
-								v634:Disconnect();
-								v634 = nil;
-							end
-							v844 = 778 - ((1828 - 1185) + (708 - (489 + 85)));
-						end
-						if (v844 == (1 + (1501 - (277 + 1224)))) then
-							v845 = v631.Character;
-							if v845 then
-								local v1135 = (1493 - (663 + 830)) - 0;
-								local v1136;
-								while true do
-									if (v1135 == (0 + 0)) then
-										v1136 = v845:FindFirstChild("Humanoid");
-										if v1136 then
-											v1136.JumpHeight = (61.2 - 36) - (893 - (461 + 414));
-										end
-										break;
-									end
-								end
-							end
-							break;
-						end
-					end
-				end;
-				break;
-			end
-			if (v630 == (1 + 0 + 0)) then
-				v635 = nil;
-				function v635()
-					local v846 = 0;
-					local v847;
-					local v848;
-					while true do
-						if (v846 == (1 + 0)) then
-							while true do
-								if (v847 == (0 - (0 + 0))) then
-									v848 = (709 + 10) - ((566 - (172 + 78)) + (648 - 245));
-									while true do
-										if (v848 == 0) then
-											if v633 then
-												local v1295 = 0 + 0 + 0;
-												while true do
-													if (v1295 == ((0 - 0) - 0)) then
-														v633:Disconnect();
-														v633 = nil;
-														break;
-													end
-												end
-											end
-											v633 = game:GetService("RunService").Heartbeat:Connect(function()
-												local v1268 = 0 + 0;
-												local v1269;
-												local v1270;
-												while true do
-													if (v1268 == (0 + 0)) then
-														v1269 = (0 - 0) + (0 - 0);
-														v1270 = nil;
-														v1268 = 1;
-													end
-													if (v1268 == (1 + 0)) then
-														while true do
-															if (v1269 == ((0 + 0) - 0)) then
-																v1270 = v631.Character;
-																if v1270 then
-																	local v1356 = 0;
-																	local v1357;
-																	local v1358;
-																	while true do
-																		if (v1356 == 1) then
-																			while true do
-																				if (v1357 == (0 + 0 + (0 - 0))) then
-																					v1358 = v1270:FindFirstChild("Humanoid");
-																					if (v1358 and (v1358.JumpHeight ~= v632)) then
-																						v1358.JumpHeight = v632;
-																					end
-																					break;
-																				end
-																			end
-																			break;
-																		end
-																		if (v1356 == (0 - 0)) then
-																			v1357 = 0 + 0 + 0;
-																			v1358 = nil;
-																			v1356 = 1;
-																		end
-																	end
-																end
-																break;
-															end
-														end
-														break;
-													end
-												end
-											end);
-											break;
-										end
-									end
-									break;
-								end
-							end
-							break;
-						end
-						if (v846 == (0 + 0)) then
-							v847 = (447 - (133 + 314)) - (0 + 0);
-							v848 = nil;
-							v846 = 214 - (199 + 14);
-						end
-					end
-				end
-				v636 = nil;
-				function v636()
-					local v849 = (0 - 0) - 0;
-					local v850;
-					while true do
-						if (v849 == (1549 - (647 + 902))) then
-							v850 = v631.Character;
-							if v850 then
-								local v1137 = 0;
-								local v1138;
-								while true do
-									if (v1137 == ((0 - 0) - (233 - (85 + 148)))) then
-										local v1239 = 1289 - (426 + 863);
-										while true do
-											if (v1239 == (4 - 3)) then
-												v1137 = (1655 - (873 + 781)) - (0 - 0);
-												break;
-											end
-											if (v1239 == 0) then
-												task.wait(0.5 - (0 - 0));
-												v1138 = v850:WaitForChild("Humanoid", 1 + 0 + (14 - 10));
-												v1239 = 1 - 0;
-											end
-										end
-									end
-									if (v1137 == (2 - 1)) then
-										if v1138 then
-											local v1271 = 0;
-											while true do
-												if (v1271 == 0) then
-													v1138.JumpHeight = v632;
-													v1138.Died:Connect(function()
-														local v1326 = 0;
-														while true do
-															if (((1947 - (414 + 1533)) + 0 + 0) == v1326) then
-																task.wait(558 - (443 + 112));
-																v635();
-																break;
-															end
-														end
-													end);
-													break;
-												end
-											end
-										end
-										break;
-									end
-								end
-							end
-							break;
-						end
-					end
-				end
-				v630 = (1484 - (888 + 591)) - 3;
-			end
+			v197.CharacterAddedConnection = v198.CharacterAdded:Connect(function(v841)
+				v197:SetupCharacter(v841);
+			end);
+			FlatIdent_7063 = 2;
 		end
 	end
-	local v471 = Instance.new("Frame");
-	v471.Name = "JumpPowerFrame";
-	v471.Size = UDim2.new(17.9 - ((30 - 18) + 5), (0 + 0) - (0 - 0), (0 + 0) - 0, (124 + 131) - 135);
-	v471.BackgroundColor3 = Color3.fromRGB(148 - (10 + 78), (24 - 11) + (86 - 39), (3721 - (136 + 1542)) - (1656 + (1039 - 722)));
-	v471.BackgroundTransparency = 0.1;
-	local v476 = Instance.new("UICorner");
-	v476.CornerRadius = UDim.new(0 + 0 + 0, 7 + (1 - 0));
-	v476.Parent = v471;
-	local v479 = Instance.new("UIStroke");
-	v479.Thickness = (3 + 1) - (488 - (68 + 418));
-	v479.Color = Color3.fromRGB((1065 - 672) - (567 - 254), 160, (526 + 83) - ((1097 - (770 + 322)) + 21 + 328));
-	v479.Transparency = (0.2 + 0) - (0 + 0);
-	v479.Parent = v471;
-	local v484 = Instance.new("ImageLabel");
-	v484.Name = "JumpPowerIcon";
-	v484.Size = UDim2.new(0 - 0, 1303 - ((515 - 249) + (2736 - 1731)), 0 - 0, 13 + 9 + (14 - 4));
-	v484.Position = UDim2.new((0 + 0) - (0 + 0), 8 + 2, 0, 13 - 3);
-	v484.BackgroundTransparency = 3 - 2;
-	v484.Image = "rbxassetid://3926305904";
-	v484.ImageRectSize = Vector2.new(88 - 24, (595 + 1165) - (561 + (5228 - 4093)));
-	v484.ImageRectOffset = Vector2.new((0 - 0) - (0 + 0), 1900 - 1516);
-	v484.Parent = v471;
-	local v493 = Instance.new("TextLabel");
-	v493.Name = "JumpPowerTitle";
-	v493.Size = UDim2.new(3 - (833 - (762 + 69)), -((3613 - 2497) - (507 + 559)), (0 + 0) - (0 + 0), (147 - 86) - (13 + 28));
-	v493.Position = UDim2.new((7 + 381) - ((825 - 613) + (333 - (8 + 149))), 1370 - (1199 + 121), (1531 - 626) - ((564 - 314) + 270 + 385), 6 - 4);
-	v493.BackgroundTransparency = 1;
-	v493.Text = "防检测跳跃高度";
-	v493.TextColor3 = Color3.fromRGB((1137 - 647) - 310, 177 + 23, 445 - 190);
-	v493.Font = Enum.Font.GothamBold;
-	v493.TextSize = 1819 - (518 + 1289);
-	v493.TextXAlignment = Enum.TextXAlignment.Left;
-	v493.Parent = v471;
-	local v504 = Instance.new("TextBox");
-	v504.Name = "JumpPowerInput";
-	v504.Size = UDim2.new((0.7 - 0) - 0, 0 + 0, (2856 - 900) - (1377 + 492 + (556 - (304 + 165))), (99 + 5) - (234 - (54 + 106)));
-	v504.Position = UDim2.new(1901.15 - ((2453 - (1618 + 351)) + 1417), 0, 0 - (0 + 0), 67 - 27);
-	v504.BackgroundColor3 = Color3.fromRGB((1834 - (10 + 1006)) - (13 + 35 + 725), 45, (13 + 76) - (110 - 76));
-	v504.TextColor3 = Color3.fromRGB(590 - (1403 - (912 + 121)), 61 + 67 + (1381 - (1140 + 149)), (393 + 221) - 384);
-	v504.Font = Enum.Font.GothamSemibold;
-	v504.TextSize = 4 + 10;
-	v504.PlaceholderText = "输入跳跃高度 (7.2-500)";
-	v504.Text = "7.2";
-	v504.ClearTextOnFocus = false;
-	local v515 = Instance.new("UICorner");
-	v515.CornerRadius = UDim.new((0 - 0) + 0, 859 - (29 + 123 + (2399 - 1698)));
-	v515.Parent = v504;
-	local v518 = Instance.new("UIStroke");
-	v518.Thickness = 1;
-	v518.Color = Color3.fromRGB(100, 1411 - ((806 - 376) + 152 + 729), 381 - 271);
-	v518.Parent = v504;
-	v504.FocusLost:Connect(function(v637)
-		if v637 then
-			local v706 = 186 - (165 + 21);
-			local v707;
-			local v708;
-			while true do
-				if (0 == v706) then
-					v707 = 111 - (61 + 50);
-					v708 = nil;
-					v706 = 1 + 0;
-				end
-				if (v706 == 1) then
-					while true do
-						if (((0 - 0) + 0) == v707) then
-							v708 = tonumber(v504.Text);
-							if (v708 and (v708 >= (14.2 - 7)) and (v708 <= (197 + 303))) then
-								local v1174 = 1460 - (1295 + 165);
-								local v1175;
-								while true do
-									if (v1174 == ((205 + 690) - (224 + 333 + (1735 - (819 + 578))))) then
-										v1175 = v470.SetJumpHeight(v708);
-										if v1175 then
-											v2:SetCore("SendNotification", {Title="XDG-HOB",Text=("跳跃高度已设置为: " .. string.format("%.1f", v708)),Duration=(1 + 2),Icon="rbxassetid://4483345998"});
-										end
-										break;
-									end
-								end
-							else
-								local v1176 = 1402 - (331 + 1071);
-								local v1177;
-								while true do
-									if (v1176 == (743 - (588 + 155))) then
-										v1177 = (1282 - (546 + 736)) - 0;
-										while true do
-											if (((1937 - (1834 + 103)) - (0 + 0)) == v1177) then
-												v504.Text = "7.2";
-												v2:SetCore("SendNotification", {Title="错误",Text="请输入7.2-500之间的数字",Duration=5,Icon="rbxassetid://4483345998"});
-												break;
-											end
-										end
-										break;
-									end
-								end
-							end
-							break;
-						end
-					end
-					break;
-				end
-			end
-		end
-	end);
-	local v522 = Instance.new("TextButton");
-	v522.Name = "ApplyJumpPowerButton";
-	v522.Size = UDim2.new((0.5 - 0) - (1766 - (1536 + 230)), (491 - (128 + 363)) - 0, 801 - (107 + 392 + (751 - 449)), 8 + 22);
-	v522.Position = UDim2.new((1434.25 - 568) - ((114 - 75) + (2008 - 1181)), 0 + 0, 1009 - (615 + 394), (199 + 21) - (134 + 6));
-	v522.BackgroundColor3 = Color3.fromRGB((542 - 364) - (444 - 346), (1286 - (59 + 592)) - (1051 - 576), (719 - 328) - (96 + 40));
-	v522.Text = "应用高度";
-	v522.TextColor3 = Color3.new(172 - (70 + 101), 2 - 1, 1 + 0 + (0 - 0));
-	v522.Font = Enum.Font.GothamSemibold;
-	v522.TextSize = 14;
-	v522.TextStrokeTransparency = (241.6 - (123 + 118)) - (0 + 0);
-	v522.TextStrokeColor3 = Color3.fromRGB(0 + 0 + (1399 - (653 + 746)), 0, 0 - (0 - 0));
-	local v533 = Instance.new("UICorner");
-	v533.CornerRadius = UDim.new(0 - 0, 110 - ((275 - 172) + 1 + 0));
-	v533.Parent = v522;
-	local v536 = Instance.new("UIStroke");
-	v536.Thickness = (356 + 199) - (475 + 69 + 10);
-	v536.Color = Color3.fromRGB(259 - 139, 25 + 175, 40 + 215);
-	v536.Parent = v522;
-	v522.MouseEnter:Connect(function()
-		v522.BackgroundColor3 = Color3.fromRGB((784 - 464) - 220, 172 + 8, 255);
-	end);
-	v522.MouseLeave:Connect(function()
-		v522.BackgroundColor3 = Color3.fromRGB(147 - 67, (1255 - (885 + 349)) + 111 + 28, (613 - 388) + (87 - 57));
-	end);
-	v522.MouseButton1Click:Connect(function()
-		local v640 = (2471 - (915 + 53)) - ((2196 - (768 + 33)) + (413 - 305));
-		local v641;
-		while true do
-			if (v640 == (0 - 0)) then
-				v641 = tonumber(v504.Text);
-				if (v641 and (v641 >= 7.2) and (v641 <= 500)) then
-					local v899 = 0;
-					local v900;
-					local v901;
-					while true do
-						if (v899 == (329 - (287 + 41))) then
-							while true do
-								if (v900 == (847 - (638 + 209))) then
-									v901 = v470.SetJumpHeight(v641);
-									if v901 then
-										v2:SetCore("SendNotification", {Title="XDG-HOB",Text=("跳跃高度已设置为: " .. string.format("%.1f", v641)),Duration=((628 + 579) - ((1693 - (96 + 1590)) + (2869 - (741 + 931)))),Icon="rbxassetid://4483345998"});
-									end
-									break;
-								end
-							end
-							break;
-						end
-						if (v899 == 0) then
-							v900 = (0 + 0) - (0 - 0);
-							v901 = nil;
-							v899 = 1;
-						end
-					end
-				else
-					local v902 = 0 - 0;
-					local v903;
-					while true do
-						if (v902 == (0 + 0)) then
-							v903 = 0 + 0 + 0 + 0;
-							while true do
-								if (0 == v903) then
-									v504.Text = "7.2";
-									v2:SetCore("SendNotification", {Title="错误",Text="请输入7.2-500之间的数字",Duration=(2 + (11 - 8)),Icon="rbxassetid://4483345998"});
-									break;
-								end
-							end
-							break;
-						end
-					end
-				end
-				break;
-			end
-		end
-	end);
-	local v540 = Instance.new("TextLabel");
-	v540.Name = "CurrentJumpLabel";
-	v540.Size = UDim2.new((104 + 216) - (14 + 13 + 292), 0 - (0 - 0), (0 + 0) - (494 - (64 + 430)), 83 - 63);
-	v540.Position = UDim2.new((0 + 0) - (363 - (106 + 257)), (0 + 0) - (721 - (496 + 225)), 139 - ((87 - 44) + (467 - 371)), (2127 - (256 + 1402)) - 354);
-	v540.BackgroundTransparency = 1 - (1899 - (30 + 1869));
-	v540.TextColor3 = Color3.fromRGB((1519 - (213 + 1156)) + (218 - (96 + 92)), 10 + 47 + (1042 - (142 + 757)), (411 + 93) - 249);
-	v540.Font = Enum.Font.GothamSemibold;
-	v540.TextSize = 5 + 6;
-	v540.Text = "当前高度: 7.2";
-	v540.Parent = v471;
-	game:GetService("RunService").Heartbeat:Connect(function()
-		v540.Text = "当前高度: " .. string.format("%.1f", v470.GetJumpHeight());
-	end);
-	v522.Parent = v471;
-	v504.Parent = v471;
-	v471.Parent = v370;
-	return v364;
-end
-local function v151()
-	local v553 = 0 + 0;
-	local v554;
-	local v555;
-	local v556;
-	local v557;
-	local v558;
-	local v559;
-	local v560;
-	local v561;
-	local v562;
-	local v563;
-	local v564;
-	local v565;
-	local v566;
-	local v567;
-	local v568;
-	local v569;
-	local v570;
-	local v571;
-	local v572;
-	local v573;
-	local v574;
-	local v575;
-	local v576;
-	local v577;
-	local v578;
-	local v579;
-	local v580;
-	local v581;
+end;
+v149.SetupCharacter = function(v202, v203)
+	local FlatIdent_4E551 = 0;
+	local v204;
+	local v205;
 	while true do
-		if (((104 - (32 + 47)) - (1988 - (1053 + 924))) == v553) then
-			local v709 = 0;
-			while true do
-				if (v709 == (4 + 0)) then
-					v573.Size = UDim2.new((2 - 0) - (1649 - (685 + 963)), -(101 - 51), 1 + 0, 0 - 0);
-					v553 = 12 + 3;
-					break;
-				end
-				if (v709 == (1712 - (541 + 1168))) then
-					v573 = Instance.new("TextLabel");
-					v573.Name = "ExecutorName";
-					v709 = 1601 - (645 + 952);
-				end
-				if (v709 == (838 - (669 + 169))) then
-					v572.Position = UDim2.new(0 + (0 - 0), (1 - 0) + 9, 0.5 + 0, -(4 + 12));
-					v572.BackgroundTransparency = 766 - (181 + 584);
-					v709 = 1396 - (665 + 730);
-				end
-				if (v709 == 2) then
-					v572.ImageRectOffset = Vector2.new((1441 - 941) - (627 - 319), (1718 - (540 + 810)) - 240);
-					v572.Parent = v569;
-					v709 = 3;
-				end
-				if (v709 == (3 - 2)) then
-					v572.Image = "rbxassetid://3926305904";
-					v572.ImageRectSize = Vector2.new((4990 - 3175) - (1126 + 288 + (540 - (166 + 37))), (3885 - (22 + 1859)) - ((3414 - (843 + 929)) + 298));
-					v709 = 264 - (30 + 232);
-				end
-			end
+		if (FlatIdent_4E551 == 0) then
+			v204 = 1433 - (797 + 636);
+			v205 = nil;
+			FlatIdent_4E551 = 1;
 		end
-		if (v553 == ((2776 - 1804) - (357 + (1392 - (55 + 722))))) then
-			v554 = Instance.new("Frame");
-			v554.Name = "InfoContainer";
-			v554.Size = UDim2.new(1 + (0 - 0), 0, (1677 - (78 + 1597)) - (1 + 0), 0 + 0 + 0);
-			v554.BackgroundTransparency = (2 + 0) - (550 - (305 + 244));
-			v554.Visible = false;
-			v554.Parent = v136;
-			v555 = Instance.new("ScrollingFrame");
-			v555.Name = "InfoScroll";
-			v555.Size = UDim2.new(1 + 0 + 0, -(2 + 18), 1 + (105 - (95 + 10)), -(1321 - (384 + 917)));
-			v553 = (495 + 203) - ((405 - 277) + 569);
-		end
-		if (v553 == (16 - 4)) then
-			local v717 = 762 - (592 + 170);
+		if (FlatIdent_4E551 == 1) then
 			while true do
-				if (v717 == (6 - 4)) then
-					v569.Size = UDim2.new(0.9 - 0, 0 + 0, (601 + 942) - ((3397 - 1990) + 136), 1937 - (112 + 575 + 1200));
-					v569.BackgroundColor3 = Color3.fromRGB((3280 - 1510) - (556 + (1661 - (353 + 154))), 79 - 19, (335 - 89) - (122 + 54));
-					v717 = 3 + 0;
-				end
-				if (v717 == 0) then
-					v568.Parent = v563;
-					v563.Parent = v555;
-					v717 = 1 + 0;
-				end
-				if (v717 == (3 - 0)) then
-					v569.BackgroundTransparency = 0.1 - 0;
-					v570 = Instance.new("UICorner");
-					v717 = 4;
-				end
-				if (v717 == (9 - 5)) then
-					v570.CornerRadius = UDim.new(86 - (7 + 79), 8);
-					v553 = 13;
-					break;
-				end
-				if (v717 == (1 + 0)) then
-					v569 = Instance.new("Frame");
-					v569.Name = "ExecutorFrame";
-					v717 = 2;
-				end
-			end
-		end
-		if (v553 == (116 - ((190 - (24 + 157)) + 86))) then
-			local v718 = 0 - 0;
-			local v719;
-			while true do
-				if (v718 == (0 - 0)) then
-					v719 = (120 + 301) - ((740 - 465) + (526 - (262 + 118)));
+				if (v204 == (4 - 3)) then
+					local FlatIdent_6EEC8 = 0;
 					while true do
-						if (v719 == (1087 - (1038 + 45))) then
-							v580.Text = "系统状态";
-							v553 = 22;
-							break;
-						end
-						if (((1 - 0) + (232 - (19 + 211))) == v719) then
-							v580.Position = UDim2.new(0, (227 - (88 + 25)) - (29 + (89 - 54)), (0 + 0) - (0 + 0), 5 - 3);
-							v580.BackgroundTransparency = 4 - (1039 - (1007 + 29));
-							v719 = 1 + 2 + (2 - 1);
-						end
-						if (v719 == (1014 - ((250 - 197) + 959))) then
-							local v1086 = 0;
-							while true do
-								if (v1086 == (0 + 0)) then
-									v580.Name = "StatusTitle";
-									v580.Size = UDim2.new((1220 - (340 + 471)) - ((785 - 473) + 96), -((675 - (276 + 313)) - (87 - 51)), 285 - (136 + 11 + 138), 9 + 11);
-									v1086 = 1 + 0;
-								end
-								if (v1086 == (1973 - (495 + 1477))) then
-									v719 = (2700 - 1798) - (533 + 280 + (489 - (342 + 61)));
-									break;
-								end
-							end
-						end
-						if (v719 == (0 + 0)) then
-							local v1087 = 0 + 0;
-							while true do
-								if (v1087 == 1) then
-									v719 = (166 - (4 + 161)) - (0 + 0);
-									break;
-								end
-								if (v1087 == 0) then
-									v579.TextXAlignment = Enum.TextXAlignment.Left;
-									v579.TextYAlignment = Enum.TextYAlignment.Top;
-									v1087 = 3 - 2;
-								end
-							end
-						end
-						if (v719 == ((1295 - 802) - ((515 - (322 + 175)) + (1037 - (173 + 390))))) then
-							v579.Parent = v575;
-							v580 = Instance.new("TextLabel");
-							v719 = 1 + 1;
-						end
-					end
-					break;
-				end
-			end
-		end
-		if (v553 == (3 + 5)) then
-			v565 = Instance.new("UIStroke");
-			v565.Thickness = (320 - (203 + 111)) - (1 + 3);
-			v565.Color = Color3.fromRGB(1166 - (860 + 160 + 66), (1351 - 888) - (110 + 11 + (888 - (57 + 649))), 639 - (328 + 56));
-			v565.Transparency = 0.2 + 0 + 0;
-			v565.Parent = v563;
-			v566 = Instance.new("ImageLabel");
-			v566.Name = "PlayerIcon";
-			v566.Size = UDim2.new(512 - (433 + 79), 3 + 29, 0, 32);
-			v566.Position = UDim2.new(0 + 0, 33 - 23, (5863.5 - 4623) - (721 + 267 + 225 + 27), -((1038 - (562 + 474)) + 14));
-			v553 = (6 - 3) + 6;
-		end
-		if (v553 == 10) then
-			v567.BackgroundTransparency = 1971 - ((99 - 50) + 1921);
-			v567.Text = v1.Name;
-			v567.TextColor3 = Color3.fromRGB((2015 - (76 + 829)) - (223 + (2340 - (1506 + 167))), (510 - 238) - ((317 - (58 + 208)) + 1 + 0), (282 + 113) - 165);
-			v567.Font = Enum.Font.GothamSemibold;
-			v567.TextSize = 29 - (9 + 6);
-			v567.TextStrokeTransparency = (4589.7 - 3464) - ((483 - (258 + 79)) + 125 + 854);
-			v567.TextStrokeColor3 = Color3.fromRGB((0 - 0) + (1470 - (1219 + 251)), (2276 - (1231 + 440)) - ((369 - (34 + 24)) + 171 + 123), 0 - 0);
-			v567.Parent = v563;
-			v568 = Instance.new("TextLabel");
-			v553 = (14 + 16) - (57 - 38);
-		end
-		if (v553 == (5 + (18 - 12))) then
-			local v737 = 0 - 0;
-			while true do
-				if (v737 == (9 - 6)) then
-					v568.Font = Enum.Font.GothamBold;
-					v568.TextSize = 25 - 13;
-					v737 = 1593 - (877 + 712);
-				end
-				if (v737 == 4) then
-					v568.TextXAlignment = Enum.TextXAlignment.Left;
-					v553 = 8 + 4;
-					break;
-				end
-				if (v737 == 2) then
-					v568.Text = "角色名称";
-					v568.TextColor3 = Color3.fromRGB((905 - (242 + 512)) + (60 - 31), (2331 - (92 + 535)) - (397 + 107 + 1000), (354 - 182) + 83);
-					v737 = 1 + 2;
-				end
-				if (v737 == (3 - 2)) then
-					v568.Position = UDim2.new(0 + 0 + 0, 32 + 13 + 5, 0 + 0, (1 - 0) + (1 - 0));
-					v568.BackgroundTransparency = (3431 - (1476 + 309)) - ((2247 - (299 + 985)) + 163 + 519);
-					v737 = 6 - 4;
-				end
-				if (v737 == (93 - (86 + 7))) then
-					v568.Name = "PlayerTitle";
-					v568.Size = UDim2.new((5901 - 4457) - (48 + 448 + (1827 - (672 + 208))), -(1408 - (529 + 704 + (257 - (14 + 118)))), 445 - (339 + 106), 20);
-					v737 = 1;
-				end
-			end
-		end
-		if (v553 == (4 + 0)) then
-			v560.BackgroundTransparency = 1 + 0 + (1395 - (440 + 955));
-			v560.Image = "rbxassetid://3926305904";
-			v560.ImageRectSize = Vector2.new(64 + 0, 64);
-			v560.ImageRectOffset = Vector2.new(0 + (0 - 0), 192 + 384);
-			v560.Parent = v557;
-			v561 = Instance.new("TextLabel");
-			v561.Name = "BeijingTime";
-			v561.Size = UDim2.new((2 - 1) - (0 + 0), -(43 + (360 - (260 + 93))), 1 + 0, (171 + 11) - (156 + 26));
-			v561.Position = UDim2.new((0 - 0) + (0 - 0), 2024 - (1181 + 793), (0 + 0) - (307 - (105 + 202)), (132 + 32) - ((959 - (352 + 458)) + (60 - 45)));
-			v553 = 12 - 7;
-		end
-		if (v553 == ((947 + 31) - (890 + 70))) then
-			v576.CornerRadius = UDim.new(117 - (39 + 78), (1432 - 942) - (14 + (1417 - (438 + 511))));
-			v576.Parent = v575;
-			v577 = Instance.new("UIStroke");
-			v577.Thickness = 1385 - (1262 + 121);
-			v577.Color = Color3.fromRGB((1243 - (728 + 340)) - 95, (2237 - (816 + 974)) - 287, (404 - 272) + (442 - 319));
-			v577.Transparency = 0.2 + (339 - (163 + 176));
-			v577.Parent = v575;
-			v578 = Instance.new("ImageLabel");
-			v578.Name = "StatusIcon";
-			v553 = (14 - 9) + (64 - 50);
-		end
-		if (v553 == (4 + 9)) then
-			local v753 = 1810 - (1564 + 246);
-			while true do
-				if (v753 == 3) then
-					v572 = Instance.new("ImageLabel");
-					v572.Name = "ExecutorIcon";
-					v753 = 4;
-				end
-				if (v753 == (347 - (124 + 221))) then
-					v571.Transparency = 0.2 + 0 + 0;
-					v571.Parent = v569;
-					v753 = 454 - (115 + 336);
-				end
-				if (v753 == (0 - 0)) then
-					v570.Parent = v569;
-					v571 = Instance.new("UIStroke");
-					v753 = 1 + 0;
-				end
-				if (4 == v753) then
-					v572.Size = UDim2.new((46 - (45 + 1)) - (0 + 0), (1991 - (1282 + 708)) + (1243 - (583 + 629)), (9 + 42) - ((30 - 18) + 21 + 18), (1200 - (943 + 227)) + 2);
-					v553 = 43 - (13 + 16);
-					break;
-				end
-				if (v753 == (1632 - (1539 + 92))) then
-					v571.Thickness = 1948 - (706 + 1240);
-					v571.Color = Color3.fromRGB((295 - (81 + 177)) + 43, 42 + 118, (1378 - 890) - (490 - (212 + 45)));
-					v753 = 6 - 4;
-				end
-			end
-		end
-		if (v553 == ((1999 - (708 + 1238)) - 38)) then
-			local v754 = 0 + 0;
-			local v755;
-			while true do
-				if ((0 + 0) == v754) then
-					v755 = 0 + (1667 - (586 + 1081));
-					while true do
-						if (v755 == ((513 - (348 + 163)) + 1 + 0)) then
-							local v1089 = 0;
-							while true do
-								if ((280 - (215 + 65)) == v1089) then
-									v573.TextStrokeTransparency = (0.7 - 0) - (1859 - (1541 + 318));
-									v573.TextStrokeColor3 = Color3.fromRGB(0 + 0 + 0, (0 + 0) - 0, 1710 - (1203 + 393 + (1864 - (1036 + 714))));
-									v1089 = 1 + 0;
-								end
-								if (v1089 == (1 + 0)) then
-									v755 = 1284 - (883 + 397);
-									break;
-								end
-							end
-						end
-						if (((592 - (563 + 27)) - (3 - 2)) == v755) then
-							v573.Text = v6;
-							v573.TextColor3 = Color3.fromRGB((2919 - (1369 + 617)) - ((1651 - (85 + 1402)) + 549), (572 + 1086) - ((2733 - 1674) + (782 - (274 + 129))), (502 - (12 + 205)) - (51 + 4));
-							v755 = 7 - 5;
-						end
-						if (v755 == (3 + 0 + (385 - (27 + 357)))) then
-							v573.Parent = v569;
-							v553 = 16;
-							break;
-						end
-						if (((481 - (91 + 389)) + (298 - (90 + 207))) == v755) then
-							local v1093 = 0 + 0;
-							while true do
-								if ((861 - (706 + 155)) == v1093) then
-									v573.Font = Enum.Font.GothamSemibold;
-									v573.TextSize = (2201 - (730 + 1065)) - (145 + (1810 - (1339 + 224)));
-									v1093 = 1 + 0;
-								end
-								if ((1 + 0) == v1093) then
-									v755 = (3 - 0) + (843 - (268 + 575));
-									break;
-								end
-							end
-						end
-						if (v755 == ((1294 - (919 + 375)) + 0)) then
-							v573.Position = UDim2.new(0 - 0, (1119 - (180 + 791)) - (1903 - (323 + 1482)), (1918 - (1177 + 741)) + 0 + 0, 0 - 0);
-							v573.BackgroundTransparency = 1 + 0 + (0 - 0);
-							v755 = 1;
-						end
-					end
-					break;
-				end
-			end
-		end
-		if (v553 == ((4 + 32) - (122 - (96 + 13)))) then
-			return v554;
-		end
-		if (v553 == (742 - (254 + 466))) then
-			local v756 = 1921 - (962 + 959);
-			while true do
-				if (v756 == 1) then
-					v580.TextSize = 640 - (294 + (833 - 499));
-					v580.TextXAlignment = Enum.TextXAlignment.Left;
-					v756 = 1 + 1;
-				end
-				if (v756 == 2) then
-					v580.Parent = v575;
-					v575.Parent = v555;
-					v756 = 3;
-				end
-				if ((1354 - (461 + 890)) == v756) then
-					v581 = nil;
-					function v581()
-						local v1021 = 0 + 0;
-						local v1022;
-						local v1023;
-						while true do
-							if (v1021 == (0 - 0)) then
-								v1022 = 253 - ((479 - (19 + 224)) + 16 + 1);
-								v1023 = nil;
-								v1021 = 199 - (37 + 161);
-							end
-							if (v1021 == (1 + 0)) then
-								while true do
-									if (0 == v1022) then
-										v1023 = 0 + 0 + 0;
-										while true do
-											if ((0 + 0 + (61 - (60 + 1))) == v1023) then
-												local v1296 = 923 - (826 + 97);
-												while true do
-													if (v1296 == (0 + 0)) then
-														v561.Text = v7();
-														v567.Text = v1.Name;
-														v1296 = 3 - 2;
-													end
-													if (v1296 == (1 - 0)) then
-														v1023 = 3 - 2;
-														break;
-													end
-												end
-											end
-											if (v1023 == ((689 - (375 + 310)) - 3)) then
-												v573.Text = v6;
-												v579.Text = string.format("脚本状态：正常运行\n游戏ID：%d\n玩家数量：%d", game.PlaceId, #v0:GetPlayers());
-												break;
-											end
-										end
-										break;
-									end
-								end
-								break;
-							end
-						end
-					end
-					v756 = 2003 - (1864 + 135);
-				end
-				if ((0 - 0) == v756) then
-					v580.TextColor3 = Color3.fromRGB(180, (169 + 591) - (182 + 362 + (39 - 23)), (1941 - (314 + 817)) - (315 + 240));
-					v580.Font = Enum.Font.GothamBold;
-					v756 = 215 - (32 + 182);
-				end
-				if (v756 == (3 + 1)) then
-					v4.RenderStepped:Connect(function()
-						v581();
-					end);
-					v553 = (41 - 29) + (76 - (39 + 26));
-					break;
-				end
-			end
-		end
-		if ((164 - (54 + 90)) == v553) then
-			local v757 = 0 + (198 - (45 + 153));
-			while true do
-				if (v757 == ((482 + 312) - (413 + (933 - (457 + 95))))) then
-					local v945 = 0;
-					while true do
-						if (v945 == (1 + 0)) then
-							v757 = (1 - 0) - (0 - 0);
-							break;
-						end
-						if (v945 == (0 - 0)) then
-							v579.Size = UDim2.new(1 + 0 + (0 - 0), -(106 - (168 - 112)), 748 - (485 + 263), (862 - (575 + 132)) - (956 - (750 + 111)));
-							v579.Position = UDim2.new((2980 - (445 + 565)) - (469 + 113 + 200 + 1188), 50, 0 - 0, 10);
-							v945 = 1 + 0;
-						end
-					end
-				end
-				if (((311 - (189 + 121)) + 0) == v757) then
-					v579.BackgroundTransparency = 1;
-					v579.Text = "脚本状态：正常运行\n游戏ID：" .. game.PlaceId .. "\n玩家数量：" .. #v0:GetPlayers();
-					v757 = (91 + 275) - ((1673 - (634 + 713)) + (576 - (493 + 45)));
-				end
-				if (v757 == ((979 - (493 + 475)) - (2 + 5))) then
-					v579.TextStrokeColor3 = Color3.fromRGB(0 - (784 - (158 + 626)), 0, 620 - (23 + 24 + 573));
-					v553 = 8 + 13;
-					break;
-				end
-				if (v757 == (12 - 9)) then
-					v579.TextSize = 19 - (11 - 4);
-					v579.TextStrokeTransparency = 1664.7 - (283 + 986 + 395);
-					v757 = (27 + 469) - ((1167 - (1035 + 56)) + 416);
-				end
-				if (v757 == 2) then
-					local v951 = 0;
-					while true do
-						if ((960 - (114 + 845)) == v951) then
-							v757 = 2 + 1;
-							break;
-						end
-						if (v951 == (0 - 0)) then
-							v579.TextColor3 = Color3.fromRGB(185 + 35, (1712 - (179 + 870)) - (319 + (173 - 49)), (1403 - (827 + 51)) - (779 - 484));
-							v579.Font = Enum.Font.GothamSemibold;
-							v951 = 1 + 0;
-						end
-					end
-				end
-			end
-		end
-		if (v553 == ((1485 - (95 + 378)) - (42 + 522 + (627 - 184)))) then
-			local v758 = 0;
-			while true do
-				if (v758 == (1 + 0)) then
-					v561.Font = Enum.Font.GothamSemibold;
-					v561.TextSize = (1057 - (334 + 677)) - 32;
-					v758 = 7 - 5;
-				end
-				if ((1060 - (1049 + 7)) == v758) then
-					v562.Name = "TimeTitle";
-					v553 = 26 - 20;
-					break;
-				end
-				if ((5 - 2) == v758) then
-					v561.Parent = v557;
-					v562 = Instance.new("TextLabel");
-					v758 = 4;
-				end
-				if ((0 + 0) == v758) then
-					v561.BackgroundTransparency = (5 - 3) - (1 - 0);
-					v561.TextColor3 = Color3.fromRGB((302 + 376) - ((1757 - (1004 + 416)) + 121), 2177 - (1621 + 336), (2612 - (337 + 1602)) - (1960 - (1014 + 503)));
-					v758 = 1016 - (446 + 569);
-				end
-				if (v758 == 2) then
-					v561.TextStrokeTransparency = 0.7 + 0;
-					v561.TextStrokeColor3 = Color3.fromRGB((5606 - 3695) - (424 + 837 + 650), (0 - 0) + 0 + 0, 0 - (505 - (223 + 282)));
-					v758 = 1 + 2;
-				end
-			end
-		end
-		if (v553 == ((2907 - 1081) - ((1125 - 353) + 1045))) then
-			local v759 = 670 - (623 + 47);
-			while true do
-				if (2 == v759) then
-					local v961 = 45 - (32 + 13);
-					while true do
-						if (v961 == 0) then
-							v566.Parent = v563;
-							v567 = Instance.new("TextLabel");
-							v961 = 1;
-						end
-						if (v961 == 1) then
-							v759 = 2 + 1;
-							break;
-						end
-					end
-				end
-				if ((1 + 3 + 0) == v759) then
-					v567.Position = UDim2.new(144 - ((1903 - (1070 + 731)) + 42), 1894 - (1457 + 67 + 320), (2674 - (1257 + 147)) - (416 + 633 + 221), 0 - 0);
-					v553 = 10;
-					break;
-				end
-				if (v759 == (133 - (98 + 35))) then
-					v566.BackgroundTransparency = (66 + 91) - ((63 - 45) + (464 - 326));
-					v566.Image = "rbxassetid://3926305904";
-					v759 = 2 - (1 + 0);
-				end
-				if (v759 == 3) then
-					local v965 = 0;
-					while true do
-						if (v965 == (0 + 0)) then
-							v567.Name = "PlayerName";
-							v567.Size = UDim2.new(1 + 0, -((1709 - (395 + 162)) - (67 + 911 + 124)), (2290 - (816 + 1125)) - ((193 - 57) + 212), 1148 - (701 + 447));
-							v965 = 1 - 0;
-						end
-						if (v965 == (1 - 0)) then
-							v759 = 4;
-							break;
-						end
-					end
-				end
-				if (v759 == ((1345 - (391 + 950)) - (7 - 4))) then
-					local v966 = 0 - 0;
-					while true do
-						if (1 == v966) then
-							v759 = 2;
-							break;
-						end
-						if (v966 == (0 - 0)) then
-							v566.ImageRectSize = Vector2.new(37 + 15 + 7 + 5, (215 - 156) + 5);
-							v566.ImageRectOffset = Vector2.new((3254 - (251 + 1271)) - (214 + 26 + (3651 - 2287)), 1338 - (1050 + 32));
-							v966 = 1;
-						end
-					end
-				end
-			end
-		end
-		if (v553 == (17 - 10)) then
-			v557.Parent = v555;
-			v563 = Instance.new("Frame");
-			v563.Name = "PlayerFrame";
-			v563.Size = UDim2.new(0.9 - 0, (1259 - (1147 + 112)) - (0 + 0), (0 - 0) + 0 + 0, 1105 - ((1028 - (335 + 362)) + 679 + 45));
-			v563.BackgroundColor3 = Color3.fromRGB(90 - 30, (13 - 8) + 55, 70);
-			v563.BackgroundTransparency = 644.1 - (269 + (1393 - 1018));
-			v564 = Instance.new("UICorner");
-			v564.CornerRadius = UDim.new((3529 - 2804) - ((757 - 490) + (1024 - (237 + 329))), 3 + (17 - 12));
-			v564.Parent = v563;
-			v553 = 15 - (5 + 2);
-		end
-		if (v553 == (824 - (365 + 302 + 151))) then
-			local v767 = 1124 - (408 + 716);
-			local v768;
-			while true do
-				if (v767 == (0 - 0)) then
-					v768 = 1497 - (1410 + 87);
-					while true do
-						if (v768 == (821 - (344 + 477))) then
-							v562.Size = UDim2.new((324 + 1574) - (1504 + 393), -(1811 - (1188 + 573)), (0 - 0) - (0 + 0), 51 - (100 - 69));
-							v562.Position = UDim2.new(0, (1307 - 461) - (461 + (828 - 493)), 0 + (1529 - (508 + 1021)), (1657 + 106) - ((2896 - (228 + 938)) + (716 - (332 + 353))));
-							v768 = 1;
-						end
-						if (v768 == (3 - 0)) then
-							v562.TextSize = 1679 - (728 + (2458 - 1519));
-							v562.TextXAlignment = Enum.TextXAlignment.Left;
-							v768 = 4;
-						end
-						if (v768 == ((3 + 0) - 2)) then
-							local v1111 = 0;
-							while true do
-								if (v1111 == (0 + 0)) then
-									v562.BackgroundTransparency = 1 - (0 - 0);
-									v562.Text = "北京时间";
-									v1111 = 1;
-								end
-								if (v1111 == 1) then
-									v768 = 425 - (18 + 405);
-									break;
-								end
-							end
-						end
-						if ((1 + 1) == v768) then
-							v562.TextColor3 = Color3.fromRGB((209 + 203) - (353 - 121), 200, 255);
-							v562.Font = Enum.Font.GothamBold;
-							v768 = 1071 - ((1116 - (194 + 784)) + (2700 - (694 + 1076)));
-						end
-						if (v768 == ((1908 - (122 + 1782)) + 0 + 0)) then
-							v562.Parent = v557;
-							v553 = 6 + 1 + 0;
-							break;
-						end
-					end
-					break;
-				end
-			end
-		end
-		if (v553 == (14 + 2 + 0)) then
-			local v769 = 0 + 0;
-			while true do
-				if (v769 == (11 - 7)) then
-					v574.TextSize = 603 - (521 + 41 + 29);
-					v553 = 1987 - (214 + 1756);
-					break;
-				end
-				if ((9 - 7) == v769) then
-					v574.BackgroundTransparency = 1 + 0 + 0;
-					v574.Text = "注入器";
-					v769 = 1 + 2;
-				end
-				if (v769 == 1) then
-					v574.Size = UDim2.new((589 - (217 + 368)) - (8 - 5), -(1816 - (303 + 156 + 970 + 337)), (64 + 1806) - ((1363 - (844 + 45)) + (1680 - (242 + 42))), 34 - 14);
-					v574.Position = UDim2.new((0 - 0) + (0 - 0), (1201 - (132 + 1068)) + (77 - 28), 1623 - (214 + 1409), (4 + 1) - 3);
-					v769 = 1636 - (497 + 1137);
-				end
-				if (v769 == 3) then
-					v574.TextColor3 = Color3.fromRGB((1540 - (9 + 931)) - (709 - (181 + 108)), 120 + 80, 1112 - (2113 - 1256));
-					v574.Font = Enum.Font.GothamBold;
-					v769 = 11 - 7;
-				end
-				if (v769 == (0 + 0)) then
-					v574 = Instance.new("TextLabel");
-					v574.Name = "ExecutorTitle";
-					v769 = 1 + 0;
-				end
-			end
-		end
-		if (v553 == (479 - (296 + 180))) then
-			v559 = Instance.new("UIStroke");
-			v559.Thickness = 2;
-			v559.Color = Color3.fromRGB((1472 - (1183 + 220)) + 11, 1579 - ((1639 - (1037 + 228)) + (1691 - 646)), (582 - 380) + 53);
-			v559.Transparency = 0.2 - 0;
-			v559.Parent = v557;
-			v560 = Instance.new("ImageLabel");
-			v560.Name = "TimeIcon";
-			v560.Size = UDim2.new(0, (2289 - 1619) - ((1182 - (527 + 207)) + (717 - (187 + 340))), (1870 - (1298 + 572)) + (0 - 0), 202 - (144 + 26));
-			v560.Position = UDim2.new(0, (12 - 7) + 5, 0.5 - 0, -(6 + 10));
-			v553 = (8 - 5) + (2 - 1);
-		end
-		if (v553 == ((14 - 11) - (2 + 0))) then
-			v555.Position = UDim2.new(0 - (0 - 0), 10 + 0, (560 + 934) - ((1509 - (5 + 197)) + (873 - (339 + 347))), 39 - (65 - 36));
-			v555.BackgroundTransparency = 3 - 2;
-			v555.ScrollBarThickness = (389 - (365 + 11)) - 7;
-			v555.ScrollBarImageColor3 = Color3.fromRGB(95 + 5, (1176 - 870) - (483 - 277), 793 - (232 + 451));
-			v555.CanvasSize = UDim2.new(0 + (924 - (837 + 87)), (0 - 0) + (1670 - (837 + 833)), (121 + 443) - ((1897 - (356 + 1031)) + 25 + 29), (2351 - (73 + 1573)) - 355);
-			v555.Parent = v554;
-			v556 = Instance.new("UIListLayout");
-			v556.Parent = v555;
-			v556.Padding = UDim.new((1424 - (1307 + 81)) - (13 + 23), 15);
-			v553 = (237 - (7 + 227)) - (1 - 0);
-		end
-		if (v553 == (24 - (173 - (90 + 76)))) then
-			local v785 = 0;
-			while true do
-				if (v785 == 0) then
-					v574.TextXAlignment = Enum.TextXAlignment.Left;
-					v574.Parent = v569;
-					v785 = 3 - 2;
-				end
-				if (v785 == 4) then
-					v576 = Instance.new("UICorner");
-					v553 = (31 + 32) - (38 + 7);
-					break;
-				end
-				if (v785 == (3 + 0)) then
-					v575.BackgroundColor3 = Color3.fromRGB(235 - 175, 60, 330 - (197 + 63));
-					v575.BackgroundTransparency = 0.1 + 0;
-					v785 = 1 + 3;
-				end
-				if (v785 == (1 + 0)) then
-					v569.Parent = v555;
-					v575 = Instance.new("Frame");
-					v785 = 1 + 1;
-				end
-				if (v785 == 2) then
-					v575.Name = "StatusFrame";
-					v575.Size = UDim2.new(0.9 - 0, 0 - 0, 1369 - (618 + 751), (874 + 294) - ((2740 - (206 + 1704)) + (434 - 176)));
-					v785 = 3;
-				end
-			end
-		end
-		if (v553 == 2) then
-			local v786 = 0;
-			while true do
-				if ((0 - 0) == v786) then
-					v556.HorizontalAlignment = Enum.HorizontalAlignment.Center;
-					v557 = Instance.new("Frame");
-					v786 = 1;
-				end
-				if (v786 == (2 + 1)) then
-					v558 = Instance.new("UICorner");
-					v558.CornerRadius = UDim.new((1516 - (155 + 1120)) - ((1743 - (396 + 1110)) + 4), 18 - (22 - 12));
-					v786 = 2 + 2;
-				end
-				if (v786 == (4 + 0)) then
-					v558.Parent = v557;
-					v553 = (6 + 0) - 3;
-					break;
-				end
-				if (v786 == (977 - (230 + 746))) then
-					v557.Name = "TimeFrame";
-					v557.Size = UDim2.new(601.9 - (473 + 128), (48 - (39 + 9)) + (266 - (38 + 228)), (0 - 0) + 0, (1964 - (106 + 367)) - (76 + 784 + 581));
-					v786 = 1864 - (354 + 1508);
-				end
-				if (v786 == (6 - 4)) then
-					v557.BackgroundColor3 = Color3.fromRGB((162 + 59) - 161, 36 + 24, 94 - 24);
-					v557.BackgroundTransparency = (1244.1 - (334 + 910)) + (895 - (92 + 803));
-					v786 = 2 + 1;
-				end
-			end
-		end
-		if (v553 == (1200 - (1035 + 146))) then
-			v578.Size = UDim2.new((616 - (230 + 386)) - (0 + 0), 32, (1510 - (353 + 1157)) + 0, 1146 - (53 + 1061));
-			v578.Position = UDim2.new((1635 - (1568 + 67)) + 0 + 0, (6 + 31) - (68 - 41), (0 - 0) + (0 - 0), 6 + 0 + (1216 - (615 + 597)));
-			v578.BackgroundTransparency = 1 + 0;
-			v578.Image = "rbxassetid://3926305904";
-			v578.ImageRectSize = Vector2.new(95 - 31, (1226 + 264) - (2 + 83 + 738 + 603));
-			v578.ImageRectOffset = Vector2.new(0 - (1899 - (1056 + 843)), 180 - (252 - 136));
-			v578.Parent = v575;
-			v579 = Instance.new("TextLabel");
-			v579.Name = "StatusLabel";
-			v553 = (651 - 259) - ((129 - 84) + 192 + 135);
-		end
-	end
-end
-local function v152()
-	local v582 = 1976 - (286 + 1690);
-	local v583;
-	local v584;
-	local v585;
-	local v586;
-	while true do
-		if (v582 == (913 - (98 + 813))) then
-			while true do
-				if (v583 == (1 + 0)) then
-					v586 = nil;
-					while true do
-						local v1024 = 0 - 0;
-						while true do
-							if (v1024 == 2) then
-								if (v584 == 5) then
-									return v585;
-								end
-								if (v584 == ((4 + 3) - (510 - (263 + 244)))) then
-									local v1232 = (398 + 104) - ((2131 - (1502 + 185)) + 58);
+						if (0 == FlatIdent_6EEC8) then
+							for v1140, v1141 in pairs(v203:GetDescendants()) do
+								if v1141:IsA("BasePart") then
+									local FlatIdent_2BE68 = 0;
 									while true do
-										if (v1232 == (1 + 0 + 0)) then
-											v586.Parent = v585;
-											v584 = 5;
+										if (FlatIdent_2BE68 == 0) then
+											v1141.CanCollide = not v202.Enabled;
+											table.insert(v202.NoClipParts, v1141);
 											break;
 										end
-										if (v1232 == ((0 - 0) + (0 - 0))) then
-											local v1273 = 1527 - (629 + 898);
-											while true do
-												if (v1273 == (2 - 1)) then
-													v1232 = 2 - 1;
-													break;
-												end
-												if (v1273 == (365 - (12 + 353))) then
-													v586.Font = Enum.Font.Gotham;
-													v586.TextSize = 8 + (1919 - (1680 + 231));
-													v1273 = 1;
-												end
-											end
-										end
-									end
-								end
-								break;
-							end
-							if (v1024 == ((0 + 0) - (0 + 0))) then
-								local v1139 = 0;
-								while true do
-									if (v1139 == (1149 - (212 + 937))) then
-										if (v584 == (1735 - (43 + 21 + 1668))) then
-											local v1274 = 1062 - (111 + 951);
-											while true do
-												if (v1274 == (0 + 0)) then
-													v586.BackgroundTransparency = (2001 - (18 + 9)) - (1227 + 150 + 596);
-													v586.Text = "其他脚本区内容";
-													v1274 = 1;
-												end
-												if ((535 - (31 + 503)) == v1274) then
-													v586.TextColor3 = Color3.fromRGB(1832 - (595 + 1037), (2058 - (189 + 1255)) - (153 + 261), (601 - 212) - (1458 - (1170 + 109)));
-													v584 = (2315 - (348 + 1469)) - (415 + (1368 - (1115 + 174)));
-													break;
-												end
-											end
-										end
-										if (v584 == ((2 - 1) + 0)) then
-											v585.BackgroundTransparency = 492 - ((1156 - (85 + 929)) + 205 + 144);
-											v585.Visible = false;
-											v585.Parent = v136;
-											v584 = 1869 - (1151 + 716);
-										end
-										v1139 = 1;
-									end
-									if (v1139 == 1) then
-										v1024 = 1 + 0 + 0;
-										break;
 									end
 								end
 							end
-							if (v1024 == ((1 + 0) - 0)) then
-								local v1140 = 0;
-								while true do
-									if (v1140 == (1705 - (95 + 1609))) then
-										v1024 = 6 - 4;
-										break;
-									end
-									if ((758 - (364 + 394)) == v1140) then
-										if (v584 == (0 + 0 + 0 + 0)) then
-											local v1278 = 0 + 0 + 0 + 0;
+							v203.DescendantAdded:Connect(function(v1142)
+								if v1142:IsA("BasePart") then
+									local FlatIdent_31077 = 0;
+									local v1170;
+									while true do
+										if (FlatIdent_31077 == 0) then
+											v1170 = 1619 - (1427 + 192);
 											while true do
-												if (v1278 == ((2 + 0) - (1 + 0))) then
-													v585.Size = UDim2.new(1 + 0, 1864 - (1574 + 136 + 154), 319 - (200 + 118), 0 + 0);
-													v584 = 1 + (956 - (719 + 237));
-													break;
-												end
-												if (v1278 == (0 - (0 - 0))) then
-													local v1316 = 0 + 0;
+												if (v1170 == (0 + 0)) then
+													local FlatIdent_835BC = 0;
 													while true do
-														if (v1316 == (2 - 1)) then
-															v1278 = (2 - 1) - (0 - 0);
+														if (FlatIdent_835BC == 1) then
+															v1170 = 1 + 0;
 															break;
 														end
-														if (v1316 == (1991 - (761 + 1230))) then
-															v585 = Instance.new("Frame");
-															v585.Name = "OtherScriptsContainer";
-															v1316 = 194 - (80 + 113);
+														if (0 == FlatIdent_835BC) then
+															task.wait(0.1 - 0);
+															v1142.CanCollide = not v202.Enabled;
+															FlatIdent_835BC = 1;
 														end
 													end
 												end
-											end
-										end
-										if (v584 == (2 + 0)) then
-											local v1279 = 0 + 0;
-											while true do
-												if (v1279 == 1) then
-													v586.Position = UDim2.new(0 + 0, 0 + 0 + 0, 0 - (0 - 0), 0);
-													v584 = 1253 - (84 + 279 + 163 + 724);
+												if (v1170 == 1) then
+													table.insert(v202.NoClipParts, v1142);
 													break;
 												end
-												if (v1279 == (1243 - (965 + 278))) then
-													v586 = Instance.new("TextLabel");
-													v586.Size = UDim2.new(1, 1729 - (1391 + 338), 1 + (0 - 0), 0 + 0);
-													v1279 = 1 + 0;
+											end
+											break;
+										end
+									end
+								end
+							end);
+							FlatIdent_6EEC8 = 1;
+						end
+						if (FlatIdent_6EEC8 == 1) then
+							v204 = 1 + 1;
+							break;
+						end
+					end
+				end
+				if (v204 == (328 - (192 + 134))) then
+					v205 = v203:WaitForChild("Humanoid");
+					v202.JumpConnection = v205.StateChanged:Connect(function(v1143, v1144)
+						if (v1144 == Enum.HumanoidStateType.Jumping) then
+							local v1171 = 1276 - (316 + 960);
+							local v1172;
+							while true do
+								if (v1171 == 0) then
+									v1172 = 0 + 0;
+									while true do
+										if (v1172 == (0 + 0)) then
+											task.wait(0.05 + 0);
+											for v1453, v1454 in pairs(v203:GetDescendants()) do
+												if v1454:IsA("BasePart") then
+													v1454.CanCollide = not v202.Enabled;
 												end
 											end
+											break;
 										end
-										v1140 = 1;
+									end
+									break;
+								end
+							end
+						elseif (v1144 == Enum.HumanoidStateType.Landed) then
+							if not v202.Enabled then
+								local v1411 = 0 - 0;
+								local v1412;
+								while true do
+									if (v1411 == (551 - (83 + 468))) then
+										v1412 = 0;
+										while true do
+											if (v1412 == (1806 - (1202 + 604))) then
+												task.wait(0.1 - 0);
+												for v1478, v1479 in pairs(v203:GetDescendants()) do
+													if v1479:IsA("BasePart") then
+														v1479.CanCollide = true;
+													end
+												end
+												break;
+											end
+										end
+										break;
 									end
 								end
 							end
 						end
-					end
+					end);
 					break;
 				end
-				if (v583 == ((0 - 0) - (0 + 0))) then
-					v584 = 0 - (1408 - (496 + 912));
-					v585 = nil;
-					v583 = (3 - 2) + 0 + 0;
+				if (v204 == 0) then
+					local FlatIdent_5AA23 = 0;
+					while true do
+						if (FlatIdent_5AA23 == 0) then
+							task.wait(0.2 - 0);
+							if v202.JumpConnection then
+								local FlatIdent_3F15E = 0;
+								local v1150;
+								local v1151;
+								while true do
+									if (FlatIdent_3F15E == 1) then
+										while true do
+											if (v1150 == (0 - 0)) then
+												v1151 = 0;
+												while true do
+													if (v1151 == (325 - (45 + 280))) then
+														v202.JumpConnection:Disconnect();
+														v202.JumpConnection = nil;
+														break;
+													end
+												end
+												break;
+											end
+										end
+										break;
+									end
+									if (FlatIdent_3F15E == 0) then
+										v1150 = 0;
+										v1151 = nil;
+										FlatIdent_3F15E = 1;
+									end
+								end
+							end
+							FlatIdent_5AA23 = 1;
+						end
+						if (FlatIdent_5AA23 == 1) then
+							v204 = 1 + 0;
+							break;
+						end
+					end
 				end
 			end
 			break;
 		end
-		if (v582 == (1 - 0)) then
-			v585 = nil;
-			v586 = nil;
-			v582 = 1332 - (1190 + 140);
+	end
+end;
+v149.Stop = function(v206)
+	local v207 = 0 + 0;
+	local v208;
+	while true do
+		if (v207 == (1 + 1)) then
+			if v208.Character then
+				for v1173, v1174 in pairs(v208.Character:GetDescendants()) do
+					if v1174:IsA("BasePart") then
+						v1174.CanCollide = true;
+					end
+				end
+			end
+			v206.NoClipParts = {};
+			break;
 		end
-		if (v582 == (0 + 0)) then
-			v583 = 718 - (317 + 401);
-			v584 = nil;
-			v582 = 950 - (303 + 646);
+		if (v207 == (1 + 0)) then
+			local FlatIdent_71E8F = 0;
+			while true do
+				if (FlatIdent_71E8F == 1) then
+					v207 = 2;
+					break;
+				end
+				if (FlatIdent_71E8F == 0) then
+					if v206.JumpConnection then
+						local FlatIdent_5AB84 = 0;
+						local v1152;
+						while true do
+							if (FlatIdent_5AB84 == 0) then
+								v1152 = 0 + 0;
+								while true do
+									if ((0 - 0) == v1152) then
+										v206.JumpConnection:Disconnect();
+										v206.JumpConnection = nil;
+										break;
+									end
+								end
+								break;
+							end
+						end
+					end
+					v208 = game:GetService("Players").LocalPlayer;
+					FlatIdent_71E8F = 1;
+				end
+			end
+		end
+		if (v207 == (1911 - (340 + 1571))) then
+			local FlatIdent_13B77 = 0;
+			while true do
+				if (0 == FlatIdent_13B77) then
+					if v206.Connection then
+						local FlatIdent_7699F = 0;
+						local v1153;
+						while true do
+							if (FlatIdent_7699F == 0) then
+								v1153 = 0 + 0;
+								while true do
+									if (v1153 == (1772 - (1733 + 39))) then
+										v206.Connection:Disconnect();
+										v206.Connection = nil;
+										break;
+									end
+								end
+								break;
+							end
+						end
+					end
+					if v206.CharacterAddedConnection then
+						local FlatIdent_77529 = 0;
+						local v1154;
+						while true do
+							if (0 == FlatIdent_77529) then
+								v1154 = 0;
+								while true do
+									if (0 == v1154) then
+										v206.CharacterAddedConnection:Disconnect();
+										v206.CharacterAddedConnection = nil;
+										break;
+									end
+								end
+								break;
+							end
+						end
+					end
+					FlatIdent_13B77 = 1;
+				end
+				if (FlatIdent_13B77 == 1) then
+					v207 = 1;
+					break;
+				end
+			end
+		end
+	end
+end;
+local v154 = {};
+do
+	local v209 = 0 - 0;
+	local v210;
+	local v211;
+	local v212;
+	local v213;
+	local v214;
+	local v215;
+	while true do
+		if (v209 == (1036 - (125 + 909))) then
+			v215 = nil;
+			function v215()
+				local FlatIdent_8A9D7 = 0;
+				local v1145;
+				local v1146;
+				while true do
+					if (FlatIdent_8A9D7 == 0) then
+						v1145 = 1948 - (1096 + 852);
+						v1146 = nil;
+						FlatIdent_8A9D7 = 1;
+					end
+					if (FlatIdent_8A9D7 == 1) then
+						while true do
+							if ((0 + 0) == v1145) then
+								v1146 = v210.Character;
+								if v1146 then
+									local FlatIdent_22A5C = 0;
+									local v1350;
+									local v1351;
+									local v1352;
+									local v1353;
+									while true do
+										if (FlatIdent_22A5C == 2) then
+											while true do
+												if (v1350 == (1 + 0)) then
+													v1353 = nil;
+													while true do
+														if (v1351 == (513 - (409 + 103))) then
+															for v1474, v1475 in pairs(v1352) do
+																if v1475:IsA("Humanoid") then
+																	local FlatIdent_2C7C4 = 0;
+																	while true do
+																		if (FlatIdent_2C7C4 == 0) then
+																			task.wait(236.2 - (46 + 190));
+																			v1475.JumpHeight = v211;
+																			break;
+																		end
+																	end
+																end
+															end
+															v1353 = v1146:FindFirstChildOfClass("Humanoid");
+															v1351 = 2;
+														end
+														if (v1351 == (97 - (51 + 44))) then
+															if v1353 then
+																v1353.JumpHeight = v211;
+															end
+															break;
+														end
+														if (v1351 == 0) then
+															local FlatIdent_6F99F = 0;
+															while true do
+																if (FlatIdent_6F99F == 0) then
+																	task.wait(1 + 0);
+																	v1352 = v1146:GetDescendants();
+																	FlatIdent_6F99F = 1;
+																end
+																if (FlatIdent_6F99F == 1) then
+																	v1351 = 1;
+																	break;
+																end
+															end
+														end
+													end
+													break;
+												end
+												if (v1350 == (1317 - (1114 + 203))) then
+													local FlatIdent_8A8EC = 0;
+													while true do
+														if (0 == FlatIdent_8A8EC) then
+															v1351 = 726 - (228 + 498);
+															v1352 = nil;
+															FlatIdent_8A8EC = 1;
+														end
+														if (FlatIdent_8A8EC == 1) then
+															v1350 = 1;
+															break;
+														end
+													end
+												end
+											end
+											break;
+										end
+										if (0 == FlatIdent_22A5C) then
+											v1350 = 0 - 0;
+											v1351 = nil;
+											FlatIdent_22A5C = 1;
+										end
+										if (FlatIdent_22A5C == 1) then
+											v1352 = nil;
+											v1353 = nil;
+											FlatIdent_22A5C = 2;
+										end
+									end
+								end
+								break;
+							end
+						end
+						break;
+					end
+				end
+			end
+			v215();
+			v209 = 1 + 2;
+		end
+		if (v209 == (1 + 0)) then
+			local v899 = 0;
+			while true do
+				if (v899 == (663 - (174 + 489))) then
+					v213 = nil;
+					v214 = nil;
+					v899 = 1;
+				end
+				if (1 == v899) then
+					function v214()
+						local FlatIdent_69D54 = 0;
+						local v1303;
+						while true do
+							if (FlatIdent_69D54 == 0) then
+								v1303 = 0;
+								while true do
+									if (v1303 == (0 - 0)) then
+										if v212 then
+											local FlatIdent_740DC = 0;
+											while true do
+												if (FlatIdent_740DC == 0) then
+													v212:Disconnect();
+													v212 = nil;
+													break;
+												end
+											end
+										end
+										v212 = game:GetService("RunService").Heartbeat:Connect(function()
+											local FlatIdent_1CFC3 = 0;
+											local v1420;
+											local v1421;
+											while true do
+												if (FlatIdent_1CFC3 == 0) then
+													v1420 = 0;
+													v1421 = nil;
+													FlatIdent_1CFC3 = 1;
+												end
+												if (FlatIdent_1CFC3 == 1) then
+													while true do
+														if (v1420 == (1905 - (830 + 1075))) then
+															v1421 = v210.Character;
+															if v1421 then
+																local FlatIdent_2DF14 = 0;
+																local v1476;
+																local v1477;
+																while true do
+																	if (FlatIdent_2DF14 == 1) then
+																		while true do
+																			if (v1476 == 0) then
+																				v1477 = v1421:FindFirstChildOfClass("Humanoid");
+																				if (v1477 and (v1477.JumpHeight ~= v211)) then
+																					v1477.JumpHeight = v211;
+																				end
+																				break;
+																			end
+																		end
+																		break;
+																	end
+																	if (0 == FlatIdent_2DF14) then
+																		v1476 = 0;
+																		v1477 = nil;
+																		FlatIdent_2DF14 = 1;
+																	end
+																end
+															end
+															break;
+														end
+													end
+													break;
+												end
+											end
+										end);
+										break;
+									end
+								end
+								break;
+							end
+						end
+					end
+					v209 = 2;
+					break;
+				end
+			end
+		end
+		if (v209 == (528 - (303 + 221))) then
+			v154.SetJumpHeight = function(v1147)
+				local FlatIdent_61F8E = 0;
+				while true do
+					if (FlatIdent_61F8E == 0) then
+						if ((v1147 >= (1276.2 - (231 + 1038))) and (v1147 <= (417 + 83))) then
+							local v1175 = 1162 - (171 + 991);
+							local v1176;
+							while true do
+								if ((0 - 0) == v1175) then
+									local FlatIdent_974E = 0;
+									while true do
+										if (FlatIdent_974E == 0) then
+											v211 = v1147;
+											v214();
+											FlatIdent_974E = 1;
+										end
+										if (FlatIdent_974E == 1) then
+											v1175 = 1;
+											break;
+										end
+									end
+								end
+								if (v1175 == (5 - 3)) then
+									return true;
+								end
+								if (v1175 == (2 - 1)) then
+									local FlatIdent_129E6 = 0;
+									while true do
+										if (0 == FlatIdent_129E6) then
+											v1176 = v210.Character;
+											if v1176 then
+												local FlatIdent_91A09 = 0;
+												local v1422;
+												local v1423;
+												local v1424;
+												local v1425;
+												while true do
+													if (FlatIdent_91A09 == 1) then
+														v1424 = nil;
+														v1425 = nil;
+														FlatIdent_91A09 = 2;
+													end
+													if (FlatIdent_91A09 == 0) then
+														v1422 = 0 + 0;
+														v1423 = nil;
+														FlatIdent_91A09 = 1;
+													end
+													if (FlatIdent_91A09 == 2) then
+														while true do
+															if (v1422 == (0 - 0)) then
+																local FlatIdent_386FF = 0;
+																while true do
+																	if (1 == FlatIdent_386FF) then
+																		v1422 = 1 - 0;
+																		break;
+																	end
+																	if (FlatIdent_386FF == 0) then
+																		v1423 = 0 - 0;
+																		v1424 = nil;
+																		FlatIdent_386FF = 1;
+																	end
+																end
+															end
+															if (v1422 == (3 - 2)) then
+																v1425 = nil;
+																while true do
+																	if (v1423 == (1249 - (111 + 1137))) then
+																		v1425 = v1176:FindFirstChildOfClass("Humanoid");
+																		if v1425 then
+																			v1425.JumpHeight = v211;
+																		end
+																		break;
+																	end
+																	if (v1423 == (158 - (91 + 67))) then
+																		local FlatIdent_1B418 = 0;
+																		while true do
+																			if (FlatIdent_1B418 == 0) then
+																				v1424 = v1176:GetDescendants();
+																				for v1486, v1487 in pairs(v1424) do
+																					if v1487:IsA("Humanoid") then
+																						v1487.JumpHeight = v211;
+																					end
+																				end
+																				FlatIdent_1B418 = 1;
+																			end
+																			if (FlatIdent_1B418 == 1) then
+																				v1423 = 2 - 1;
+																				break;
+																			end
+																		end
+																	end
+																end
+																break;
+															end
+														end
+														break;
+													end
+												end
+											end
+											FlatIdent_129E6 = 1;
+										end
+										if (FlatIdent_129E6 == 1) then
+											v1175 = 2;
+											break;
+										end
+									end
+								end
+							end
+						end
+						return false;
+					end
+				end
+			end;
+			v154.Cleanup = function()
+				local FlatIdent_1F138 = 0;
+				local v1148;
+				while true do
+					if (FlatIdent_1F138 == 0) then
+						if v212 then
+							local FlatIdent_2B4B0 = 0;
+							while true do
+								if (FlatIdent_2B4B0 == 0) then
+									v212:Disconnect();
+									v212 = nil;
+									break;
+								end
+							end
+						end
+						if v213 then
+							local FlatIdent_1077D = 0;
+							local v1177;
+							local v1178;
+							while true do
+								if (0 == FlatIdent_1077D) then
+									v1177 = 0;
+									v1178 = nil;
+									FlatIdent_1077D = 1;
+								end
+								if (1 == FlatIdent_1077D) then
+									while true do
+										if (v1177 == (0 + 0)) then
+											v1178 = 0;
+											while true do
+												if (v1178 == (523 - (423 + 100))) then
+													v213:Disconnect();
+													v213 = nil;
+													break;
+												end
+											end
+											break;
+										end
+									end
+									break;
+								end
+							end
+						end
+						FlatIdent_1F138 = 1;
+					end
+					if (FlatIdent_1F138 == 1) then
+						v1148 = v210.Character;
+						if v1148 then
+							local FlatIdent_2E3CE = 0;
+							local v1179;
+							local v1180;
+							while true do
+								if (FlatIdent_2E3CE == 0) then
+									v1179 = 0;
+									v1180 = nil;
+									FlatIdent_2E3CE = 1;
+								end
+								if (FlatIdent_2E3CE == 1) then
+									while true do
+										if (v1179 == (0 + 0)) then
+											v1180 = v1148:GetDescendants();
+											for v1413, v1414 in pairs(v1180) do
+												if v1414:IsA("Humanoid") then
+													v1414.JumpHeight = 19.2 - 12;
+												end
+											end
+											break;
+										end
+									end
+									break;
+								end
+							end
+						end
+						break;
+					end
+				end
+			end;
+			break;
+		end
+		if (v209 == (0 + 0)) then
+			local FlatIdent_98E39 = 0;
+			while true do
+				if (0 == FlatIdent_98E39) then
+					v210 = game:GetService("Players").LocalPlayer;
+					v211 = 7.2;
+					FlatIdent_98E39 = 1;
+				end
+				if (FlatIdent_98E39 == 1) then
+					v212 = nil;
+					v209 = 772 - (326 + 445);
+					break;
+				end
+			end
+		end
+		if (v209 == 3) then
+			local v903 = 0 - 0;
+			while true do
+				if (v903 == 1) then
+					v154.GetJumpHeight = function()
+						return v211;
+					end;
+					v209 = 8 - 4;
+					break;
+				end
+				if (v903 == (0 - 0)) then
+					local FlatIdent_D07E = 0;
+					while true do
+						if (FlatIdent_D07E == 0) then
+							if v213 then
+								v213:Disconnect();
+							end
+							v213 = v210.CharacterAdded:Connect(function(v1304)
+								local FlatIdent_8C1D5 = 0;
+								local v1305;
+								local v1306;
+								while true do
+									if (FlatIdent_8C1D5 == 1) then
+										while true do
+											if (v1305 == 0) then
+												v1306 = 881 - (614 + 267);
+												while true do
+													if (v1306 == (33 - (19 + 13))) then
+														v214();
+														break;
+													end
+													if (v1306 == (0 - 0)) then
+														local FlatIdent_16F8D = 0;
+														while true do
+															if (FlatIdent_16F8D == 1) then
+																v1306 = 2 - 1;
+																break;
+															end
+															if (FlatIdent_16F8D == 0) then
+																task.wait(2 - 1);
+																v215();
+																FlatIdent_16F8D = 1;
+															end
+														end
+													end
+												end
+												break;
+											end
+										end
+										break;
+									end
+									if (FlatIdent_8C1D5 == 0) then
+										v1305 = 711 - (530 + 181);
+										v1306 = nil;
+										FlatIdent_8C1D5 = 1;
+									end
+								end
+							end);
+							FlatIdent_D07E = 1;
+						end
+						if (1 == FlatIdent_D07E) then
+							v903 = 1 + 0;
+							break;
+						end
+					end
+				end
+			end
 		end
 	end
 end
-local function v153(v587, v588)
-	local v589 = 0;
-	local v590;
-	local v591;
-	while true do
-		if (v589 == (13 - (24 - 17))) then
-			v590.MouseLeave:Connect(function()
-				if (v590.BackgroundColor3 ~= Color3.fromRGB(55 + (1757 - (1675 + 57)), 104 + 56, 666 - 411)) then
-					v590.BackgroundColor3 = Color3.fromRGB((214 + 1500) - ((1651 - (338 + 639)) + (1369 - (320 + 59))), 8 + 7 + 35, 60);
-				end
-			end);
-			v590.Parent = v122;
-			break;
-		end
-		if (v589 == ((733 - (628 + 104)) + (0 - 0))) then
-			local v796 = 1891 - (439 + 1452);
+local function v155()
+	local v216 = Instance.new("Frame");
+	v216.Name = "UtilityContainer";
+	v216.Size = UDim2.new(1 - 0, 0, 1, 0 - 0);
+	v216.BackgroundTransparency = 1;
+	v216.Visible = true;
+	v216.Parent = v136;
+	local v222 = Instance.new("ScrollingFrame");
+	v222.Name = "UtilityScroll";
+	v222.Size = UDim2.new(1, -(1832 - (1293 + 519)), 1, -(40 - 20));
+	v222.Position = UDim2.new(0, 26 - 16, 0 - 0, 43 - 33);
+	v222.BackgroundTransparency = 1;
+	v222.ScrollBarThickness = 13 - 7;
+	v222.ScrollBarImageColor3 = Color3.fromRGB(53 + 47, 21 + 79, 255 - 145);
+	v222.CanvasSize = UDim2.new(0, 0 + 0, 0 + 0, 282 + 168);
+	v222.Parent = v216;
+	local v231 = Instance.new("UIListLayout");
+	v231.Parent = v222;
+	v231.Padding = UDim.new(1096 - (709 + 387), 12);
+	v231.HorizontalAlignment = Enum.HorizontalAlignment.Center;
+	local v236 = Instance.new("TextButton");
+	v236.Name = "AntiDetectFlight";
+	v236.Size = UDim2.new(1858.9 - (673 + 1185), 0, 0 - 0, 128 - 88);
+	v236.Text = "防检测飞行";
+	v236.BackgroundColor3 = Color3.fromRGB(98 - 38, 43 + 17, 53 + 17);
+	v236.TextColor3 = Color3.new(1, 1 - 0, 1);
+	v236.Font = Enum.Font.GothamSemibold;
+	v236.TextSize = 15;
+	v236.TextStrokeTransparency = 0.5;
+	v236.TextStrokeColor3 = Color3.fromRGB(0, 0 + 0, 0 - 0);
+	v236.AutoButtonColor = false;
+	local v248 = Instance.new("UIStroke");
+	v248.Thickness = 2;
+	v248.Color = Color3.fromRGB(157 - 77, 1960 - (446 + 1434), 1373 - (1040 + 243));
+	v248.Transparency = 0.3 - 0;
+	v248.Parent = v236;
+	local v253 = Instance.new("UICorner");
+	v253.CornerRadius = UDim.new(1847 - (559 + 1288), 1939 - (609 + 1322));
+	v253.Parent = v236;
+	local v256 = Color3.fromRGB(60, 514 - (13 + 441), 261 - 191);
+	local v257 = false;
+	v236.MouseEnter:Connect(function()
+		if not v257 then
+			local FlatIdent_8EF6C = 0;
+			local v904;
 			while true do
-				if (v796 == (1947 - (105 + 1842))) then
-					v590.Text = v587;
-					v590.BackgroundColor3 = Color3.fromRGB(79 - 29, (5055 - 3950) - ((1236 - 729) + (2637 - 2089)), (39 + 858) - (289 + 548));
-					v796 = 1 - 0;
-				end
-				if (v796 == (1 + 0)) then
-					v590.TextColor3 = Color3.new(1165 - (274 + 890), 1 + 0, (1530 + 289) - (821 + 279 + 718));
-					v589 = 257 - (106 + 89 + 36 + 24);
-					break;
-				end
-			end
-		end
-		if (v589 == ((2 - 0) + 3)) then
-			local v797 = 0;
-			while true do
-				if (v797 == (820 - (731 + 88))) then
-					v590.MouseEnter:Connect(function()
-						if (v590.BackgroundColor3 ~= Color3.fromRGB((1265 + 316) - (251 + 767 + 483), 160, 55 + 200)) then
-							v590.BackgroundColor3 = Color3.fromRGB((255 - 80) - (358 - 243), (122 - 80) + (37 - 19), 70);
-						end
-					end);
-					v589 = (943 + 95) - (4 + 805 + 41 + 182);
-					break;
-				end
-				if (v797 == (0 + 0)) then
-					v591.Transparency = 158.3 - (139 + 19);
-					v591.Parent = v590;
-					v797 = 1 + 0;
-				end
-			end
-		end
-		if (v589 == (1993 - (1687 + 306))) then
-			local v798 = 0 - 0;
-			while true do
-				if (v798 == (1155 - (1018 + 136))) then
-					v590.Size = UDim2.new((0 + 0) - (0 - 0), (1115 - (117 + 698)) - (681 - (305 + 176)), 0 + 0, (84 + 28) - (135 - 57));
-					v589 = 1 + 0 + (0 - 0);
-					break;
-				end
-				if (v798 == 0) then
-					v590 = Instance.new("TextButton");
-					v590.Name = v587;
-					v798 = 2 - 1;
-				end
-			end
-		end
-		if (v589 == (3 + (1 - 0))) then
-			v591 = Instance.new("UIStroke");
-			v591.Thickness = (878 - (159 + 101)) - (14 + 603);
-			v591.Color = Color3.fromRGB(337 - 267, 242 - 172, (104 + 105) - ((375 - 257) + 11));
-			v589 = (1 - 0) + 1 + 3;
-		end
-		if (v589 == ((268 - (112 + 154)) + (0 - 0))) then
-			local v801 = 31 - (21 + 10);
-			local v802;
-			while true do
-				if (v801 == 0) then
-					v802 = (1719 - (531 + 1188)) - 0;
+				if (0 == FlatIdent_8EF6C) then
+					v904 = 0 - 0;
 					while true do
-						if (v802 == (0 + 0)) then
-							v590.Font = Enum.Font.GothamSemibold;
-							v590.TextSize = 962 - ((1214 - (96 + 567)) + 398);
-							v802 = (1 - 0) + 0;
-						end
-						if (v802 == (1 + 0 + 0)) then
-							v590.TextStrokeTransparency = (0.5 - 0) + (1695 - (867 + 828));
-							v589 = (23 - 12) - (28 - 20);
+						if (v904 == 0) then
+							v236.BackgroundColor3 = Color3.fromRGB(348 - 278, 70, 3 + 77);
+							v248.Color = Color3.fromRGB(90, 326 - 236, 36 + 64);
 							break;
 						end
 					end
@@ -3920,296 +1750,3285 @@ local function v153(v587, v588)
 				end
 			end
 		end
-		if (v589 == 3) then
-			v590.TextStrokeColor3 = Color3.fromRGB((0 - 0) - 0, (0 - 0) + 0 + 0, 0);
-			v590.MouseButton1Click:Connect(function()
-				local v831 = 0;
-				local v832;
-				while true do
-					if (v831 == ((0 - 0) - (771 - (134 + 637)))) then
-						v832 = 0 + 0 + 0;
-						while true do
-							if (v832 == (90 - ((1197 - (775 + 382)) + (69 - 20)))) then
-								local v1141 = 607 - (45 + 562);
+	end);
+	v236.MouseLeave:Connect(function()
+		if not v257 then
+			local v905 = 0;
+			local v906;
+			while true do
+				if (v905 == 0) then
+					v906 = 0 + 0;
+					while true do
+						if (v906 == 0) then
+							v236.BackgroundColor3 = v256;
+							v248.Color = Color3.fromRGB(80, 80, 267 - 177);
+							break;
+						end
+					end
+					break;
+				end
+			end
+		end
+	end);
+	v236.MouseButton1Click:Connect(function()
+		local v849 = 0;
+		while true do
+			if (v849 == (0 + 0)) then
+				v257 = not v257;
+				if v257 then
+					local FlatIdent_8DAB1 = 0;
+					local v1187;
+					while true do
+						if (FlatIdent_8DAB1 == 0) then
+							v236.BackgroundColor3 = Color3.fromRGB(80, 160, 255);
+							v248.Color = Color3.fromRGB(220 - 100, 133 + 67, 142 + 113);
+							FlatIdent_8DAB1 = 1;
+						end
+						if (FlatIdent_8DAB1 == 2) then
+							if v1187 then
+								v2:SetCore("SendNotification", {Title="XDG-HOB",Text="防检测飞行已启用",Duration=(3 + 0),Icon="rbxassetid://4483345998"});
+							else
+								local v1321 = 0 + 0;
 								while true do
-									if ((862 - (545 + 317)) == v1141) then
-										v590.BackgroundColor3 = Color3.fromRGB(118 - 38, 160, 255);
-										v590.BorderSizePixel = 7 - 5;
-										v1141 = 1027 - (763 + 263);
-									end
-									if (v1141 == 1) then
-										v832 = 1 + 1;
+									if (v1321 == (2 + 0)) then
+										v236.Text = "防检测飞行";
 										break;
 									end
-								end
-							end
-							if (v832 == ((2240 - (512 + 1238)) - ((1693 - (272 + 1322)) + (732 - 341)))) then
-								v134 = v588;
-								for v1178, v1179 in pairs(v122:GetChildren()) do
-									if v1179:IsA("TextButton") then
-										local v1242 = (1246 - (533 + 713)) + (28 - (14 + 14));
-										local v1243;
+									if (v1321 == (433 - (153 + 280))) then
+										local FlatIdent_32708 = 0;
 										while true do
-											if (v1242 == ((825 - (499 + 326)) - (0 - 0))) then
-												v1243 = (424 - (104 + 320)) - (1997 - (1929 + 68));
-												while true do
-													if (v1243 == (0 + (1323 - (1206 + 117)))) then
-														v1179.BackgroundColor3 = Color3.fromRGB(34 + 16, (1723 - (683 + 909)) - 81, (5103 - 3439) - (1032 + 572));
-														v1179.BorderSizePixel = 0 - 0;
-														break;
-													end
-												end
+											if (FlatIdent_32708 == 1) then
+												v1321 = 1 + 0;
+												break;
+											end
+											if (FlatIdent_32708 == 0) then
+												v2:SetCore("SendNotification", {Title="错误",Text="加载飞行脚本失败",Duration=(14 - 9),Icon="rbxassetid://4483345998"});
+												v257 = false;
+												FlatIdent_32708 = 1;
+											end
+										end
+									end
+									if ((1 + 0) == v1321) then
+										local FlatIdent_6A6C4 = 0;
+										while true do
+											if (FlatIdent_6A6C4 == 0) then
+												v236.BackgroundColor3 = v256;
+												v248.Color = Color3.fromRGB(42 + 38, 80, 82 + 8);
+												FlatIdent_6A6C4 = 1;
+											end
+											if (FlatIdent_6A6C4 == 1) then
+												v1321 = 2 + 0;
 												break;
 											end
 										end
 									end
 								end
-								v832 = 778 - (772 + 5);
 							end
-							if (((1846 - (19 + 1408)) - (203 + (502 - (134 + 154)))) == v832) then
-								v590.BorderColor3 = Color3.fromRGB(420 - 165, 2072 - ((1761 - 1193) + 1249), 87 + 168);
-								for v1180, v1181 in ipairs(v135) do
-									v1181.Visible = v1180 == v588;
-								end
-								break;
-							end
+							break;
 						end
-						break;
+						if (FlatIdent_8DAB1 == 1) then
+							v236.Text = "防检测飞行 ✓";
+							v1187 = pcall(function()
+								loadstring(game:HttpGet("https://raw.githubusercontent.com/nihaonihaonihaon-source/XDG-HOB/main/mbhivhjjb.lua"))();
+							end);
+							FlatIdent_8DAB1 = 2;
+						end
+					end
+				else
+					local FlatIdent_6038 = 0;
+					local v1188;
+					while true do
+						if (FlatIdent_6038 == 0) then
+							v1188 = 0;
+							while true do
+								if (v1188 == 1) then
+									v236.Text = "防检测飞行";
+									v2:SetCore("SendNotification", {Title="XDG-HOB",Text="防检测飞行已禁用",Duration=(4 - 1),Icon="rbxassetid://4483345998"});
+									break;
+								end
+								if (v1188 == (0 + 0)) then
+									local FlatIdent_79884 = 0;
+									while true do
+										if (FlatIdent_79884 == 0) then
+											v236.BackgroundColor3 = v256;
+											v248.Color = Color3.fromRGB(747 - (89 + 578), 58 + 22, 90);
+											FlatIdent_79884 = 1;
+										end
+										if (FlatIdent_79884 == 1) then
+											v1188 = 1;
+											break;
+										end
+									end
+								end
+							end
+							break;
+						end
 					end
 				end
-			end);
-			if (v588 == v134) then
-				local v851 = 0 + 0;
-				local v852;
-				local v853;
-				while true do
-					if ((203 - (10 + 192)) == v851) then
-						while true do
-							if (v852 == (0 - (47 - (13 + 34)))) then
-								v853 = 0 - (1289 - (342 + 947));
-								while true do
-									if (v853 == ((5387 - 4081) - ((2621 - (119 + 1589)) + (866 - 473)))) then
-										v590.BackgroundColor3 = Color3.fromRGB(110 - 30, 451 - 291, 255);
-										v590.BorderSizePixel = (554 - (545 + 7)) - (0 - 0);
-										v853 = (170 + 241) - ((1972 - (494 + 1209)) + (376 - 235));
+				break;
+			end
+		end
+	end);
+	v236.Parent = v222;
+	local v259 = Instance.new("TextButton");
+	v259.Name = "AntiDetectWall";
+	v259.Size = UDim2.new(0.9, 0 - 0, 1049 - (572 + 477), 6 + 34);
+	v259.Text = "防检测穿墙";
+	v259.BackgroundColor3 = Color3.fromRGB(37 + 23, 8 + 52, 70);
+	v259.TextColor3 = Color3.new(87 - (84 + 2), 1 - 0, 1 + 0);
+	v259.Font = Enum.Font.GothamSemibold;
+	v259.TextSize = 15;
+	v259.TextStrokeTransparency = 842.5 - (497 + 345);
+	v259.TextStrokeColor3 = Color3.fromRGB(0, 0, 0 + 0);
+	v259.AutoButtonColor = false;
+	local v270 = Instance.new("UIStroke");
+	v270.Thickness = 1 + 1;
+	v270.Color = Color3.fromRGB(1413 - (605 + 728), 58 + 22, 200 - 110);
+	v270.Transparency = 0.3 + 0;
+	v270.Parent = v259;
+	local v275 = Instance.new("UICorner");
+	v275.CornerRadius = UDim.new(0 - 0, 8 + 0);
+	v275.Parent = v259;
+	local v278 = Color3.fromRGB(166 - 106, 46 + 14, 70);
+	v259.MouseEnter:Connect(function()
+		if not v149.Enabled then
+			local FlatIdent_2B407 = 0;
+			while true do
+				if (FlatIdent_2B407 == 0) then
+					v259.BackgroundColor3 = Color3.fromRGB(559 - (457 + 32), 30 + 40, 80);
+					v270.Color = Color3.fromRGB(1492 - (832 + 570), 85 + 5, 27 + 73);
+					break;
+				end
+			end
+		end
+	end);
+	v259.MouseLeave:Connect(function()
+		if not v149.Enabled then
+			local v909 = 0 - 0;
+			local v910;
+			while true do
+				if (0 == v909) then
+					v910 = 0 + 0;
+					while true do
+						if (0 == v910) then
+							v259.BackgroundColor3 = v278;
+							v270.Color = Color3.fromRGB(876 - (588 + 208), 215 - 135, 1890 - (884 + 916));
+							break;
+						end
+					end
+					break;
+				end
+			end
+		end
+	end);
+	v259.MouseButton1Click:Connect(function()
+		local FlatIdent_7EE98 = 0;
+		local v850;
+		while true do
+			if (FlatIdent_7EE98 == 0) then
+				v850 = v149:Toggle();
+				if v850 then
+					local FlatIdent_285D = 0;
+					local v911;
+					while true do
+						if (FlatIdent_285D == 0) then
+							v911 = 0;
+							while true do
+								if (0 == v911) then
+									v259.BackgroundColor3 = Color3.fromRGB(167 - 87, 93 + 67, 908 - (232 + 421));
+									v270.Color = Color3.fromRGB(2009 - (1569 + 320), 50 + 150, 49 + 206);
+									v911 = 3 - 2;
+								end
+								if (v911 == (606 - (316 + 289))) then
+									v259.Text = "防检测穿墙 ✓";
+									v2:SetCore("SendNotification", {Title="XDG-HOB",Text="防检测穿墙已启用\nWASD移动 空格上升 Ctrl下降",Duration=(13 - 8),Icon="rbxassetid://4483345998"});
+									break;
+								end
+							end
+							break;
+						end
+					end
+				else
+					local FlatIdent_81F9 = 0;
+					local v912;
+					while true do
+						if (FlatIdent_81F9 == 0) then
+							v912 = 0 + 0;
+							while true do
+								if (v912 == (1453 - (666 + 787))) then
+									local FlatIdent_44652 = 0;
+									while true do
+										if (FlatIdent_44652 == 1) then
+											v912 = 1 + 0;
+											break;
+										end
+										if (FlatIdent_44652 == 0) then
+											v259.BackgroundColor3 = v278;
+											v270.Color = Color3.fromRGB(80, 80, 515 - (360 + 65));
+											FlatIdent_44652 = 1;
+										end
 									end
-									if (v853 == (2 - (999 - (197 + 801)))) then
-										v590.BorderColor3 = Color3.fromRGB((4508 - 2272) - ((1750 - 1388) + 1619), (2834 - (919 + 35)) - (805 + 145 + (2723 - 2048)), (566 - (369 + 98)) + (1271 - (400 + 715)));
+								end
+								if (v912 == (255 - (79 + 175))) then
+									v259.Text = "防检测穿墙";
+									v2:SetCore("SendNotification", {Title="XDG-HOB",Text="防检测穿墙已禁用",Duration=3,Icon="rbxassetid://4483345998"});
+									break;
+								end
+							end
+							break;
+						end
+					end
+				end
+				break;
+			end
+		end
+	end);
+	v259.Parent = v222;
+	local v280 = Instance.new("TextButton");
+	v280.Name = "PlayerJoinNotification";
+	v280.Size = UDim2.new(0.9 - 0, 0 + 0, 0 - 0, 40);
+	v280.Text = "玩家进入提示";
+	v280.BackgroundColor3 = Color3.fromRGB(60, 115 - 55, 969 - (503 + 396));
+	v280.TextColor3 = Color3.new(182 - (92 + 89), 1 - 0, 1);
+	v280.Font = Enum.Font.GothamSemibold;
+	v280.TextSize = 15;
+	v280.TextStrokeTransparency = 0.5 + 0;
+	v280.TextStrokeColor3 = Color3.fromRGB(0 + 0, 0, 0);
+	v280.AutoButtonColor = false;
+	local v291 = Instance.new("UIStroke");
+	v291.Thickness = 2;
+	v291.Color = Color3.fromRGB(80, 313 - 233, 13 + 77);
+	v291.Transparency = 0.3 - 0;
+	v291.Parent = v280;
+	local v296 = Instance.new("UICorner");
+	v296.CornerRadius = UDim.new(0, 8);
+	v296.Parent = v280;
+	local v299 = Color3.fromRGB(53 + 7, 29 + 31, 70);
+	local v300 = false;
+	v280.MouseEnter:Connect(function()
+		if not v300 then
+			local v913 = 0 - 0;
+			while true do
+				if (v913 == (0 + 0)) then
+					v280.BackgroundColor3 = Color3.fromRGB(106 - 36, 1314 - (485 + 759), 80);
+					v291.Color = Color3.fromRGB(208 - 118, 90, 1289 - (442 + 747));
+					break;
+				end
+			end
+		end
+	end);
+	v280.MouseLeave:Connect(function()
+		if not v300 then
+			local v914 = 1135 - (832 + 303);
+			while true do
+				if (v914 == 0) then
+					v280.BackgroundColor3 = v299;
+					v291.Color = Color3.fromRGB(80, 80, 90);
+					break;
+				end
+			end
+		end
+	end);
+	v280.MouseButton1Click:Connect(function()
+		local v851 = 946 - (88 + 858);
+		while true do
+			if (v851 == (0 + 0)) then
+				v300 = not v300;
+				if v300 then
+					v280.BackgroundColor3 = Color3.fromRGB(80, 160, 255);
+					v291.Color = Color3.fromRGB(120, 166 + 34, 255);
+					v280.Text = "玩家进入提示 ✓";
+					local v1202 = pcall(function()
+						loadstring(game:HttpGet("https://raw.githubusercontent.com/boyscp/scriscriptsc/main/bbn.lua"))();
+					end);
+					if v1202 then
+						v2:SetCore("SendNotification", {Title="XDG-HOB",Text="玩家进入提示脚本已加载",Duration=3,Icon="rbxassetid://4483345998"});
+					else
+						local FlatIdent_1E39B = 0;
+						local v1322;
+						while true do
+							if (FlatIdent_1E39B == 0) then
+								v1322 = 0;
+								while true do
+									if (v1322 == 0) then
+										v2:SetCore("SendNotification", {Title="错误",Text="加载玩家进入提示脚本失败",Duration=(1 + 4),Icon="rbxassetid://4483345998"});
+										v300 = false;
+										v1322 = 1;
+									end
+									if (v1322 == 1) then
+										local FlatIdent_51FCC = 0;
+										while true do
+											if (FlatIdent_51FCC == 1) then
+												v1322 = 2 - 0;
+												break;
+											end
+											if (FlatIdent_51FCC == 0) then
+												v280.BackgroundColor3 = v299;
+												v291.Color = Color3.fromRGB(869 - (766 + 23), 394 - 314, 90);
+												FlatIdent_51FCC = 1;
+											end
+										end
+									end
+									if (2 == v1322) then
+										v280.Text = "玩家进入提示";
 										break;
 									end
 								end
 								break;
 							end
 						end
+					end
+				else
+					local v1203 = 0 - 0;
+					while true do
+						if (v1203 == (3 - 2)) then
+							v280.Text = "玩家进入提示";
+							v2:SetCore("SendNotification", {Title="XDG-HOB",Text="玩家进入提示脚本已卸载",Duration=(1076 - (1036 + 37)),Icon="rbxassetid://4483345998"});
+							break;
+						end
+						if (v1203 == 0) then
+							local FlatIdent_58C0A = 0;
+							while true do
+								if (FlatIdent_58C0A == 0) then
+									v280.BackgroundColor3 = v299;
+									v291.Color = Color3.fromRGB(57 + 23, 155 - 75, 71 + 19);
+									FlatIdent_58C0A = 1;
+								end
+								if (FlatIdent_58C0A == 1) then
+									v1203 = 1;
+									break;
+								end
+							end
+						end
+					end
+				end
+				break;
+			end
+		end
+	end);
+	v280.Parent = v222;
+	local v302 = Instance.new("TextButton");
+	v302.Name = "FloatWalk";
+	v302.Size = UDim2.new(0.9, 1480 - (641 + 839), 913 - (910 + 3), 40);
+	v302.Text = "踏空";
+	v302.BackgroundColor3 = Color3.fromRGB(152 - 92, 1744 - (1466 + 218), 33 + 37);
+	v302.TextColor3 = Color3.new(1149 - (556 + 592), 1, 1);
+	v302.Font = Enum.Font.GothamSemibold;
+	v302.TextSize = 6 + 9;
+	v302.TextStrokeTransparency = 0.5;
+	v302.TextStrokeColor3 = Color3.fromRGB(808 - (329 + 479), 854 - (174 + 680), 0 - 0);
+	v302.AutoButtonColor = false;
+	local v313 = Instance.new("UIStroke");
+	v313.Thickness = 3 - 1;
+	v313.Color = Color3.fromRGB(58 + 22, 819 - (396 + 343), 8 + 82);
+	v313.Transparency = 1477.3 - (29 + 1448);
+	v313.Parent = v302;
+	local v318 = Instance.new("UICorner");
+	v318.CornerRadius = UDim.new(0, 8);
+	v318.Parent = v302;
+	local v321 = Color3.fromRGB(1449 - (135 + 1254), 226 - 166, 326 - 256);
+	local v322 = false;
+	v302.MouseEnter:Connect(function()
+		if not v322 then
+			local FlatIdent_2F8E7 = 0;
+			while true do
+				if (FlatIdent_2F8E7 == 0) then
+					v302.BackgroundColor3 = Color3.fromRGB(70, 47 + 23, 1607 - (389 + 1138));
+					v313.Color = Color3.fromRGB(664 - (102 + 472), 85 + 5, 100);
+					break;
+				end
+			end
+		end
+	end);
+	v302.MouseLeave:Connect(function()
+		if not v322 then
+			local FlatIdent_35F25 = 0;
+			local v917;
+			local v918;
+			while true do
+				if (FlatIdent_35F25 == 0) then
+					v917 = 0;
+					v918 = nil;
+					FlatIdent_35F25 = 1;
+				end
+				if (FlatIdent_35F25 == 1) then
+					while true do
+						if (v917 == (0 + 0)) then
+							v918 = 0 + 0;
+							while true do
+								if (v918 == 0) then
+									v302.BackgroundColor3 = v321;
+									v313.Color = Color3.fromRGB(1625 - (320 + 1225), 142 - 62, 56 + 34);
+									break;
+								end
+							end
+							break;
+						end
+					end
+					break;
+				end
+			end
+		end
+	end);
+	v302.MouseButton1Click:Connect(function()
+		local FlatIdent_4185D = 0;
+		local v852;
+		local v853;
+		while true do
+			if (FlatIdent_4185D == 0) then
+				v852 = 1464 - (157 + 1307);
+				v853 = nil;
+				FlatIdent_4185D = 1;
+			end
+			if (FlatIdent_4185D == 1) then
+				while true do
+					if (v852 == (1859 - (821 + 1038))) then
+						v853 = 0 - 0;
+						while true do
+							if ((0 + 0) == v853) then
+								v322 = not v322;
+								if v322 then
+									v302.BackgroundColor3 = Color3.fromRGB(142 - 62, 160, 255);
+									v313.Color = Color3.fromRGB(120, 75 + 125, 255);
+									v302.Text = "踏空 ✓";
+									local v1370 = pcall(function()
+										loadstring(game:HttpGet("https://raw.githubusercontent.com/GhostPlayer352/Test4/main/Float"))();
+									end);
+									if v1370 then
+										v2:SetCore("SendNotification", {Title="XDG-HOB",Text="踏空脚本已加载",Duration=3,Icon="rbxassetid://4483345998"});
+									else
+										local v1432 = 0 - 0;
+										while true do
+											if (v1432 == 0) then
+												local FlatIdent_5F7B5 = 0;
+												while true do
+													if (FlatIdent_5F7B5 == 1) then
+														v1432 = 1 + 0;
+														break;
+													end
+													if (0 == FlatIdent_5F7B5) then
+														v2:SetCore("SendNotification", {Title="错误",Text="加载踏空脚本失败",Duration=(1031 - (834 + 192)),Icon="rbxassetid://4483345998"});
+														v322 = false;
+														FlatIdent_5F7B5 = 1;
+													end
+												end
+											end
+											if (v1432 == (1 + 1)) then
+												v302.Text = "踏空";
+												break;
+											end
+											if (v1432 == (1 + 0)) then
+												local FlatIdent_28DC7 = 0;
+												while true do
+													if (FlatIdent_28DC7 == 0) then
+														v302.BackgroundColor3 = v321;
+														v313.Color = Color3.fromRGB(123 - 43, 384 - (300 + 4), 25 + 65);
+														FlatIdent_28DC7 = 1;
+													end
+													if (FlatIdent_28DC7 == 1) then
+														v1432 = 2;
+														break;
+													end
+												end
+											end
+										end
+									end
+								else
+									local FlatIdent_1D0A6 = 0;
+									while true do
+										if (FlatIdent_1D0A6 == 1) then
+											v302.Text = "踏空";
+											v2:SetCore("SendNotification", {Title="XDG-HOB",Text="踏空脚本已卸载",Duration=(2 + 1),Icon="rbxassetid://4483345998"});
+											break;
+										end
+										if (FlatIdent_1D0A6 == 0) then
+											v302.BackgroundColor3 = v321;
+											v313.Color = Color3.fromRGB(209 - 129, 442 - (112 + 250), 90);
+											FlatIdent_1D0A6 = 1;
+										end
+									end
+								end
+								break;
+							end
+						end
 						break;
 					end
-					if (0 == v851) then
-						v852 = 0 + 0 + 0;
-						v853 = nil;
-						v851 = 1 + 0;
+				end
+				break;
+			end
+		end
+	end);
+	v302.Parent = v222;
+	local v324 = Instance.new("TextButton");
+	v324.Name = "WallClimb";
+	v324.Size = UDim2.new(0.9 - 0, 0 + 0, 0 + 0, 30 + 10);
+	v324.Text = "爬墙";
+	v324.BackgroundColor3 = Color3.fromRGB(30 + 30, 60, 53 + 17);
+	v324.TextColor3 = Color3.new(1415 - (1001 + 413), 2 - 1, 883 - (244 + 638));
+	v324.Font = Enum.Font.GothamSemibold;
+	v324.TextSize = 708 - (627 + 66);
+	v324.TextStrokeTransparency = 0.5 - 0;
+	v324.TextStrokeColor3 = Color3.fromRGB(0, 602 - (512 + 90), 0);
+	v324.AutoButtonColor = false;
+	local v335 = Instance.new("UIStroke");
+	v335.Thickness = 1908 - (1665 + 241);
+	v335.Color = Color3.fromRGB(80, 80, 90);
+	v335.Transparency = 717.3 - (373 + 344);
+	v335.Parent = v324;
+	local v340 = Instance.new("UICorner");
+	v340.CornerRadius = UDim.new(0 + 0, 8);
+	v340.Parent = v324;
+	local v343 = Color3.fromRGB(16 + 44, 158 - 98, 118 - 48);
+	local v344 = false;
+	v324.MouseEnter:Connect(function()
+		if not v344 then
+			local FlatIdent_3EDDC = 0;
+			local v919;
+			while true do
+				if (FlatIdent_3EDDC == 0) then
+					v919 = 1099 - (35 + 1064);
+					while true do
+						if (v919 == (0 + 0)) then
+							v324.BackgroundColor3 = Color3.fromRGB(70, 149 - 79, 1 + 79);
+							v335.Color = Color3.fromRGB(1326 - (298 + 938), 1349 - (233 + 1026), 1766 - (636 + 1030));
+							break;
+						end
+					end
+					break;
+				end
+			end
+		end
+	end);
+	v324.MouseLeave:Connect(function()
+		if not v344 then
+			v324.BackgroundColor3 = v343;
+			v335.Color = Color3.fromRGB(41 + 39, 79 + 1, 27 + 63);
+		end
+	end);
+	v324.MouseButton1Click:Connect(function()
+		v344 = not v344;
+		if v344 then
+			local v922 = 0;
+			local v923;
+			while true do
+				if (v922 == (1 + 1)) then
+					if v923 then
+						v2:SetCore("SendNotification", {Title="XDG-HOB",Text="爬墙脚本已加载",Duration=(224 - (55 + 166)),Icon="rbxassetid://4483345998"});
+					else
+						local v1323 = 0;
+						while true do
+							if (v1323 == (1 + 0)) then
+								local FlatIdent_5AC6 = 0;
+								while true do
+									if (1 == FlatIdent_5AC6) then
+										v1323 = 2;
+										break;
+									end
+									if (FlatIdent_5AC6 == 0) then
+										v324.BackgroundColor3 = v343;
+										v335.Color = Color3.fromRGB(9 + 71, 80, 343 - 253);
+										FlatIdent_5AC6 = 1;
+									end
+								end
+							end
+							if (v1323 == (299 - (36 + 261))) then
+								v324.Text = "爬墙";
+								break;
+							end
+							if ((0 - 0) == v1323) then
+								v2:SetCore("SendNotification", {Title="错误",Text="加载爬墙脚本失败",Duration=(1373 - (34 + 1334)),Icon="rbxassetid://4483345998"});
+								v344 = false;
+								v1323 = 1 + 0;
+							end
+						end
+					end
+					break;
+				end
+				if (v922 == (0 + 0)) then
+					v324.BackgroundColor3 = Color3.fromRGB(1363 - (1035 + 248), 181 - (20 + 1), 255);
+					v335.Color = Color3.fromRGB(63 + 57, 519 - (134 + 185), 1388 - (549 + 584));
+					v922 = 686 - (314 + 371);
+				end
+				if (v922 == (3 - 2)) then
+					local FlatIdent_73069 = 0;
+					while true do
+						if (FlatIdent_73069 == 0) then
+							v324.Text = "爬墙 ✓";
+							v923 = pcall(function()
+								loadstring(game:HttpGet("https://pastebin.com/raw/zXk4Rq2r"))();
+							end);
+							FlatIdent_73069 = 1;
+						end
+						if (FlatIdent_73069 == 1) then
+							v922 = 970 - (478 + 490);
+							break;
+						end
 					end
 				end
 			end
-			v589 = (2508 - (744 + 581)) - (109 + 107 + (2585 - (653 + 969)));
+		else
+			local v924 = 0 + 0;
+			local v925;
+			while true do
+				if (v924 == 0) then
+					v925 = 1172 - (786 + 386);
+					while true do
+						if (v925 == (0 - 0)) then
+							local FlatIdent_1F799 = 0;
+							while true do
+								if (FlatIdent_1F799 == 1) then
+									v925 = 1341 - (1093 + 247);
+									break;
+								end
+								if (0 == FlatIdent_1F799) then
+									v324.BackgroundColor3 = v343;
+									v335.Color = Color3.fromRGB(80, 1459 - (1055 + 324), 90);
+									FlatIdent_1F799 = 1;
+								end
+							end
+						end
+						if (v925 == 1) then
+							v324.Text = "爬墙";
+							v2:SetCore("SendNotification", {Title="XDG-HOB",Text="爬墙脚本已卸载",Duration=3,Icon="rbxassetid://4483345998"});
+							break;
+						end
+					end
+					break;
+				end
+			end
+		end
+	end);
+	v324.Parent = v222;
+	local v346 = Instance.new("TextButton");
+	v346.Name = "IronFist";
+	v346.Size = UDim2.new(0.9 + 0, 0 + 0, 0 - 0, 135 - 95);
+	v346.Text = "铁拳";
+	v346.BackgroundColor3 = Color3.fromRGB(60, 170 - 110, 70);
+	v346.TextColor3 = Color3.new(2 - 1, 1 + 0, 3 - 2);
+	v346.Font = Enum.Font.GothamSemibold;
+	v346.TextSize = 15;
+	v346.TextStrokeTransparency = 0.5;
+	v346.TextStrokeColor3 = Color3.fromRGB(0 - 0, 0, 0 + 0);
+	v346.AutoButtonColor = false;
+	local v357 = Instance.new("UIStroke");
+	v357.Thickness = 4 - 2;
+	v357.Color = Color3.fromRGB(768 - (364 + 324), 219 - 139, 215 - 125);
+	v357.Transparency = 0.3 + 0;
+	v357.Parent = v346;
+	local v362 = Instance.new("UICorner");
+	v362.CornerRadius = UDim.new(0 - 0, 12 - 4);
+	v362.Parent = v346;
+	local v365 = Color3.fromRGB(182 - 122, 1328 - (1249 + 19), 70);
+	local v366 = false;
+	v346.MouseEnter:Connect(function()
+		if not v366 then
+			local FlatIdent_5062 = 0;
+			local v926;
+			local v927;
+			while true do
+				if (FlatIdent_5062 == 1) then
+					while true do
+						if (v926 == 0) then
+							v927 = 0 + 0;
+							while true do
+								if (v927 == (0 - 0)) then
+									v346.BackgroundColor3 = Color3.fromRGB(1156 - (686 + 400), 55 + 15, 309 - (73 + 156));
+									v357.Color = Color3.fromRGB(90, 1 + 89, 911 - (721 + 90));
+									break;
+								end
+							end
+							break;
+						end
+					end
+					break;
+				end
+				if (0 == FlatIdent_5062) then
+					v926 = 0;
+					v927 = nil;
+					FlatIdent_5062 = 1;
+				end
+			end
+		end
+	end);
+	v346.MouseLeave:Connect(function()
+		if not v366 then
+			local v928 = 0 + 0;
+			local v929;
+			while true do
+				if (v928 == 0) then
+					v929 = 0;
+					while true do
+						if (v929 == (0 - 0)) then
+							v346.BackgroundColor3 = v365;
+							v357.Color = Color3.fromRGB(550 - (224 + 246), 129 - 49, 165 - 75);
+							break;
+						end
+					end
+					break;
+				end
+			end
+		end
+	end);
+	v346.MouseButton1Click:Connect(function()
+		local FlatIdent_81F6A = 0;
+		local v854;
+		while true do
+			if (FlatIdent_81F6A == 0) then
+				v854 = 0 + 0;
+				while true do
+					if (v854 == 0) then
+						v366 = not v366;
+						if v366 then
+							local FlatIdent_D076 = 0;
+							local v1212;
+							while true do
+								if (0 == FlatIdent_D076) then
+									v346.BackgroundColor3 = Color3.fromRGB(2 + 78, 118 + 42, 506 - 251);
+									v357.Color = Color3.fromRGB(399 - 279, 200, 768 - (203 + 310));
+									FlatIdent_D076 = 1;
+								end
+								if (FlatIdent_D076 == 1) then
+									v346.Text = "铁拳 ✓";
+									v1212 = pcall(function()
+										loadstring(game:HttpGet("https://raw.githubusercontent.com/0Ben1/fe/main/obf_rf6iQURzu1fqrytcnLBAvW34C9N55kS9g9G3CKz086rC47M6632sEd4ZZYB0AYgV.lua.txt"))();
+									end);
+									FlatIdent_D076 = 2;
+								end
+								if (FlatIdent_D076 == 2) then
+									if v1212 then
+										v2:SetCore("SendNotification", {Title="XDG-HOB",Text="铁拳脚本已加载",Duration=(1996 - (1238 + 755)),Icon="rbxassetid://4483345998"});
+									else
+										v2:SetCore("SendNotification", {Title="错误",Text="加载铁拳脚本失败",Duration=(1 + 4),Icon="rbxassetid://4483345998"});
+										v366 = false;
+										v346.BackgroundColor3 = v365;
+										v357.Color = Color3.fromRGB(80, 1614 - (709 + 825), 165 - 75);
+										v346.Text = "铁拳";
+									end
+									break;
+								end
+							end
+						else
+							local FlatIdent_66193 = 0;
+							while true do
+								if (FlatIdent_66193 == 0) then
+									v346.BackgroundColor3 = v365;
+									v357.Color = Color3.fromRGB(116 - 36, 80, 954 - (196 + 668));
+									FlatIdent_66193 = 1;
+								end
+								if (1 == FlatIdent_66193) then
+									v346.Text = "铁拳";
+									v2:SetCore("SendNotification", {Title="XDG-HOB",Text="铁拳脚本已卸载",Duration=(11 - 8),Icon="rbxassetid://4483345998"});
+									break;
+								end
+							end
+						end
+						break;
+					end
+				end
+				break;
+			end
+		end
+	end);
+	v346.Parent = v222;
+	return v216;
+end
+local function v156()
+	local v368 = Instance.new("Frame");
+	v368.Name = "FunctionContainer";
+	v368.Size = UDim2.new(1 - 0, 0, 834 - (171 + 662), 93 - (4 + 89));
+	v368.BackgroundTransparency = 1;
+	v368.Visible = false;
+	v368.Parent = v136;
+	local v374 = Instance.new("ScrollingFrame");
+	v374.Name = "FunctionScroll";
+	v374.Size = UDim2.new(3 - 2, -(8 + 12), 1, -(87 - 67));
+	v374.Position = UDim2.new(0 + 0, 10, 0, 1496 - (35 + 1451));
+	v374.BackgroundTransparency = 1;
+	v374.ScrollBarThickness = 1459 - (28 + 1425);
+	v374.ScrollBarImageColor3 = Color3.fromRGB(2093 - (941 + 1052), 96 + 4, 1624 - (822 + 692));
+	v374.CanvasSize = UDim2.new(0, 0, 0, 650);
+	v374.Parent = v368;
+	local v383 = Instance.new("UIListLayout");
+	v383.Parent = v374;
+	v383.Padding = UDim.new(0 - 0, 12);
+	v383.HorizontalAlignment = Enum.HorizontalAlignment.Center;
+	local v388 = Instance.new("Frame");
+	v388.Name = "SpeedFrame";
+	v388.Size = UDim2.new(0.9, 0 + 0, 0, 417 - (45 + 252));
+	v388.BackgroundColor3 = Color3.fromRGB(60, 60 + 0, 25 + 45);
+	v388.BackgroundTransparency = 0.1 - 0;
+	local v393 = Instance.new("UICorner");
+	v393.CornerRadius = UDim.new(433 - (114 + 319), 11 - 3);
+	v393.Parent = v388;
+	local v396 = Instance.new("UIStroke");
+	v396.Thickness = 2 - 0;
+	v396.Color = Color3.fromRGB(51 + 29, 160, 379 - 124);
+	v396.Transparency = 0.2 - 0;
+	v396.Parent = v388;
+	local v401 = Instance.new("ImageLabel");
+	v401.Name = "SpeedIcon";
+	v401.Size = UDim2.new(0, 1995 - (556 + 1407), 0, 1238 - (741 + 465));
+	v401.Position = UDim2.new(465 - (170 + 295), 6 + 4, 0 + 0, 24 - 14);
+	v401.BackgroundTransparency = 1 + 0;
+	v401.Image = "rbxassetid://3926305904";
+	v401.ImageRectSize = Vector2.new(64, 42 + 22);
+	v401.ImageRectOffset = Vector2.new(0 + 0, 1358 - (957 + 273));
+	v401.Parent = v388;
+	local v410 = Instance.new("TextLabel");
+	v410.Name = "SpeedTitle";
+	v410.Size = UDim2.new(1 + 0, -50, 0 + 0, 76 - 56);
+	v410.Position = UDim2.new(0 - 0, 152 - 102, 0 - 0, 1782 - (389 + 1391));
+	v410.BackgroundTransparency = 1 + 0;
+	v410.Text = "防检测速度调整";
+	v410.TextColor3 = Color3.fromRGB(180, 21 + 179, 255);
+	v410.Font = Enum.Font.GothamBold;
+	v410.TextSize = 26 - 14;
+	v410.TextXAlignment = Enum.TextXAlignment.Left;
+	v410.Parent = v388;
+	local v423 = Instance.new("TextBox");
+	v423.Name = "SpeedInput";
+	v423.Size = UDim2.new(951.7 - (783 + 168), 0 - 0, 0 + 0, 30);
+	v423.Position = UDim2.new(0.15, 0, 0, 40);
+	v423.BackgroundColor3 = Color3.fromRGB(45, 356 - (309 + 2), 168 - 113);
+	v423.TextColor3 = Color3.fromRGB(1432 - (1090 + 122), 220, 75 + 155);
+	v423.Font = Enum.Font.GothamSemibold;
+	v423.TextSize = 46 - 32;
+	v423.PlaceholderText = "输入速度 (16-400)";
+	v423.Text = "16";
+	v423.ClearTextOnFocus = false;
+	local v435 = Instance.new("UICorner");
+	v435.CornerRadius = UDim.new(0, 6);
+	v435.Parent = v423;
+	local v438 = Instance.new("UIStroke");
+	v438.Thickness = 1 + 0;
+	v438.Color = Color3.fromRGB(1218 - (628 + 490), 18 + 82, 272 - 162);
+	v438.Parent = v423;
+	v423.FocusLost:Connect(function(v855)
+		if v855 then
+			local FlatIdent_3A655 = 0;
+			local v930;
+			local v931;
+			while true do
+				if (FlatIdent_3A655 == 1) then
+					while true do
+						if (v930 == (774 - (431 + 343))) then
+							v931 = tonumber(v423.Text);
+							if (v931 and (v931 >= (32 - 16)) and (v931 <= (1157 - 757))) then
+								local FlatIdent_771FD = 0;
+								local v1327;
+								while true do
+									if (FlatIdent_771FD == 0) then
+										v1327 = 0 + 0;
+										while true do
+											if (v1327 == 0) then
+												v8.SetRealSpeed(v931);
+												v2:SetCore("SendNotification", {Title="XDG-HOB",Text=("速度已设置为: " .. v931),Duration=3,Icon="rbxassetid://4483345998"});
+												break;
+											end
+										end
+										break;
+									end
+								end
+							else
+								local v1328 = 0;
+								while true do
+									if ((0 + 0) == v1328) then
+										v423.Text = "16";
+										v2:SetCore("SendNotification", {Title="错误",Text="请输入16-400之间的数字",Duration=(1700 - (556 + 1139)),Icon="rbxassetid://4483345998"});
+										break;
+									end
+								end
+							end
+							break;
+						end
+					end
+					break;
+				end
+				if (FlatIdent_3A655 == 0) then
+					v930 = 0 - 0;
+					v931 = nil;
+					FlatIdent_3A655 = 1;
+				end
+			end
+		end
+	end);
+	v423.Parent = v388;
+	local v443 = Instance.new("TextButton");
+	v443.Name = "ApplySpeedButton";
+	v443.Size = UDim2.new(15.5 - (6 + 9), 0 + 0, 0, 16 + 14);
+	v443.Position = UDim2.new(169.25 - (28 + 141), 0 + 0, 0 - 0, 57 + 23);
+	v443.BackgroundColor3 = Color3.fromRGB(1397 - (486 + 831), 416 - 256, 255);
+	v443.Text = "应用速度";
+	v443.TextColor3 = Color3.new(3 - 2, 1 + 0, 3 - 2);
+	v443.Font = Enum.Font.GothamSemibold;
+	v443.TextSize = 1277 - (668 + 595);
+	v443.TextStrokeTransparency = 0.6 + 0;
+	v443.TextStrokeColor3 = Color3.fromRGB(0 + 0, 0 - 0, 0);
+	local v454 = Instance.new("UICorner");
+	v454.CornerRadius = UDim.new(290 - (23 + 267), 6);
+	v454.Parent = v443;
+	local v457 = Instance.new("UIStroke");
+	v457.Thickness = 1;
+	v457.Color = Color3.fromRGB(120, 200, 2199 - (1129 + 815));
+	v457.Parent = v443;
+	v443.MouseEnter:Connect(function()
+		v443.BackgroundColor3 = Color3.fromRGB(100, 567 - (371 + 16), 2005 - (1326 + 424));
+	end);
+	v443.MouseLeave:Connect(function()
+		v443.BackgroundColor3 = Color3.fromRGB(80, 303 - 143, 931 - 676);
+	end);
+	v443.MouseButton1Click:Connect(function()
+		local FlatIdent_3423 = 0;
+		local v858;
+		local v859;
+		while true do
+			if (0 == FlatIdent_3423) then
+				v858 = 0;
+				v859 = nil;
+				FlatIdent_3423 = 1;
+			end
+			if (FlatIdent_3423 == 1) then
+				while true do
+					if (v858 == 0) then
+						v859 = tonumber(v423.Text);
+						if (v859 and (v859 >= (134 - (88 + 30))) and (v859 <= 400)) then
+							local FlatIdent_4479E = 0;
+							local v1216;
+							local v1217;
+							while true do
+								if (1 == FlatIdent_4479E) then
+									while true do
+										if (v1216 == (0 - 0)) then
+											v1217 = 1776 - (421 + 1355);
+											while true do
+												if (v1217 == (0 - 0)) then
+													v8.SetRealSpeed(v859);
+													v2:SetCore("SendNotification", {Title="XDG-HOB",Text=("速度已设置为: " .. v859),Duration=(2 + 1),Icon="rbxassetid://4483345998"});
+													break;
+												end
+											end
+											break;
+										end
+									end
+									break;
+								end
+								if (FlatIdent_4479E == 0) then
+									v1216 = 771 - (720 + 51);
+									v1217 = nil;
+									FlatIdent_4479E = 1;
+								end
+							end
+						else
+							local FlatIdent_32B1C = 0;
+							local v1218;
+							local v1219;
+							while true do
+								if (FlatIdent_32B1C == 1) then
+									while true do
+										if (v1218 == (1083 - (286 + 797))) then
+											v1219 = 0 - 0;
+											while true do
+												if (v1219 == 0) then
+													v423.Text = "16";
+													v2:SetCore("SendNotification", {Title="错误",Text="请输入16-400之间的数字",Duration=5,Icon="rbxassetid://4483345998"});
+													break;
+												end
+											end
+											break;
+										end
+									end
+									break;
+								end
+								if (FlatIdent_32B1C == 0) then
+									v1218 = 0;
+									v1219 = nil;
+									FlatIdent_32B1C = 1;
+								end
+							end
+						end
+						break;
+					end
+				end
+				break;
+			end
+		end
+	end);
+	v443.Parent = v388;
+	local v462 = Instance.new("TextLabel");
+	v462.Name = "CurrentSpeedLabel";
+	v462.Size = UDim2.new(1 - 0, 439 - (397 + 42), 0 + 0, 820 - (24 + 776));
+	v462.Position = UDim2.new(0 - 0, 785 - (222 + 563), 0, 253 - 138);
+	v462.BackgroundTransparency = 1 + 0;
+	v462.TextColor3 = Color3.fromRGB(370 - (23 + 167), 1998 - (690 + 1108), 93 + 162);
+	v462.Font = Enum.Font.GothamSemibold;
+	v462.TextSize = 11;
+	v462.Text = "当前速度: 16";
+	v462.Parent = v388;
+	local v472;
+	function updateCurrentSpeed()
+		v462.Text = "当前速度: " .. math.floor(v8.GetRealSpeed());
+	end
+	game:GetService("RunService").Heartbeat:Connect(function()
+		v472();
+	end);
+	v388.Parent = v374;
+	local v474 = Instance.new("Frame");
+	v474.Name = "JumpPowerFrame";
+	v474.Size = UDim2.new(0.9 + 0, 848 - (40 + 808), 0, 20 + 100);
+	v474.BackgroundColor3 = Color3.fromRGB(229 - 169, 58 + 2, 38 + 32);
+	v474.BackgroundTransparency = 0.1;
+	local v479 = Instance.new("UICorner");
+	v479.CornerRadius = UDim.new(0 + 0, 579 - (47 + 524));
+	v479.Parent = v474;
+	local v482 = Instance.new("UIStroke");
+	v482.Thickness = 2 + 0;
+	v482.Color = Color3.fromRGB(218 - 138, 239 - 79, 581 - 326);
+	v482.Transparency = 1726.2 - (1165 + 561);
+	v482.Parent = v474;
+	local v487 = Instance.new("ImageLabel");
+	v487.Name = "JumpPowerIcon";
+	v487.Size = UDim2.new(0, 1 + 31, 0 - 0, 13 + 19);
+	v487.Position = UDim2.new(479 - (341 + 138), 10, 0 + 0, 10);
+	v487.BackgroundTransparency = 1 - 0;
+	v487.Image = "rbxassetid://3926305904";
+	v487.ImageRectSize = Vector2.new(64, 390 - (89 + 237));
+	v487.ImageRectOffset = Vector2.new(0 - 0, 808 - 424);
+	v487.Parent = v474;
+	local v496 = Instance.new("TextLabel");
+	v496.Name = "JumpPowerTitle";
+	v496.Size = UDim2.new(882 - (581 + 300), -(1270 - (855 + 365)), 0, 47 - 27);
+	v496.Position = UDim2.new(0 + 0, 50, 1235 - (1030 + 205), 2 + 0);
+	v496.BackgroundTransparency = 1;
+	v496.Text = "防检测跳跃高度";
+	v496.TextColor3 = Color3.fromRGB(168 + 12, 486 - (156 + 130), 579 - 324);
+	v496.Font = Enum.Font.GothamBold;
+	v496.TextSize = 19 - 7;
+	v496.TextXAlignment = Enum.TextXAlignment.Left;
+	v496.Parent = v474;
+	local v507 = Instance.new("TextBox");
+	v507.Name = "JumpPowerInput";
+	v507.Size = UDim2.new(0.7 - 0, 0, 0, 8 + 22);
+	v507.Position = UDim2.new(0.15 + 0, 0, 0, 109 - (10 + 59));
+	v507.BackgroundColor3 = Color3.fromRGB(13 + 32, 221 - 176, 55);
+	v507.TextColor3 = Color3.fromRGB(1383 - (671 + 492), 176 + 44, 230);
+	v507.Font = Enum.Font.GothamSemibold;
+	v507.TextSize = 14;
+	v507.PlaceholderText = "输入跳跃高度 (7.2-500)";
+	v507.Text = "7.2";
+	v507.ClearTextOnFocus = false;
+	local v518 = Instance.new("UICorner");
+	v518.CornerRadius = UDim.new(0, 1221 - (369 + 846));
+	v518.Parent = v507;
+	local v521 = Instance.new("UIStroke");
+	v521.Thickness = 1;
+	v521.Color = Color3.fromRGB(27 + 73, 100, 94 + 16);
+	v521.Parent = v507;
+	v507.FocusLost:Connect(function(v861)
+		if v861 then
+			local FlatIdent_885BC = 0;
+			local v932;
+			local v933;
+			while true do
+				if (FlatIdent_885BC == 0) then
+					v932 = 1945 - (1036 + 909);
+					v933 = nil;
+					FlatIdent_885BC = 1;
+				end
+				if (FlatIdent_885BC == 1) then
+					while true do
+						if (v932 == 0) then
+							v933 = tonumber(v507.Text);
+							if (v933 and (v933 >= (6.2 + 1)) and (v933 <= 500)) then
+								local FlatIdent_4C119 = 0;
+								local v1329;
+								local v1330;
+								while true do
+									if (FlatIdent_4C119 == 0) then
+										v1329 = 0 - 0;
+										v1330 = nil;
+										FlatIdent_4C119 = 1;
+									end
+									if (FlatIdent_4C119 == 1) then
+										while true do
+											if ((203 - (11 + 192)) == v1329) then
+												v1330 = v154.SetJumpHeight(v933);
+												if v1330 then
+													v2:SetCore("SendNotification", {Title="XDG-HOB",Text=("跳跃高度已设置为: " .. string.format("%.1f", v933)),Duration=(2 + 1),Icon="rbxassetid://4483345998"});
+												end
+												break;
+											end
+										end
+										break;
+									end
+								end
+							else
+								local FlatIdent_8B6ED = 0;
+								local v1331;
+								while true do
+									if (FlatIdent_8B6ED == 0) then
+										v1331 = 175 - (135 + 40);
+										while true do
+											if (v1331 == (0 - 0)) then
+												v507.Text = "7.2";
+												v2:SetCore("SendNotification", {Title="错误",Text="请输入7.2-500之间的数字",Duration=(4 + 1),Icon="rbxassetid://4483345998"});
+												break;
+											end
+										end
+										break;
+									end
+								end
+							end
+							break;
+						end
+					end
+					break;
+				end
+			end
+		end
+	end);
+	v507.Parent = v474;
+	local v526 = Instance.new("TextButton");
+	v526.Name = "ApplyJumpPowerButton";
+	v526.Size = UDim2.new(0.5 - 0, 0 - 0, 176 - (50 + 126), 83 - 53);
+	v526.Position = UDim2.new(0.25, 0 + 0, 0, 1493 - (1233 + 180));
+	v526.BackgroundColor3 = Color3.fromRGB(1049 - (522 + 447), 160, 1676 - (107 + 1314));
+	v526.Text = "应用高度";
+	v526.TextColor3 = Color3.new(1 + 0, 2 - 1, 1 + 0);
+	v526.Font = Enum.Font.GothamSemibold;
+	v526.TextSize = 27 - 13;
+	v526.TextStrokeTransparency = 0.6 - 0;
+	v526.TextStrokeColor3 = Color3.fromRGB(1910 - (716 + 1194), 0, 0 + 0);
+	local v537 = Instance.new("UICorner");
+	v537.CornerRadius = UDim.new(0 + 0, 509 - (74 + 429));
+	v537.Parent = v526;
+	local v540 = Instance.new("UIStroke");
+	v540.Thickness = 1 - 0;
+	v540.Color = Color3.fromRGB(120, 200, 127 + 128);
+	v540.Parent = v526;
+	v526.MouseEnter:Connect(function()
+		v526.BackgroundColor3 = Color3.fromRGB(228 - 128, 128 + 52, 255);
+	end);
+	v526.MouseLeave:Connect(function()
+		v526.BackgroundColor3 = Color3.fromRGB(80, 160, 785 - 530);
+	end);
+	v526.MouseButton1Click:Connect(function()
+		local FlatIdent_772BD = 0;
+		local v864;
+		while true do
+			if (FlatIdent_772BD == 0) then
+				v864 = tonumber(v507.Text);
+				if (v864 and (v864 >= 7.2) and (v864 <= (1236 - 736))) then
+					local FlatIdent_2CB11 = 0;
+					local v934;
+					while true do
+						if (FlatIdent_2CB11 == 0) then
+							v934 = v154.SetJumpHeight(v864);
+							if v934 then
+								v2:SetCore("SendNotification", {Title="XDG-HOB",Text=("跳跃高度已设置为: " .. string.format("%.1f", v864)),Duration=3,Icon="rbxassetid://4483345998"});
+							end
+							break;
+						end
+					end
+				else
+					local FlatIdent_6E337 = 0;
+					local v935;
+					while true do
+						if (FlatIdent_6E337 == 0) then
+							v935 = 433 - (279 + 154);
+							while true do
+								if (v935 == (778 - (454 + 324))) then
+									v507.Text = "7.2";
+									v2:SetCore("SendNotification", {Title="错误",Text="请输入7.2-500之间的数字",Duration=(4 + 1),Icon="rbxassetid://4483345998"});
+									break;
+								end
+							end
+							break;
+						end
+					end
+				end
+				break;
+			end
+		end
+	end);
+	v526.Parent = v474;
+	local v545 = Instance.new("TextLabel");
+	v545.Name = "CurrentJumpLabel";
+	v545.Size = UDim2.new(1, 17 - (12 + 5), 0 + 0, 20);
+	v545.Position = UDim2.new(0 - 0, 0, 0 + 0, 115);
+	v545.BackgroundTransparency = 1094 - (277 + 816);
+	v545.TextColor3 = Color3.fromRGB(769 - 589, 1383 - (1058 + 125), 255);
+	v545.Font = Enum.Font.GothamSemibold;
+	v545.TextSize = 3 + 8;
+	v545.Text = "当前高度: 7.2";
+	v545.Parent = v474;
+	game:GetService("RunService").Heartbeat:Connect(function()
+		v545.Text = "当前高度: " .. string.format("%.1f", v154.GetJumpHeight());
+	end);
+	v526.Parent = v474;
+	v474.Parent = v374;
+	local v556 = Instance.new("Frame");
+	v556.Name = "NightVisionFrame";
+	v556.Size = UDim2.new(0.9, 975 - (815 + 160), 0 - 0, 140);
+	v556.BackgroundColor3 = Color3.fromRGB(60, 142 - 82, 17 + 53);
+	v556.BackgroundTransparency = 0.1 - 0;
+	local v561 = Instance.new("UICorner");
+	v561.CornerRadius = UDim.new(1898 - (41 + 1857), 1901 - (1222 + 671));
+	v561.Parent = v556;
+	local v564 = Instance.new("UIStroke");
+	v564.Thickness = 5 - 3;
+	v564.Color = Color3.fromRGB(114 - 34, 160, 1437 - (229 + 953));
+	v564.Transparency = 1774.2 - (1111 + 663);
+	v564.Parent = v556;
+	local v569 = Instance.new("ImageLabel");
+	v569.Name = "NightVisionIcon";
+	v569.Size = UDim2.new(1579 - (874 + 705), 32, 0, 32);
+	v569.Position = UDim2.new(0 + 0, 7 + 3, 0 - 0, 1 + 9);
+	v569.BackgroundTransparency = 680 - (642 + 37);
+	v569.Image = "rbxassetid://3926305904";
+	v569.ImageRectSize = Vector2.new(64, 15 + 49);
+	v569.ImageRectOffset = Vector2.new(0 + 0, 1767 - 1063);
+	v569.Parent = v556;
+	local v578 = Instance.new("TextLabel");
+	v578.Name = "NightVisionTitle";
+	v578.Size = UDim2.new(1, -50, 454 - (233 + 221), 46 - 26);
+	v578.Position = UDim2.new(0 + 0, 50, 1541 - (718 + 823), 2 + 0);
+	v578.BackgroundTransparency = 806 - (266 + 539);
+	v578.Text = "夜视模式";
+	v578.TextColor3 = Color3.fromRGB(509 - 329, 1425 - (636 + 589), 605 - 350);
+	v578.Font = Enum.Font.GothamBold;
+	v578.TextSize = 24 - 12;
+	v578.TextXAlignment = Enum.TextXAlignment.Left;
+	v578.Parent = v556;
+	local v589 = Instance.new("TextButton");
+	v589.Name = "NightVisionToggle";
+	v589.Size = UDim2.new(0.7 + 0, 0, 0 + 0, 40);
+	v589.Position = UDim2.new(0.15, 1015 - (657 + 358), 0 - 0, 91 - 51);
+	v589.BackgroundColor3 = Color3.fromRGB(1247 - (1151 + 36), 58 + 2, 19 + 51);
+	v589.Text = "启用夜视";
+	v589.TextColor3 = Color3.fromRGB(657 - 437, 2052 - (1552 + 280), 1064 - (64 + 770));
+	v589.Font = Enum.Font.GothamSemibold;
+	v589.TextSize = 10 + 4;
+	v589.TextStrokeTransparency = 0.5 - 0;
+	v589.TextStrokeColor3 = Color3.fromRGB(0 + 0, 1243 - (157 + 1086), 0 - 0);
+	v589.AutoButtonColor = false;
+	local v601 = Instance.new("UICorner");
+	v601.CornerRadius = UDim.new(0, 6);
+	v601.Parent = v589;
+	local v604 = Instance.new("UIStroke");
+	v604.Thickness = 8 - 6;
+	v604.Color = Color3.fromRGB(122 - 42, 109 - 29, 909 - (599 + 220));
+	v604.Transparency = 0.3 - 0;
+	v604.Parent = v589;
+	local v609 = false;
+	local v610 = nil;
+	v589.MouseEnter:Connect(function()
+		if not v609 then
+			local FlatIdent_13AEB = 0;
+			local v936;
+			while true do
+				if (FlatIdent_13AEB == 0) then
+					v936 = 1931 - (1813 + 118);
+					while true do
+						if (v936 == (0 + 0)) then
+							v589.BackgroundColor3 = Color3.fromRGB(1287 - (841 + 376), 98 - 28, 19 + 61);
+							v604.Color = Color3.fromRGB(245 - 155, 949 - (464 + 395), 100);
+							break;
+						end
+					end
+					break;
+				end
+			end
+		end
+	end);
+	v589.MouseLeave:Connect(function()
+		if not v609 then
+			local FlatIdent_398FF = 0;
+			local v937;
+			while true do
+				if (FlatIdent_398FF == 0) then
+					v937 = 0;
+					while true do
+						if (0 == v937) then
+							v589.BackgroundColor3 = Color3.fromRGB(153 - 93, 60, 34 + 36);
+							v604.Color = Color3.fromRGB(80, 917 - (467 + 370), 185 - 95);
+							break;
+						end
+					end
+					break;
+				end
+			end
+		end
+	end);
+	v589.MouseButton1Click:Connect(function()
+		v609 = not v609;
+		if v609 then
+			local FlatIdent_3397E = 0;
+			local v938;
+			while true do
+				if (FlatIdent_3397E == 0) then
+					v938 = 0 + 0;
+					while true do
+						if ((6 - 4) == v938) then
+							if game:GetService("RunService"):IsClient() then
+								local v1332 = 0 + 0;
+								while true do
+									if (v1332 == 0) then
+										if v610 then
+											v610:Disconnect();
+										end
+										v610 = game:GetService("RunService").RenderStepped:Connect(function()
+										end);
+										break;
+									end
+								end
+							end
+							v2:SetCore("SendNotification", {Title="XDG-HOB",Text="夜视已启用",Duration=(6 - 3),Icon="rbxassetid://4483345998"});
+							break;
+						end
+						if ((521 - (150 + 370)) == v938) then
+							local FlatIdent_360C0 = 0;
+							while true do
+								if (FlatIdent_360C0 == 0) then
+									v589.Text = "夜视启用中 ✓";
+									spawn(function()
+										while task.wait() do
+											if v609 then
+												game.Lighting.Ambient = Color3.new(1283 - (74 + 1208), 1, 2 - 1);
+											else
+												game.Lighting.Ambient = Color3.new(0, 0, 0 - 0);
+											end
+										end
+									end);
+									FlatIdent_360C0 = 1;
+								end
+								if (1 == FlatIdent_360C0) then
+									v938 = 2 + 0;
+									break;
+								end
+							end
+						end
+						if (v938 == (390 - (14 + 376))) then
+							local FlatIdent_43917 = 0;
+							while true do
+								if (FlatIdent_43917 == 1) then
+									v938 = 1 + 0;
+									break;
+								end
+								if (FlatIdent_43917 == 0) then
+									v589.BackgroundColor3 = Color3.fromRGB(138 - 58, 104 + 56, 225 + 30);
+									v604.Color = Color3.fromRGB(120, 191 + 9, 747 - 492);
+									FlatIdent_43917 = 1;
+								end
+							end
+						end
+					end
+					break;
+				end
+			end
+		else
+			local FlatIdent_530E4 = 0;
+			local v939;
+			while true do
+				if (0 == FlatIdent_530E4) then
+					v939 = 78 - (23 + 55);
+					while true do
+						if (v939 == (4 - 2)) then
+							if v610 then
+								local FlatIdent_1B638 = 0;
+								local v1333;
+								while true do
+									if (FlatIdent_1B638 == 0) then
+										v1333 = 0;
+										while true do
+											if (v1333 == (0 + 0)) then
+												v610:Disconnect();
+												v610 = nil;
+												break;
+											end
+										end
+										break;
+									end
+								end
+							end
+							v2:SetCore("SendNotification", {Title="XDG-HOB",Text="夜视已禁用",Duration=(3 + 0),Icon="rbxassetid://4483345998"});
+							break;
+						end
+						if (v939 == 0) then
+							local FlatIdent_82627 = 0;
+							while true do
+								if (FlatIdent_82627 == 1) then
+									v939 = 1 - 0;
+									break;
+								end
+								if (FlatIdent_82627 == 0) then
+									v589.BackgroundColor3 = Color3.fromRGB(93 - 33, 19 + 41, 971 - (652 + 249));
+									v604.Color = Color3.fromRGB(214 - 134, 1948 - (708 + 1160), 244 - 154);
+									FlatIdent_82627 = 1;
+								end
+							end
+						end
+						if (v939 == (28 - (10 + 17))) then
+							local FlatIdent_571C4 = 0;
+							while true do
+								if (FlatIdent_571C4 == 0) then
+									v589.Text = "启用夜视";
+									game.Lighting.Ambient = Color3.new(0, 0 + 0, 0);
+									FlatIdent_571C4 = 1;
+								end
+								if (FlatIdent_571C4 == 1) then
+									v939 = 1734 - (1400 + 332);
+									break;
+								end
+							end
+						end
+					end
+					break;
+				end
+			end
+		end
+	end);
+	v589.Parent = v556;
+	local v612 = Instance.new("TextLabel");
+	v612.Name = "NightVisionStatus";
+	v612.Size = UDim2.new(1 - 0, 1908 - (242 + 1666), 0 + 0, 20);
+	v612.Position = UDim2.new(0 + 0, 0 + 0, 940 - (850 + 90), 115);
+	v612.BackgroundTransparency = 1 - 0;
+	v612.TextColor3 = Color3.fromRGB(1570 - (360 + 1030), 177 + 23, 255);
+	v612.Font = Enum.Font.GothamSemibold;
+	v612.TextSize = 11;
+	v612.Text = "状态: 已禁用";
+	v612.Parent = v556;
+	game:GetService("RunService").Heartbeat:Connect(function()
+		if v609 then
+			v612.Text = "状态: 已启用";
+		else
+			v612.Text = "状态: 已禁用";
+		end
+	end);
+	v556.Parent = v374;
+	return v368;
+end
+local function v157()
+	local v623 = 0 - 0;
+	local v624;
+	local v625;
+	local v626;
+	local v627;
+	local v628;
+	local v629;
+	local v630;
+	local v631;
+	local v632;
+	local v633;
+	local v634;
+	local v635;
+	local v636;
+	local v637;
+	local v638;
+	local v639;
+	local v640;
+	local v641;
+	local v642;
+	local v643;
+	local v644;
+	local v645;
+	local v646;
+	local v647;
+	local v648;
+	local v649;
+	local v650;
+	local v651;
+	while true do
+		if (v623 == (20 - 5)) then
+			v644.TextColor3 = Color3.fromRGB(1841 - (909 + 752), 1423 - (109 + 1114), 255);
+			v644.Font = Enum.Font.GothamBold;
+			v644.TextSize = 21 - 9;
+			v644.TextXAlignment = Enum.TextXAlignment.Left;
+			v644.Parent = v639;
+			v639.Parent = v625;
+			v645 = Instance.new("Frame");
+			v645.Name = "StatusFrame";
+			v645.Size = UDim2.new(0.9, 0 + 0, 242 - (6 + 236), 51 + 29);
+			v645.BackgroundColor3 = Color3.fromRGB(49 + 11, 141 - 81, 122 - 52);
+			v623 = 1149 - (1076 + 57);
+		end
+		if (4 == v623) then
+			local FlatIdent_19705 = 0;
+			while true do
+				if (FlatIdent_19705 == 0) then
+					v630.Parent = v627;
+					v631 = Instance.new("TextLabel");
+					v631.Name = "BeijingTime";
+					v631.Size = UDim2.new(1, -(9 + 41), 690 - (579 + 110), 0 + 0);
+					FlatIdent_19705 = 1;
+				end
+				if (FlatIdent_19705 == 2) then
+					v631.TextSize = 1188 - (663 + 511);
+					v631.TextStrokeTransparency = 0.7;
+					v623 = 5;
+					break;
+				end
+				if (FlatIdent_19705 == 1) then
+					v631.Position = UDim2.new(0 + 0, 27 + 23, 407 - (174 + 233), 0);
+					v631.BackgroundTransparency = 2 - 1;
+					v631.TextColor3 = Color3.fromRGB(386 - 166, 220, 103 + 127);
+					v631.Font = Enum.Font.GothamSemibold;
+					FlatIdent_19705 = 2;
+				end
+			end
+		end
+		if (v623 == (16 + 1)) then
+			local FlatIdent_39734 = 0;
+			local v963;
+			while true do
+				if (FlatIdent_39734 == 0) then
+					v963 = 0;
+					while true do
+						if (v963 == (1 + 1)) then
+							v648.ImageRectOffset = Vector2.new(0 - 0, 39 + 25);
+							v648.Parent = v645;
+							v649 = Instance.new("TextLabel");
+							v963 = 6 - 3;
+						end
+						if (v963 == (7 - 4)) then
+							v649.Name = "StatusLabel";
+							v623 = 9 + 9;
+							break;
+						end
+						if (v963 == 0) then
+							v648.Name = "StatusIcon";
+							v648.Size = UDim2.new(0, 62 - 30, 0 + 0, 3 + 29);
+							v648.Position = UDim2.new(722 - (478 + 244), 10, 517 - (440 + 77), 5 + 5);
+							v963 = 3 - 2;
+						end
+						if (v963 == (1557 - (655 + 901))) then
+							local FlatIdent_14E41 = 0;
+							while true do
+								if (FlatIdent_14E41 == 0) then
+									v648.BackgroundTransparency = 1 + 0;
+									v648.Image = "rbxassetid://3926305904";
+									FlatIdent_14E41 = 1;
+								end
+								if (FlatIdent_14E41 == 1) then
+									v648.ImageRectSize = Vector2.new(49 + 15, 44 + 20);
+									v963 = 7 - 5;
+									break;
+								end
+							end
+						end
+					end
+					break;
+				end
+			end
+		end
+		if ((1455 - (695 + 750)) == v623) then
+			local FlatIdent_5B644 = 0;
+			local v964;
+			while true do
+				if (FlatIdent_5B644 == 0) then
+					v964 = 0 - 0;
+					while true do
+						if (v964 == 0) then
+							local FlatIdent_284B8 = 0;
+							while true do
+								if (FlatIdent_284B8 == 2) then
+									v964 = 1311 - (682 + 628);
+									break;
+								end
+								if (FlatIdent_284B8 == 0) then
+									v638.Size = UDim2.new(1 - 0, -50, 0, 20);
+									v638.Position = UDim2.new(0 - 0, 50, 351 - (285 + 66), 4 - 2);
+									FlatIdent_284B8 = 1;
+								end
+								if (FlatIdent_284B8 == 1) then
+									v638.BackgroundTransparency = 1;
+									v638.Text = "角色名称";
+									FlatIdent_284B8 = 2;
+								end
+							end
+						end
+						if (v964 == (1 + 0)) then
+							local FlatIdent_2789B = 0;
+							while true do
+								if (FlatIdent_2789B == 2) then
+									v964 = 2;
+									break;
+								end
+								if (FlatIdent_2789B == 0) then
+									v638.TextColor3 = Color3.fromRGB(180, 499 - (176 + 123), 107 + 148);
+									v638.Font = Enum.Font.GothamBold;
+									FlatIdent_2789B = 1;
+								end
+								if (FlatIdent_2789B == 1) then
+									v638.TextSize = 9 + 3;
+									v638.TextXAlignment = Enum.TextXAlignment.Left;
+									FlatIdent_2789B = 2;
+								end
+							end
+						end
+						if (v964 == 2) then
+							v638.Parent = v633;
+							v633.Parent = v625;
+							v623 = 280 - (239 + 30);
+							break;
+						end
+					end
+					break;
+				end
+			end
+		end
+		if ((2 + 5) == v623) then
+			v634.CornerRadius = UDim.new(0 + 0, 8);
+			v634.Parent = v633;
+			v635 = Instance.new("UIStroke");
+			v635.Thickness = 3 - 1;
+			v635.Color = Color3.fromRGB(249 - 169, 475 - (306 + 9), 889 - 634);
+			v635.Transparency = 0.2;
+			v635.Parent = v633;
+			v636 = Instance.new("ImageLabel");
+			v636.Name = "PlayerIcon";
+			v636.Size = UDim2.new(0, 6 + 26, 0 + 0, 32);
+			v623 = 8;
+		end
+		if (v623 == (8 + 8)) then
+			v645.BackgroundTransparency = 0.1 - 0;
+			v646 = Instance.new("UICorner");
+			v646.CornerRadius = UDim.new(0, 8);
+			v646.Parent = v645;
+			v647 = Instance.new("UIStroke");
+			v647.Thickness = 2;
+			v647.Color = Color3.fromRGB(1455 - (1140 + 235), 102 + 58, 234 + 21);
+			v647.Transparency = 0.2 + 0;
+			v647.Parent = v645;
+			v648 = Instance.new("ImageLabel");
+			v623 = 17;
+		end
+		if (v623 == 5) then
+			local FlatIdent_94874 = 0;
+			while true do
+				if (FlatIdent_94874 == 2) then
+					v632.BackgroundTransparency = 1 - 0;
+					v632.Text = "北京时间";
+					v632.TextColor3 = Color3.fromRGB(169 + 11, 889 - (586 + 103), 24 + 231);
+					FlatIdent_94874 = 3;
+				end
+				if (FlatIdent_94874 == 0) then
+					v631.TextStrokeColor3 = Color3.fromRGB(0, 52 - (33 + 19), 0);
+					v631.Parent = v627;
+					v632 = Instance.new("TextLabel");
+					FlatIdent_94874 = 1;
+				end
+				if (1 == FlatIdent_94874) then
+					v632.Name = "TimeTitle";
+					v632.Size = UDim2.new(1, -(19 + 31), 0, 59 - 39);
+					v632.Position = UDim2.new(0, 50, 0, 1 + 1);
+					FlatIdent_94874 = 2;
+				end
+				if (FlatIdent_94874 == 3) then
+					v632.Font = Enum.Font.GothamBold;
+					v623 = 18 - 12;
+					break;
+				end
+			end
+		end
+		if (v623 == (1501 - (1309 + 179))) then
+			v642.ImageRectOffset = Vector2.new(192, 230 - 102);
+			v642.Parent = v639;
+			v643 = Instance.new("TextLabel");
+			v643.Name = "ExecutorName";
+			v643.Size = UDim2.new(1 + 0, -(134 - 84), 1 + 0, 0 - 0);
+			v643.Position = UDim2.new(0 - 0, 659 - (295 + 314), 0, 0 - 0);
+			v643.BackgroundTransparency = 1963 - (1300 + 662);
+			v643.Text = v6;
+			v643.TextColor3 = Color3.fromRGB(690 - 470, 1975 - (1178 + 577), 120 + 110);
+			v643.Font = Enum.Font.GothamSemibold;
+			v623 = 14;
+		end
+		if (v623 == (5 - 3)) then
+			v627.Name = "TimeFrame";
+			v627.Size = UDim2.new(1405.9 - (851 + 554), 0, 0 + 0, 138 - 88);
+			v627.BackgroundColor3 = Color3.fromRGB(60, 130 - 70, 70);
+			v627.BackgroundTransparency = 302.1 - (115 + 187);
+			v628 = Instance.new("UICorner");
+			v628.CornerRadius = UDim.new(0 + 0, 8);
+			v628.Parent = v627;
+			v629 = Instance.new("UIStroke");
+			v629.Thickness = 2;
+			v629.Color = Color3.fromRGB(80, 152 + 8, 255);
+			v623 = 3;
+		end
+		if (v623 == (0 - 0)) then
+			local FlatIdent_B6A2 = 0;
+			while true do
+				if (FlatIdent_B6A2 == 2) then
+					v625 = Instance.new("ScrollingFrame");
+					v625.Name = "InfoScroll";
+					v625.Size = UDim2.new(359 - (237 + 121), -20, 898 - (525 + 372), -(37 - 17));
+					FlatIdent_B6A2 = 3;
+				end
+				if (3 == FlatIdent_B6A2) then
+					v625.Position = UDim2.new(0, 32 - 22, 0, 10);
+					v623 = 143 - (96 + 46);
+					break;
+				end
+				if (FlatIdent_B6A2 == 1) then
+					v624.BackgroundTransparency = 1 - 0;
+					v624.Visible = false;
+					v624.Parent = v136;
+					FlatIdent_B6A2 = 2;
+				end
+				if (FlatIdent_B6A2 == 0) then
+					v624 = Instance.new("Frame");
+					v624.Name = "InfoContainer";
+					v624.Size = UDim2.new(1, 1161 - (160 + 1001), 1 + 0, 0 + 0);
+					FlatIdent_B6A2 = 1;
+				end
+			end
+		end
+		if (v623 == (789 - (643 + 134))) then
+			local FlatIdent_7B4B6 = 0;
+			while true do
+				if (1 == FlatIdent_7B4B6) then
+					v642.Name = "ExecutorIcon";
+					v642.Size = UDim2.new(0 - 0, 31 + 1, 0 - 0, 32);
+					v642.Position = UDim2.new(0 - 0, 10, 719.5 - (316 + 403), -16);
+					v642.BackgroundTransparency = 1 + 0;
+					FlatIdent_7B4B6 = 2;
+				end
+				if (FlatIdent_7B4B6 == 0) then
+					v641.Color = Color3.fromRGB(29 + 51, 160, 611 - 356);
+					v641.Transparency = 0.2;
+					v641.Parent = v639;
+					v642 = Instance.new("ImageLabel");
+					FlatIdent_7B4B6 = 1;
+				end
+				if (FlatIdent_7B4B6 == 2) then
+					v642.Image = "rbxassetid://3926305904";
+					v642.ImageRectSize = Vector2.new(175 - 111, 24 + 40);
+					v623 = 32 - 19;
+					break;
+				end
+			end
+		end
+		if (v623 == (1 + 0)) then
+			local FlatIdent_1FCD6 = 0;
+			while true do
+				if (FlatIdent_1FCD6 == 2) then
+					v626.HorizontalAlignment = Enum.HorizontalAlignment.Center;
+					v627 = Instance.new("Frame");
+					v623 = 1 + 1;
+					break;
+				end
+				if (FlatIdent_1FCD6 == 0) then
+					v625.BackgroundTransparency = 1;
+					v625.ScrollBarThickness = 6;
+					v625.ScrollBarImageColor3 = Color3.fromRGB(100, 33 + 67, 110);
+					v625.CanvasSize = UDim2.new(0, 0 - 0, 0 - 0, 350);
+					FlatIdent_1FCD6 = 1;
+				end
+				if (FlatIdent_1FCD6 == 1) then
+					v625.Parent = v624;
+					v626 = Instance.new("UIListLayout");
+					v626.Parent = v625;
+					v626.Padding = UDim.new(0, 31 - 16);
+					FlatIdent_1FCD6 = 2;
+				end
+			end
+		end
+		if (v623 == 14) then
+			local FlatIdent_57893 = 0;
+			while true do
+				if (FlatIdent_57893 == 0) then
+					v643.TextSize = 14;
+					v643.TextStrokeTransparency = 0.7;
+					v643.TextStrokeColor3 = Color3.fromRGB(0, 0 - 0, 0 + 0);
+					v643.Parent = v639;
+					FlatIdent_57893 = 1;
+				end
+				if (FlatIdent_57893 == 2) then
+					v644.BackgroundTransparency = 2 - 1;
+					v644.Text = "注入器";
+					v623 = 4 + 11;
+					break;
+				end
+				if (FlatIdent_57893 == 1) then
+					v644 = Instance.new("TextLabel");
+					v644.Name = "ExecutorTitle";
+					v644.Size = UDim2.new(2 - 1, -50, 17 - (12 + 5), 77 - 57);
+					v644.Position = UDim2.new(0, 106 - 56, 0, 3 - 1);
+					FlatIdent_57893 = 2;
+				end
+			end
+		end
+		if (v623 == (1993 - (1656 + 317))) then
+			local FlatIdent_91F32 = 0;
+			while true do
+				if (1 == FlatIdent_91F32) then
+					v650.Parent = v645;
+					v645.Parent = v625;
+					FlatIdent_91F32 = 2;
+				end
+				if (FlatIdent_91F32 == 3) then
+					v4.RenderStepped:Connect(function()
+						v651();
+					end);
+					return v624;
+				end
+				if (FlatIdent_91F32 == 2) then
+					v651 = nil;
+					function v651()
+						local v1149 = 0;
+						while true do
+							if (v1149 == (1 + 0)) then
+								v643.Text = v6;
+								v649.Text = string.format("脚本状态：正常运行\n游戏ID：%d\n玩家数量：%d", game.PlaceId, #v0:GetPlayers());
+								break;
+							end
+							if (v1149 == 0) then
+								local FlatIdent_67777 = 0;
+								while true do
+									if (0 == FlatIdent_67777) then
+										v631.Text = v7();
+										v637.Text = v1.Name;
+										FlatIdent_67777 = 1;
+									end
+									if (FlatIdent_67777 == 1) then
+										v1149 = 1;
+										break;
+									end
+								end
+							end
+						end
+					end
+					FlatIdent_91F32 = 3;
+				end
+				if (FlatIdent_91F32 == 0) then
+					v650.TextSize = 11 + 1;
+					v650.TextXAlignment = Enum.TextXAlignment.Left;
+					FlatIdent_91F32 = 1;
+				end
+			end
+		end
+		if ((29 - 18) == v623) then
+			v639 = Instance.new("Frame");
+			v639.Name = "ExecutorFrame";
+			v639.Size = UDim2.new(0.9 - 0, 354 - (5 + 349), 0 - 0, 1321 - (266 + 1005));
+			v639.BackgroundColor3 = Color3.fromRGB(40 + 20, 204 - 144, 70);
+			v639.BackgroundTransparency = 0.1;
+			v640 = Instance.new("UICorner");
+			v640.CornerRadius = UDim.new(0 - 0, 1704 - (561 + 1135));
+			v640.Parent = v639;
+			v641 = Instance.new("UIStroke");
+			v641.Thickness = 2 - 0;
+			v623 = 12;
+		end
+		if (v623 == (19 - 13)) then
+			local FlatIdent_75E0E = 0;
+			while true do
+				if (FlatIdent_75E0E == 0) then
+					v632.TextSize = 1078 - (507 + 559);
+					v632.TextXAlignment = Enum.TextXAlignment.Left;
+					v632.Parent = v627;
+					v627.Parent = v625;
+					FlatIdent_75E0E = 1;
+				end
+				if (FlatIdent_75E0E == 1) then
+					v633 = Instance.new("Frame");
+					v633.Name = "PlayerFrame";
+					v633.Size = UDim2.new(0.9, 0, 0 - 0, 154 - 104);
+					v633.BackgroundColor3 = Color3.fromRGB(60, 448 - (212 + 176), 70);
+					FlatIdent_75E0E = 2;
+				end
+				if (FlatIdent_75E0E == 2) then
+					v633.BackgroundTransparency = 0.1;
+					v634 = Instance.new("UICorner");
+					v623 = 912 - (250 + 655);
+					break;
+				end
+			end
+		end
+		if ((8 - 5) == v623) then
+			v629.Transparency = 0.2;
+			v629.Parent = v627;
+			v630 = Instance.new("ImageLabel");
+			v630.Name = "TimeIcon";
+			v630.Size = UDim2.new(0 - 0, 49 - 17, 1956 - (1869 + 87), 32);
+			v630.Position = UDim2.new(0 - 0, 1911 - (484 + 1417), 0.5 - 0, -16);
+			v630.BackgroundTransparency = 1 - 0;
+			v630.Image = "rbxassetid://3926305904";
+			v630.ImageRectSize = Vector2.new(837 - (48 + 725), 103 - 39);
+			v630.ImageRectOffset = Vector2.new(0, 1544 - 968);
+			v623 = 3 + 1;
+		end
+		if (v623 == 19) then
+			local FlatIdent_2D63C = 0;
+			local v1073;
+			while true do
+				if (FlatIdent_2D63C == 0) then
+					v1073 = 0;
+					while true do
+						if (v1073 == 2) then
+							v650.BackgroundTransparency = 2 - 1;
+							v650.Text = "系统状态";
+							v650.TextColor3 = Color3.fromRGB(180, 200, 255);
+							v1073 = 3;
+						end
+						if (v1073 == 3) then
+							v650.Font = Enum.Font.GothamBold;
+							v623 = 6 + 14;
+							break;
+						end
+						if (v1073 == (1 + 0)) then
+							local FlatIdent_3A1C6 = 0;
+							while true do
+								if (FlatIdent_3A1C6 == 1) then
+									v650.Position = UDim2.new(895 - (557 + 338), 50, 0, 1 + 1);
+									v1073 = 2;
+									break;
+								end
+								if (0 == FlatIdent_3A1C6) then
+									v650.Name = "StatusTitle";
+									v650.Size = UDim2.new(1, -(903 - (152 + 701)), 1311 - (430 + 881), 8 + 12);
+									FlatIdent_3A1C6 = 1;
+								end
+							end
+						end
+						if (v1073 == (0 - 0)) then
+							local FlatIdent_28BB6 = 0;
+							while true do
+								if (FlatIdent_28BB6 == 0) then
+									v649.TextYAlignment = Enum.TextYAlignment.Top;
+									v649.Parent = v645;
+									FlatIdent_28BB6 = 1;
+								end
+								if (1 == FlatIdent_28BB6) then
+									v650 = Instance.new("TextLabel");
+									v1073 = 1;
+									break;
+								end
+							end
+						end
+					end
+					break;
+				end
+			end
+		end
+		if (v623 == (31 - 22)) then
+			local FlatIdent_2876F = 0;
+			while true do
+				if (FlatIdent_2876F == 1) then
+					v637.Font = Enum.Font.GothamSemibold;
+					v637.TextSize = 38 - 24;
+					v637.TextStrokeTransparency = 0.7 - 0;
+					FlatIdent_2876F = 2;
+				end
+				if (FlatIdent_2876F == 0) then
+					v637.BackgroundTransparency = 2 - 1;
+					v637.Text = v1.Name;
+					v637.TextColor3 = Color3.fromRGB(474 - 254, 1021 - (499 + 302), 1096 - (39 + 827));
+					FlatIdent_2876F = 1;
+				end
+				if (FlatIdent_2876F == 3) then
+					v638.Name = "PlayerTitle";
+					v623 = 10;
+					break;
+				end
+				if (2 == FlatIdent_2876F) then
+					v637.TextStrokeColor3 = Color3.fromRGB(0 - 0, 0 - 0, 0);
+					v637.Parent = v633;
+					v638 = Instance.new("TextLabel");
+					FlatIdent_2876F = 3;
+				end
+			end
+		end
+		if (v623 == (2 + 16)) then
+			local FlatIdent_15AD5 = 0;
+			while true do
+				if (FlatIdent_15AD5 == 2) then
+					v649.TextSize = 2 + 10;
+					v649.TextStrokeTransparency = 0.7 + 0;
+					v649.TextStrokeColor3 = Color3.fromRGB(0, 1503 - (1395 + 108), 0);
+					FlatIdent_15AD5 = 3;
+				end
+				if (0 == FlatIdent_15AD5) then
+					v649.Size = UDim2.new(2 - 1, -50, 0, 10 + 50);
+					v649.Position = UDim2.new(0, 79 - 29, 104 - (103 + 1), 564 - (475 + 79));
+					v649.BackgroundTransparency = 2 - 1;
+					FlatIdent_15AD5 = 1;
+				end
+				if (1 == FlatIdent_15AD5) then
+					v649.Text = "脚本状态：正常运行\n游戏ID：" .. game.PlaceId .. "\n玩家数量：" .. #v0:GetPlayers();
+					v649.TextColor3 = Color3.fromRGB(220, 220, 736 - 506);
+					v649.Font = Enum.Font.GothamSemibold;
+					FlatIdent_15AD5 = 2;
+				end
+				if (FlatIdent_15AD5 == 3) then
+					v649.TextXAlignment = Enum.TextXAlignment.Left;
+					v623 = 54 - 35;
+					break;
+				end
+			end
+		end
+		if ((1212 - (7 + 1197)) == v623) then
+			v636.Position = UDim2.new(0, 5 + 5, 0.5, -(6 + 10));
+			v636.BackgroundTransparency = 320 - (27 + 292);
+			v636.Image = "rbxassetid://3926305904";
+			v636.ImageRectSize = Vector2.new(187 - 123, 80 - 16);
+			v636.ImageRectOffset = Vector2.new(536 - 408, 504 - 248);
+			v636.Parent = v633;
+			v637 = Instance.new("TextLabel");
+			v637.Name = "PlayerName";
+			v637.Size = UDim2.new(1 - 0, -(189 - (43 + 96)), 4 - 3, 0 - 0);
+			v637.Position = UDim2.new(0, 50, 0, 0);
+			v623 = 8 + 1;
 		end
 	end
 end
-for v592, v593 in ipairs(v133) do
-	v153(v593, v592);
+local function v158()
+	local v652 = Instance.new("Frame");
+	v652.Name = "OtherScriptsContainer";
+	v652.Size = UDim2.new(1 + 0, 0, 1 - 0, 0 + 0);
+	v652.BackgroundTransparency = 1 - 0;
+	v652.Visible = false;
+	v652.Parent = v136;
+	local v658 = Instance.new("ScrollingFrame");
+	v658.Name = "OtherScriptsScroll";
+	v658.Size = UDim2.new(1 + 0, -(2 + 18), 1, -20);
+	v658.Position = UDim2.new(1751 - (1414 + 337), 10, 1940 - (1642 + 298), 10);
+	v658.BackgroundTransparency = 1;
+	v658.ScrollBarThickness = 6;
+	v658.ScrollBarImageColor3 = Color3.fromRGB(260 - 160, 100, 110);
+	v658.CanvasSize = UDim2.new(0 - 0, 0 - 0, 0 + 0, 650);
+	v658.Parent = v652;
+	local v667 = Instance.new("UIListLayout");
+	v667.Parent = v658;
+	v667.Padding = UDim.new(0 + 0, 12);
+	v667.HorizontalAlignment = Enum.HorizontalAlignment.Center;
+	local v672 = Instance.new("TextButton");
+	v672.Name = "VoidChinese99Night";
+	v672.Size = UDim2.new(972.9 - (357 + 615), 0 + 0, 0, 98 - 58);
+	v672.Text = "虚空汉化99夜";
+	v672.BackgroundColor3 = Color3.fromRGB(52 + 8, 128 - 68, 56 + 14);
+	v672.TextColor3 = Color3.new(1, 1 + 0, 1 + 0);
+	v672.Font = Enum.Font.GothamSemibold;
+	v672.TextSize = 1316 - (384 + 917);
+	v672.TextStrokeTransparency = 697.5 - (128 + 569);
+	v672.TextStrokeColor3 = Color3.fromRGB(0, 1543 - (1407 + 136), 1887 - (687 + 1200));
+	v672.AutoButtonColor = false;
+	local v684 = Instance.new("UIStroke");
+	v684.Thickness = 1712 - (556 + 1154);
+	v684.Color = Color3.fromRGB(281 - 201, 175 - (9 + 86), 511 - (275 + 146));
+	v684.Transparency = 0.3 + 0;
+	v684.Parent = v672;
+	local v689 = Instance.new("UICorner");
+	v689.CornerRadius = UDim.new(64 - (29 + 35), 35 - 27);
+	v689.Parent = v672;
+	local v692 = Color3.fromRGB(179 - 119, 264 - 204, 70);
+	local v693 = false;
+	v672.MouseEnter:Connect(function()
+		if not v693 then
+			v672.BackgroundColor3 = Color3.fromRGB(46 + 24, 1082 - (53 + 959), 80);
+			v684.Color = Color3.fromRGB(498 - (312 + 96), 90, 173 - 73);
+		end
+	end);
+	v672.MouseLeave:Connect(function()
+		if not v693 then
+			local FlatIdent_7FF98 = 0;
+			local v1108;
+			while true do
+				if (FlatIdent_7FF98 == 0) then
+					v1108 = 0;
+					while true do
+						if ((285 - (147 + 138)) == v1108) then
+							v672.BackgroundColor3 = v692;
+							v684.Color = Color3.fromRGB(979 - (813 + 86), 73 + 7, 90);
+							break;
+						end
+					end
+					break;
+				end
+			end
+		end
+	end);
+	v672.MouseButton1Click:Connect(function()
+		local v866 = 0;
+		while true do
+			if (v866 == (0 - 0)) then
+				v693 = not v693;
+				if v693 then
+					v672.BackgroundColor3 = Color3.fromRGB(572 - (18 + 474), 54 + 106, 832 - 577);
+					v684.Color = Color3.fromRGB(120, 200, 255);
+					v672.Text = "虚空汉化99夜 ✓";
+					local v1269 = pcall(function()
+						loadstring(game:HttpGet("https://raw.githubusercontent.com/ke9460394-dot/ugik/refs/heads/main/99%E5%A4%9C%E8%99%9A%E7%A9%BA.txt"))();
+					end);
+					if v1269 then
+						v2:SetCore("SendNotification", {Title="XDG-HOB",Text="虚空汉化99夜脚本已加载",Duration=(1089 - (860 + 226)),Icon="rbxassetid://4483345998"});
+					else
+						local FlatIdent_8C7C9 = 0;
+						local v1334;
+						local v1335;
+						while true do
+							if (FlatIdent_8C7C9 == 1) then
+								while true do
+									if (v1334 == 0) then
+										v1335 = 0 + 0;
+										while true do
+											if ((1242 - (988 + 252)) == v1335) then
+												v672.Text = "虚空汉化99夜";
+												break;
+											end
+											if (v1335 == (0 + 0)) then
+												v2:SetCore("SendNotification", {Title="错误",Text="加载虚空汉化99夜脚本失败",Duration=(2 + 3),Icon="rbxassetid://4483345998"});
+												v693 = false;
+												v1335 = 1971 - (49 + 1921);
+											end
+											if (1 == v1335) then
+												local FlatIdent_34A16 = 0;
+												while true do
+													if (FlatIdent_34A16 == 0) then
+														v672.BackgroundColor3 = v692;
+														v684.Color = Color3.fromRGB(970 - (223 + 667), 132 - (51 + 1), 154 - 64);
+														FlatIdent_34A16 = 1;
+													end
+													if (FlatIdent_34A16 == 1) then
+														v1335 = 3 - 1;
+														break;
+													end
+												end
+											end
+										end
+										break;
+									end
+								end
+								break;
+							end
+							if (0 == FlatIdent_8C7C9) then
+								v1334 = 303 - (121 + 182);
+								v1335 = nil;
+								FlatIdent_8C7C9 = 1;
+							end
+						end
+					end
+				else
+					local FlatIdent_950AF = 0;
+					local v1270;
+					while true do
+						if (FlatIdent_950AF == 0) then
+							v1270 = 1125 - (146 + 979);
+							while true do
+								if (v1270 == (0 + 0)) then
+									v672.BackgroundColor3 = v692;
+									v684.Color = Color3.fromRGB(80, 685 - (311 + 294), 250 - 160);
+									v1270 = 1 + 0;
+								end
+								if ((1444 - (496 + 947)) == v1270) then
+									v672.Text = "虚空汉化99夜";
+									v2:SetCore("SendNotification", {Title="XDG-HOB",Text="虚空汉化99夜脚本已卸载",Duration=3,Icon="rbxassetid://4483345998"});
+									break;
+								end
+							end
+							break;
+						end
+					end
+				end
+				break;
+			end
+		end
+	end);
+	v672.Parent = v658;
+	local v695 = Instance.new("TextButton");
+	v695.Name = "SkyboxBug";
+	v695.Size = UDim2.new(1358.9 - (1233 + 125), 0 + 0, 0 + 0, 8 + 32);
+	v695.Text = "天空盒子bug(只能在特定服务器使用)";
+	v695.BackgroundColor3 = Color3.fromRGB(1705 - (963 + 682), 60, 70);
+	v695.TextColor3 = Color3.new(1 + 0, 1, 1505 - (504 + 1000));
+	v695.Font = Enum.Font.GothamSemibold;
+	v695.TextSize = 9 + 4;
+	v695.TextStrokeTransparency = 0.5;
+	v695.TextStrokeColor3 = Color3.fromRGB(0 + 0, 0 + 0, 0);
+	v695.AutoButtonColor = false;
+	local v706 = Instance.new("UIStroke");
+	v706.Thickness = 2 - 0;
+	v706.Color = Color3.fromRGB(69 + 11, 47 + 33, 90);
+	v706.Transparency = 182.3 - (156 + 26);
+	v706.Parent = v695;
+	local v711 = Instance.new("UICorner");
+	v711.CornerRadius = UDim.new(0 + 0, 8);
+	v711.Parent = v695;
+	local v714 = Color3.fromRGB(60, 93 - 33, 234 - (149 + 15));
+	local v715 = false;
+	v695.MouseEnter:Connect(function()
+		if not v715 then
+			local FlatIdent_17A1A = 0;
+			local v1109;
+			while true do
+				if (FlatIdent_17A1A == 0) then
+					v1109 = 0;
+					while true do
+						if (v1109 == 0) then
+							v695.BackgroundColor3 = Color3.fromRGB(1030 - (890 + 70), 187 - (39 + 78), 80);
+							v706.Color = Color3.fromRGB(90, 572 - (14 + 468), 219 - 119);
+							break;
+						end
+					end
+					break;
+				end
+			end
+		end
+	end);
+	v695.MouseLeave:Connect(function()
+		if not v715 then
+			local FlatIdent_2B679 = 0;
+			while true do
+				if (FlatIdent_2B679 == 0) then
+					v695.BackgroundColor3 = v714;
+					v706.Color = Color3.fromRGB(80, 223 - 143, 47 + 43);
+					break;
+				end
+			end
+		end
+	end);
+	v695.MouseButton1Click:Connect(function()
+		v715 = not v715;
+		if v715 then
+			local FlatIdent_8417D = 0;
+			local v1112;
+			local v1113;
+			while true do
+				if (FlatIdent_8417D == 1) then
+					while true do
+						if (v1112 == (1 + 1)) then
+							if v1113 then
+								v2:SetCore("SendNotification", {Title="XDG-HOB",Text="天空盒子bug脚本已加载",Duration=(2 + 1),Icon="rbxassetid://4483345998"});
+							else
+								local v1336 = 0;
+								local v1337;
+								while true do
+									if (v1336 == (0 + 0)) then
+										v1337 = 0;
+										while true do
+											if (v1337 == (0 - 0)) then
+												v2:SetCore("SendNotification", {Title="错误",Text="加载天空盒子bug脚本失败",Duration=(5 + 0),Icon="rbxassetid://4483345998"});
+												v715 = false;
+												v1337 = 3 - 2;
+											end
+											if (v1337 == 2) then
+												v695.Text = "天空盒子bug(只能在特定服务器使用)";
+												break;
+											end
+											if (v1337 == 1) then
+												local FlatIdent_6E445 = 0;
+												while true do
+													if (FlatIdent_6E445 == 1) then
+														v1337 = 2;
+														break;
+													end
+													if (FlatIdent_6E445 == 0) then
+														v695.BackgroundColor3 = v714;
+														v706.Color = Color3.fromRGB(80, 80, 3 + 87);
+														FlatIdent_6E445 = 1;
+													end
+												end
+											end
+										end
+										break;
+									end
+								end
+							end
+							break;
+						end
+						if (v1112 == 1) then
+							v695.Text = "天空盒子bug(只能在特定服务器使用) ✓";
+							v1113 = pcall(function()
+								loadstring(game:HttpGet("https://rawscripts.net/raw/Brookhaven-RP-Skybox-Brookhaven-61921"))();
+							end);
+							v1112 = 53 - (12 + 39);
+						end
+						if (v1112 == (0 + 0)) then
+							v695.BackgroundColor3 = Color3.fromRGB(247 - 167, 569 - 409, 76 + 179);
+							v706.Color = Color3.fromRGB(120, 106 + 94, 255);
+							v1112 = 1;
+						end
+					end
+					break;
+				end
+				if (FlatIdent_8417D == 0) then
+					v1112 = 0 + 0;
+					v1113 = nil;
+					FlatIdent_8417D = 1;
+				end
+			end
+		else
+			local FlatIdent_81A83 = 0;
+			while true do
+				if (FlatIdent_81A83 == 1) then
+					v695.Text = "天空盒子bug(只能在特定服务器使用)";
+					v2:SetCore("SendNotification", {Title="XDG-HOB",Text="天空盒子bug脚本已卸载",Duration=(1713 - (1596 + 114)),Icon="rbxassetid://4483345998"});
+					break;
+				end
+				if (FlatIdent_81A83 == 0) then
+					v695.BackgroundColor3 = v714;
+					v706.Color = Color3.fromRGB(202 - 122, 54 + 26, 434 - 344);
+					FlatIdent_81A83 = 1;
+				end
+			end
+		end
+	end);
+	v695.Parent = v658;
+	local v717 = Instance.new("TextButton");
+	v717.Name = "StealBrainRed";
+	v717.Size = UDim2.new(0.9 - 0, 713 - (164 + 549), 1438 - (1059 + 379), 49 - 9);
+	v717.Text = "偷走脑红";
+	v717.BackgroundColor3 = Color3.fromRGB(32 + 28, 11 + 49, 462 - (145 + 247));
+	v717.TextColor3 = Color3.new(1, 1 + 0, 1 + 0);
+	v717.Font = Enum.Font.GothamSemibold;
+	v717.TextSize = 15;
+	v717.TextStrokeTransparency = 0.5 - 0;
+	v717.TextStrokeColor3 = Color3.fromRGB(0 + 0, 0 + 0, 0 - 0);
+	v717.AutoButtonColor = false;
+	local v728 = Instance.new("UIStroke");
+	v728.Thickness = 2;
+	v728.Color = Color3.fromRGB(800 - (254 + 466), 640 - (544 + 16), 286 - 196);
+	v728.Transparency = 0.3;
+	v728.Parent = v717;
+	local v733 = Instance.new("UICorner");
+	v733.CornerRadius = UDim.new(0, 636 - (294 + 334));
+	v733.Parent = v717;
+	local v736 = Color3.fromRGB(313 - (236 + 17), 26 + 34, 70);
+	local v737 = false;
+	v717.MouseEnter:Connect(function()
+		if not v737 then
+			local v1117 = 0;
+			while true do
+				if (v1117 == (0 + 0)) then
+					v717.BackgroundColor3 = Color3.fromRGB(263 - 193, 70, 378 - 298);
+					v728.Color = Color3.fromRGB(90, 47 + 43, 83 + 17);
+					break;
+				end
+			end
+		end
+	end);
+	v717.MouseLeave:Connect(function()
+		if not v737 then
+			v717.BackgroundColor3 = v736;
+			v728.Color = Color3.fromRGB(874 - (413 + 381), 80, 90);
+		end
+	end);
+	v717.MouseButton1Click:Connect(function()
+		local v867 = 0;
+		while true do
+			if (v867 == 0) then
+				v737 = not v737;
+				if v737 then
+					local FlatIdent_74083 = 0;
+					local v1278;
+					local v1279;
+					while true do
+						if (FlatIdent_74083 == 1) then
+							while true do
+								if (v1278 == (1 + 0)) then
+									local FlatIdent_9195A = 0;
+									while true do
+										if (FlatIdent_9195A == 1) then
+											v1278 = 2;
+											break;
+										end
+										if (0 == FlatIdent_9195A) then
+											v717.Text = "偷走脑红 ✓";
+											v1279 = pcall(function()
+												loadstring(game:HttpGet("https://pastefy.app/AZeSJL5d/raw"))();
+											end);
+											FlatIdent_9195A = 1;
+										end
+									end
+								end
+								if ((3 - 1) == v1278) then
+									if v1279 then
+										v2:SetCore("SendNotification", {Title="XDG-HOB",Text="偷走脑红脚本已加载",Duration=3,Icon="rbxassetid://4483345998"});
+									else
+										local FlatIdent_CCAB = 0;
+										while true do
+											if (FlatIdent_CCAB == 1) then
+												v717.BackgroundColor3 = v736;
+												v728.Color = Color3.fromRGB(2050 - (582 + 1388), 136 - 56, 90);
+												FlatIdent_CCAB = 2;
+											end
+											if (FlatIdent_CCAB == 2) then
+												v717.Text = "偷走脑红";
+												break;
+											end
+											if (FlatIdent_CCAB == 0) then
+												v2:SetCore("SendNotification", {Title="错误",Text="加载偷走脑红脚本失败",Duration=(12 - 7),Icon="rbxassetid://4483345998"});
+												v737 = false;
+												FlatIdent_CCAB = 1;
+											end
+										end
+									end
+									break;
+								end
+								if (0 == v1278) then
+									local FlatIdent_73680 = 0;
+									while true do
+										if (FlatIdent_73680 == 1) then
+											v1278 = 1 + 0;
+											break;
+										end
+										if (FlatIdent_73680 == 0) then
+											v717.BackgroundColor3 = Color3.fromRGB(80, 115 + 45, 619 - (326 + 38));
+											v728.Color = Color3.fromRGB(354 - 234, 285 - 85, 875 - (47 + 573));
+											FlatIdent_73680 = 1;
+										end
+									end
+								end
+							end
+							break;
+						end
+						if (FlatIdent_74083 == 0) then
+							v1278 = 0;
+							v1279 = nil;
+							FlatIdent_74083 = 1;
+						end
+					end
+				else
+					local FlatIdent_50385 = 0;
+					while true do
+						if (FlatIdent_50385 == 1) then
+							v717.Text = "偷走脑红";
+							v2:SetCore("SendNotification", {Title="XDG-HOB",Text="偷走脑红脚本已卸载",Duration=3,Icon="rbxassetid://4483345998"});
+							break;
+						end
+						if (0 == FlatIdent_50385) then
+							v717.BackgroundColor3 = v736;
+							v728.Color = Color3.fromRGB(80, 339 - 259, 146 - 56);
+							FlatIdent_50385 = 1;
+						end
+					end
+				end
+				break;
+			end
+		end
+	end);
+	v717.Parent = v658;
+	local v739 = Instance.new("TextButton");
+	v739.Name = "BfChineseScript";
+	v739.Size = UDim2.new(1664.9 - (1269 + 395), 492 - (76 + 416), 443 - (319 + 124), 40);
+	v739.Text = "Bf汉化脚本";
+	v739.BackgroundColor3 = Color3.fromRGB(137 - 77, 1067 - (564 + 443), 193 - 123);
+	v739.TextColor3 = Color3.new(1, 459 - (337 + 121), 2 - 1);
+	v739.Font = Enum.Font.GothamSemibold;
+	v739.TextSize = 15;
+	v739.TextStrokeTransparency = 0.5 - 0;
+	v739.TextStrokeColor3 = Color3.fromRGB(1911 - (1261 + 650), 0, 0 + 0);
+	v739.AutoButtonColor = false;
+	local v750 = Instance.new("UIStroke");
+	v750.Thickness = 2;
+	v750.Color = Color3.fromRGB(127 - 47, 80, 1907 - (772 + 1045));
+	v750.Transparency = 0.3;
+	v750.Parent = v739;
+	local v755 = Instance.new("UICorner");
+	v755.CornerRadius = UDim.new(0 + 0, 152 - (102 + 42));
+	v755.Parent = v739;
+	local v758 = Color3.fromRGB(60, 1904 - (1524 + 320), 1340 - (1049 + 221));
+	local v759 = false;
+	v739.MouseEnter:Connect(function()
+		if not v759 then
+			local FlatIdent_40F18 = 0;
+			local v1120;
+			while true do
+				if (FlatIdent_40F18 == 0) then
+					v1120 = 156 - (18 + 138);
+					while true do
+						if (v1120 == 0) then
+							v739.BackgroundColor3 = Color3.fromRGB(171 - 101, 70, 80);
+							v750.Color = Color3.fromRGB(1192 - (67 + 1035), 438 - (136 + 212), 100);
+							break;
+						end
+					end
+					break;
+				end
+			end
+		end
+	end);
+	v739.MouseLeave:Connect(function()
+		if not v759 then
+			local v1121 = 0 - 0;
+			local v1122;
+			while true do
+				if (v1121 == (0 + 0)) then
+					v1122 = 0 + 0;
+					while true do
+						if (v1122 == (1604 - (240 + 1364))) then
+							v739.BackgroundColor3 = v758;
+							v750.Color = Color3.fromRGB(1162 - (1050 + 32), 285 - 205, 54 + 36);
+							break;
+						end
+					end
+					break;
+				end
+			end
+		end
+	end);
+	v739.MouseButton1Click:Connect(function()
+		local v868 = 0;
+		while true do
+			if ((1055 - (331 + 724)) == v868) then
+				v759 = not v759;
+				if v759 then
+					local FlatIdent_898E8 = 0;
+					local v1285;
+					local v1286;
+					while true do
+						if (FlatIdent_898E8 == 0) then
+							v1285 = 0;
+							v1286 = nil;
+							FlatIdent_898E8 = 1;
+						end
+						if (FlatIdent_898E8 == 1) then
+							while true do
+								if (v1285 == 0) then
+									local FlatIdent_68113 = 0;
+									while true do
+										if (FlatIdent_68113 == 1) then
+											v1285 = 1 - 0;
+											break;
+										end
+										if (FlatIdent_68113 == 0) then
+											v739.BackgroundColor3 = Color3.fromRGB(7 + 73, 804 - (269 + 375), 980 - (267 + 458));
+											v750.Color = Color3.fromRGB(120, 63 + 137, 255);
+											FlatIdent_68113 = 1;
+										end
+									end
+								end
+								if (v1285 == (820 - (667 + 151))) then
+									if v1286 then
+										v2:SetCore("SendNotification", {Title="XDG-HOB",Text="Bf汉化脚本已加载",Duration=3,Icon="rbxassetid://4483345998"});
+									else
+										local FlatIdent_6C782 = 0;
+										local v1441;
+										local v1442;
+										while true do
+											if (FlatIdent_6C782 == 1) then
+												while true do
+													if (v1441 == (1497 - (1410 + 87))) then
+														v1442 = 1897 - (1504 + 393);
+														while true do
+															if (v1442 == 1) then
+																v739.BackgroundColor3 = v758;
+																v750.Color = Color3.fromRGB(216 - 136, 207 - 127, 90);
+																v1442 = 798 - (461 + 335);
+															end
+															if ((0 + 0) == v1442) then
+																local FlatIdent_89142 = 0;
+																while true do
+																	if (FlatIdent_89142 == 1) then
+																		v1442 = 1762 - (1730 + 31);
+																		break;
+																	end
+																	if (FlatIdent_89142 == 0) then
+																		v2:SetCore("SendNotification", {Title="错误",Text="加载Bf汉化脚本失败",Duration=5,Icon="rbxassetid://4483345998"});
+																		v759 = false;
+																		FlatIdent_89142 = 1;
+																	end
+																end
+															end
+															if (v1442 == 2) then
+																v739.Text = "Bf汉化脚本";
+																break;
+															end
+														end
+														break;
+													end
+												end
+												break;
+											end
+											if (FlatIdent_6C782 == 0) then
+												v1441 = 0;
+												v1442 = nil;
+												FlatIdent_6C782 = 1;
+											end
+										end
+									end
+									break;
+								end
+								if (v1285 == (1668 - (728 + 939))) then
+									local FlatIdent_1AD87 = 0;
+									while true do
+										if (FlatIdent_1AD87 == 1) then
+											v1285 = 6 - 4;
+											break;
+										end
+										if (FlatIdent_1AD87 == 0) then
+											v739.Text = "Bf汉化脚本 ✓";
+											v1286 = pcall(function()
+												loadstring(game:HttpGet("https://raw.githubusercontent.com/Dev-BlueX/BlueX-Hub/refs/heads/main/Main.lua"))();
+											end);
+											FlatIdent_1AD87 = 1;
+										end
+									end
+								end
+							end
+							break;
+						end
+					end
+				else
+					local FlatIdent_4BE15 = 0;
+					local v1287;
+					while true do
+						if (FlatIdent_4BE15 == 0) then
+							v1287 = 0;
+							while true do
+								if (v1287 == (0 - 0)) then
+									v739.BackgroundColor3 = v758;
+									v750.Color = Color3.fromRGB(183 - 103, 1148 - (138 + 930), 83 + 7);
+									v1287 = 1 + 0;
+								end
+								if (v1287 == (1 + 0)) then
+									v739.Text = "Bf汉化脚本";
+									v2:SetCore("SendNotification", {Title="XDG-HOB",Text="Bf汉化脚本已卸载",Duration=(12 - 9),Icon="rbxassetid://4483345998"});
+									break;
+								end
+							end
+							break;
+						end
+					end
+				end
+				break;
+			end
+		end
+	end);
+	v739.Parent = v658;
+	local v761 = Instance.new("TextButton");
+	v761.Name = "BackdoorExecutor";
+	v761.Size = UDim2.new(1766.9 - (459 + 1307), 0, 1870 - (474 + 1396), 69 - 29);
+	v761.Text = "后门执行器";
+	v761.BackgroundColor3 = Color3.fromRGB(57 + 3, 1 + 59, 70);
+	v761.TextColor3 = Color3.new(2 - 1, 1 + 0, 3 - 2);
+	v761.Font = Enum.Font.GothamSemibold;
+	v761.TextSize = 65 - 50;
+	v761.TextStrokeTransparency = 591.5 - (562 + 29);
+	v761.TextStrokeColor3 = Color3.fromRGB(0 + 0, 1419 - (374 + 1045), 0 + 0);
+	v761.AutoButtonColor = false;
+	local v772 = Instance.new("UIStroke");
+	v772.Thickness = 2;
+	v772.Color = Color3.fromRGB(80, 248 - 168, 728 - (448 + 190));
+	v772.Transparency = 0.3 + 0;
+	v772.Parent = v761;
+	local v777 = Instance.new("UICorner");
+	v777.CornerRadius = UDim.new(0, 8);
+	v777.Parent = v761;
+	local v780 = Color3.fromRGB(28 + 32, 40 + 20, 269 - 199);
+	local v781 = false;
+	v761.MouseEnter:Connect(function()
+		if not v781 then
+			local v1123 = 0;
+			while true do
+				if (v1123 == (0 - 0)) then
+					v761.BackgroundColor3 = Color3.fromRGB(1564 - (1307 + 187), 277 - 207, 187 - 107);
+					v772.Color = Color3.fromRGB(275 - 185, 773 - (232 + 451), 96 + 4);
+					break;
+				end
+			end
+		end
+	end);
+	v761.MouseLeave:Connect(function()
+		if not v781 then
+			local FlatIdent_3B79 = 0;
+			while true do
+				if (FlatIdent_3B79 == 0) then
+					v761.BackgroundColor3 = v780;
+					v772.Color = Color3.fromRGB(71 + 9, 644 - (510 + 54), 181 - 91);
+					break;
+				end
+			end
+		end
+	end);
+	v761.MouseButton1Click:Connect(function()
+		local FlatIdent_33966 = 0;
+		local v869;
+		while true do
+			if (0 == FlatIdent_33966) then
+				v869 = 0;
+				while true do
+					if (v869 == (36 - (13 + 23))) then
+						v781 = not v781;
+						if v781 then
+							local FlatIdent_3FB17 = 0;
+							local v1293;
+							while true do
+								if (FlatIdent_3FB17 == 0) then
+									v761.BackgroundColor3 = Color3.fromRGB(80, 160, 496 - 241);
+									v772.Color = Color3.fromRGB(120, 200, 365 - 110);
+									FlatIdent_3FB17 = 1;
+								end
+								if (FlatIdent_3FB17 == 1) then
+									v761.Text = "后门执行器 ✓";
+									v1293 = pcall(function()
+										loadstring(game:HttpGet("https://raw.githubusercontent.com/iK4oS/backdoor.exe/v6x/source.lua"))();
+									end);
+									FlatIdent_3FB17 = 2;
+								end
+								if (FlatIdent_3FB17 == 2) then
+									if v1293 then
+										v2:SetCore("SendNotification", {Title="XDG-HOB",Text="后门执行器脚本已加载",Duration=(4 - 1),Icon="rbxassetid://4483345998"});
+									else
+										v2:SetCore("SendNotification", {Title="错误",Text="加载后门执行器脚本失败",Duration=5,Icon="rbxassetid://4483345998"});
+										v781 = false;
+										v761.BackgroundColor3 = v780;
+										v772.Color = Color3.fromRGB(80, 80, 1178 - (830 + 258));
+										v761.Text = "后门执行器";
+									end
+									break;
+								end
+							end
+						else
+							local FlatIdent_7EB60 = 0;
+							local v1294;
+							while true do
+								if (FlatIdent_7EB60 == 0) then
+									v1294 = 0 - 0;
+									while true do
+										if (v1294 == (0 + 0)) then
+											v761.BackgroundColor3 = v780;
+											v772.Color = Color3.fromRGB(69 + 11, 1521 - (860 + 581), 331 - 241);
+											v1294 = 1;
+										end
+										if (v1294 == 1) then
+											v761.Text = "后门执行器";
+											v2:SetCore("SendNotification", {Title="XDG-HOB",Text="后门执行器脚本已卸载",Duration=(3 + 0),Icon="rbxassetid://4483345998"});
+											break;
+										end
+									end
+									break;
+								end
+							end
+						end
+						break;
+					end
+				end
+				break;
+			end
+		end
+	end);
+	v761.Parent = v658;
+	local v783 = Instance.new("TextButton");
+	v783.Name = "SkinScript";
+	v783.Size = UDim2.new(0.9, 241 - (237 + 4), 0 - 0, 101 - 61);
+	v783.Text = "皮脚本";
+	v783.BackgroundColor3 = Color3.fromRGB(60, 113 - 53, 70);
+	v783.TextColor3 = Color3.new(1 + 0, 1, 1 + 0);
+	v783.Font = Enum.Font.GothamSemibold;
+	v783.TextSize = 56 - 41;
+	v783.TextStrokeTransparency = 0.5;
+	v783.TextStrokeColor3 = Color3.fromRGB(0, 0 + 0, 0 + 0);
+	v783.AutoButtonColor = false;
+	local v794 = Instance.new("UIStroke");
+	v794.Thickness = 1428 - (85 + 1341);
+	v794.Color = Color3.fromRGB(136 - 56, 225 - 145, 90);
+	v794.Transparency = 372.3 - (45 + 327);
+	v794.Parent = v783;
+	local v799 = Instance.new("UICorner");
+	v799.CornerRadius = UDim.new(0 - 0, 510 - (444 + 58));
+	v799.Parent = v783;
+	local v802 = Color3.fromRGB(27 + 33, 11 + 49, 70);
+	local v803 = false;
+	v783.MouseEnter:Connect(function()
+		if not v803 then
+			local v1126 = 0 + 0;
+			while true do
+				if (v1126 == (0 - 0)) then
+					v783.BackgroundColor3 = Color3.fromRGB(70, 1802 - (64 + 1668), 2053 - (1227 + 746));
+					v794.Color = Color3.fromRGB(276 - 186, 90, 185 - 85);
+					break;
+				end
+			end
+		end
+	end);
+	v783.MouseLeave:Connect(function()
+		if not v803 then
+			local FlatIdent_2B80F = 0;
+			local v1127;
+			while true do
+				if (FlatIdent_2B80F == 0) then
+					v1127 = 0;
+					while true do
+						if (v1127 == (494 - (415 + 79))) then
+							v783.BackgroundColor3 = v802;
+							v794.Color = Color3.fromRGB(3 + 77, 80, 90);
+							break;
+						end
+					end
+					break;
+				end
+			end
+		end
+	end);
+	v783.MouseButton1Click:Connect(function()
+		local FlatIdent_62B5E = 0;
+		local v870;
+		local v871;
+		while true do
+			if (FlatIdent_62B5E == 1) then
+				while true do
+					if (v870 == 0) then
+						v871 = 491 - (142 + 349);
+						while true do
+							if ((0 + 0) == v871) then
+								v803 = not v803;
+								if v803 then
+									local FlatIdent_3B5FD = 0;
+									local v1398;
+									local v1399;
+									while true do
+										if (1 == FlatIdent_3B5FD) then
+											while true do
+												if (v1398 == (1 - 0)) then
+													v783.Text = "皮脚本 ✓";
+													v1399 = pcall(function()
+														loadstring(game:HttpGet("https://raw.githubusercontent.com/xiao122231/xiao122231/main/%E8%87%AA%E7%84%B6%E7%81%BE%E5%AE%B3"))();
+													end);
+													v1398 = 1 + 1;
+												end
+												if (v1398 == 2) then
+													if v1399 then
+														v2:SetCore("SendNotification", {Title="XDG-HOB",Text="皮脚本已加载",Duration=3,Icon="rbxassetid://4483345998"});
+													else
+														local FlatIdent_87256 = 0;
+														while true do
+															if (FlatIdent_87256 == 0) then
+																v2:SetCore("SendNotification", {Title="错误",Text="加载皮脚本失败",Duration=5,Icon="rbxassetid://4483345998"});
+																v803 = false;
+																FlatIdent_87256 = 1;
+															end
+															if (FlatIdent_87256 == 1) then
+																v783.BackgroundColor3 = v802;
+																v794.Color = Color3.fromRGB(80, 57 + 23, 245 - 155);
+																FlatIdent_87256 = 2;
+															end
+															if (FlatIdent_87256 == 2) then
+																v783.Text = "皮脚本";
+																break;
+															end
+														end
+													end
+													break;
+												end
+												if (v1398 == 0) then
+													local FlatIdent_7DA5D = 0;
+													while true do
+														if (FlatIdent_7DA5D == 0) then
+															v783.BackgroundColor3 = Color3.fromRGB(1944 - (1710 + 154), 478 - (200 + 118), 102 + 153);
+															v794.Color = Color3.fromRGB(209 - 89, 200, 255);
+															FlatIdent_7DA5D = 1;
+														end
+														if (1 == FlatIdent_7DA5D) then
+															v1398 = 1;
+															break;
+														end
+													end
+												end
+											end
+											break;
+										end
+										if (FlatIdent_3B5FD == 0) then
+											v1398 = 0;
+											v1399 = nil;
+											FlatIdent_3B5FD = 1;
+										end
+									end
+								else
+									local FlatIdent_21D3 = 0;
+									while true do
+										if (FlatIdent_21D3 == 0) then
+											v783.BackgroundColor3 = v802;
+											v794.Color = Color3.fromRGB(118 - 38, 72 + 8, 90 + 0);
+											FlatIdent_21D3 = 1;
+										end
+										if (FlatIdent_21D3 == 1) then
+											v783.Text = "皮脚本";
+											v2:SetCore("SendNotification", {Title="XDG-HOB",Text="皮脚本已卸载",Duration=3,Icon="rbxassetid://4483345998"});
+											break;
+										end
+									end
+								end
+								break;
+							end
+						end
+						break;
+					end
+				end
+				break;
+			end
+			if (FlatIdent_62B5E == 0) then
+				v870 = 0;
+				v871 = nil;
+				FlatIdent_62B5E = 1;
+			end
+		end
+	end);
+	v783.Parent = v658;
+	return v652;
 end
-table.insert(v135, v149());
-table.insert(v135, v150());
-table.insert(v135, v151());
-table.insert(v135, v152());
+local function v159(v805, v806)
+	local v807 = Instance.new("TextButton");
+	v807.Name = v805;
+	v807.Size = UDim2.new(0 + 0, 100, 0 + 0, 73 - 39);
+	v807.Text = v805;
+	v807.BackgroundColor3 = Color3.fromRGB(1300 - (363 + 887), 87 - 37, 285 - 225);
+	v807.TextColor3 = Color3.new(1 + 0, 2 - 1, 1 + 0);
+	v807.Font = Enum.Font.GothamSemibold;
+	v807.TextSize = 1677 - (674 + 990);
+	v807.TextStrokeTransparency = 0.5 + 0;
+	v807.TextStrokeColor3 = Color3.fromRGB(0, 0 + 0, 0 - 0);
+	v807.MouseButton1Click:Connect(function()
+		local v872 = 1055 - (507 + 548);
+		local v873;
+		while true do
+			if (v872 == (837 - (289 + 548))) then
+				v873 = 0;
+				while true do
+					if (1 == v873) then
+						v807.BackgroundColor3 = Color3.fromRGB(80, 160, 2073 - (821 + 997));
+						v807.BorderSizePixel = 257 - (195 + 60);
+						v873 = 1 + 1;
+					end
+					if (v873 == (1503 - (251 + 1250))) then
+						v807.BorderColor3 = Color3.fromRGB(747 - 492, 176 + 79, 1287 - (809 + 223));
+						for v1341, v1342 in ipairs(v135) do
+							v1342.Visible = v1341 == v806;
+						end
+						break;
+					end
+					if (v873 == 0) then
+						local FlatIdent_2444E = 0;
+						while true do
+							if (FlatIdent_2444E == 0) then
+								v134 = v806;
+								for v1344, v1345 in pairs(v122:GetChildren()) do
+									if v1345:IsA("TextButton") then
+										local v1417 = 0 - 0;
+										while true do
+											if (v1417 == 0) then
+												v1345.BackgroundColor3 = Color3.fromRGB(150 - 100, 165 - 115, 45 + 15);
+												v1345.BorderSizePixel = 0 + 0;
+												break;
+											end
+										end
+									end
+								end
+								FlatIdent_2444E = 1;
+							end
+							if (1 == FlatIdent_2444E) then
+								v873 = 1;
+								break;
+							end
+						end
+					end
+				end
+				break;
+			end
+		end
+	end);
+	if (v806 == v134) then
+		local v874 = 617 - (14 + 603);
+		while true do
+			if (v874 == 0) then
+				v807.BackgroundColor3 = Color3.fromRGB(80, 160, 384 - (118 + 11));
+				v807.BorderSizePixel = 1 + 1;
+				v874 = 1 + 0;
+			end
+			if (v874 == (2 - 1)) then
+				v807.BorderColor3 = Color3.fromRGB(1204 - (551 + 398), 162 + 93, 91 + 164);
+				break;
+			end
+		end
+	end
+	local v818 = Instance.new("UIStroke");
+	v818.Thickness = 1 + 0;
+	v818.Color = Color3.fromRGB(70, 260 - 190, 184 - 104);
+	v818.Transparency = 0.3 + 0;
+	v818.Parent = v807;
+	v807.MouseEnter:Connect(function()
+		if (v807.BackgroundColor3 ~= Color3.fromRGB(317 - 237, 45 + 115, 255)) then
+			v807.BackgroundColor3 = Color3.fromRGB(149 - (40 + 49), 228 - 168, 560 - (99 + 391));
+		end
+	end);
+	v807.MouseLeave:Connect(function()
+		if (v807.BackgroundColor3 ~= Color3.fromRGB(67 + 13, 160, 255)) then
+			v807.BackgroundColor3 = Color3.fromRGB(50, 219 - 169, 148 - 88);
+		end
+	end);
+	v807.Parent = v122;
+end
+for v824, v825 in ipairs(v133) do
+	v159(v825, v824);
+end
+table.insert(v135, v155());
+table.insert(v135, v156());
+table.insert(v135, v157());
+table.insert(v135, v158());
 v13.Visible = true;
 v74.Visible = true;
-local v156 = true;
-local v157 = false;
-local v158;
-local v159;
-local v160 = false;
-local v161;
-local v162;
-local function v163(v594)
-	if v157 then
-		local v643 = 0 - 0;
-		local v644;
-		local v645;
-		local v646;
-		local v647;
-		local v648;
+local v162 = true;
+local v163 = false;
+local v164;
+local v165;
+local v166 = false;
+local v167;
+local v168;
+local function v169(v826)
+	if v163 then
+		local FlatIdent_347D3 = 0;
+		local v875;
+		local v876;
+		local v877;
+		local v878;
+		local v879;
+		local v880;
 		while true do
-			if ((1288 - ((2116 - (12 + 1619)) + (965 - (103 + 60)))) == v643) then
-				local v854 = 0;
-				while true do
-					if (1 == v854) then
-						v643 = (5298 - 4223) - ((4652 - 3587) + 8);
-						break;
-					end
-					if (v854 == (0 - 0)) then
-						v646 = v13.AbsoluteSize;
-						v647 = math.clamp(v159.X + v644.X, (2221 - (710 + 952)) - ((2300 - (555 + 1313)) + 117 + 10), v645.X - v646.X);
-						v854 = 1 + 0;
-					end
-				end
+			if (FlatIdent_347D3 == 2) then
+				v879 = nil;
+				v880 = nil;
+				FlatIdent_347D3 = 3;
 			end
-			if (v643 == (0 + 0)) then
-				local v855 = 1468 - (1261 + 207);
-				local v856;
+			if (FlatIdent_347D3 == 3) then
 				while true do
-					if (v855 == (252 - (245 + 7))) then
-						v856 = (747 - (212 + 535)) + (0 - 0);
+					if (v875 == (0 - 0)) then
+						local v1158 = 1604 - (1032 + 572);
 						while true do
-							if (v856 == ((3078 - (905 + 571)) - ((2978 - 2343) + (1367 - 401)))) then
-								v643 = 1;
+							if ((418 - (203 + 214)) == v1158) then
+								v875 = 1;
 								break;
 							end
-							if (v856 == (0 + (0 - 0))) then
-								v644 = v594.Position - v158;
-								v645 = workspace.CurrentCamera.ViewportSize;
-								v856 = 1;
-							end
-						end
-						break;
-					end
-				end
-			end
-			if (v643 == (1 + 1)) then
-				v648 = math.clamp(v159.Y + v644.Y, (1505 - (522 + 941)) - (5 + (1548 - (292 + 1219))), v645.Y - v646.Y);
-				v13.Position = UDim2.new(0 - (1112 - (787 + 325)), v647, 0 + (0 - 0), v648);
-				break;
-			end
-		end
-	end
-end
-local function v164(v595)
-	if v160 then
-		local v649 = (0 + 0) - (0 - 0);
-		local v650;
-		local v651;
-		local v652;
-		local v653;
-		local v654;
-		while true do
-			if (v649 == 0) then
-				v650 = v595.Position - v161;
-				v651 = workspace.CurrentCamera.ViewportSize;
-				v649 = 1 + (534 - (424 + 110));
-			end
-			if (((2 + 1) - (1 + 0)) == v649) then
-				v654 = math.clamp(v162.Y + v650.Y, (0 + 0) - 0, v651.Y - v652.Y);
-				v74.Position = UDim2.new(0 - (312 - (33 + 279)), v653, 0 - (0 + 0), v654);
-				break;
-			end
-			if (v649 == (1 + 0)) then
-				v652 = v74.AbsoluteSize;
-				v653 = math.clamp(v162.X + v650.X, (1882 - (1338 + 15)) - ((1741 - (528 + 895)) + 101 + 110), v651.X - v652.X);
-				v649 = 9 - 7;
-			end
-		end
-	end
-end
-v48.InputBegan:Connect(function(v596)
-	if ((v596.UserInputType == Enum.UserInputType.MouseButton1) or (v596.UserInputType == Enum.UserInputType.Touch)) then
-		local v655 = 1924 - (1606 + 318);
-		local v656;
-		while true do
-			if (v655 == (1819 - (298 + 1521))) then
-				v656 = 0 - 0;
-				while true do
-					if (v656 == (310 - (154 + 156))) then
-						local v1044 = 0 - 0;
-						while true do
-							if (v1044 == 0) then
-								v157 = true;
-								v158 = v596.Position;
-								v1044 = 1 - 0;
-							end
-							if (v1044 == 1) then
-								v656 = 1116 - (712 + 403);
-								break;
-							end
-						end
-					end
-					if (v656 == (1588 - ((1413 - (168 + 282)) + 624))) then
-						v159 = Vector2.new(v13.Position.X.Offset, v13.Position.Y.Offset);
-						break;
-					end
-				end
-				break;
-			end
-		end
-	end
-end);
-v48.InputEnded:Connect(function(v597)
-	if ((v597.UserInputType == Enum.UserInputType.MouseButton1) or (v597.UserInputType == Enum.UserInputType.Touch)) then
-		v157 = false;
-	end
-end);
-v74.InputBegan:Connect(function(v598)
-	if ((v598.UserInputType == Enum.UserInputType.MouseButton1) or (v598.UserInputType == Enum.UserInputType.Touch)) then
-		local v657 = 0 - 0;
-		local v658;
-		while true do
-			if (v657 == (0 + 0)) then
-				v658 = 0 + 0;
-				while true do
-					if (((2 - 1) + 0) == v658) then
-						v162 = Vector2.new(v74.Position.X.Offset, v74.Position.Y.Offset);
-						break;
-					end
-					if (v658 == (846 - ((1969 - (1242 + 209)) + 328))) then
-						v160 = true;
-						v161 = v598.Position;
-						v658 = 2 - (680 - (20 + 659));
-					end
-				end
-				break;
-			end
-		end
-	end
-end);
-v74.InputEnded:Connect(function(v599)
-	if ((v599.UserInputType == Enum.UserInputType.MouseButton1) or (v599.UserInputType == Enum.UserInputType.Touch)) then
-		local v659 = 0 + 0;
-		local v660;
-		while true do
-			if (v659 == 0) then
-				v660 = (0 + 0) - (0 - 0);
-				while true do
-					if (v660 == ((649 - 332) - ((920 - (427 + 192)) + (35 - 19)))) then
-						if v160 then
-							local v1143 = 0;
-							local v1144;
-							local v1145;
-							while true do
-								if (v1143 == (0 + 0)) then
-									v1144 = 1947 - (1427 + 520);
-									v1145 = nil;
-									v1143 = 1 + 0;
+							if (v1158 == 0) then
+								local FlatIdent_24E4B = 0;
+								while true do
+									if (FlatIdent_24E4B == 0) then
+										v876 = v826.Position - v164;
+										v877 = workspace.CurrentCamera.ViewportSize;
+										FlatIdent_24E4B = 1;
+									end
+									if (FlatIdent_24E4B == 1) then
+										v1158 = 1;
+										break;
+									end
 								end
-								if (v1143 == 1) then
+							end
+						end
+					end
+					if (v875 == (1819 - (568 + 1249))) then
+						v880 = math.clamp(v165.Y + v876.Y, 0, v877.Y - v878.Y);
+						v13.Position = UDim2.new(0 + 0, v879, 0, v880);
+						break;
+					end
+					if (v875 == 1) then
+						v878 = v13.AbsoluteSize;
+						v879 = math.clamp(v165.X + v876.X, 0, v877.X - v878.X);
+						v875 = 4 - 2;
+					end
+				end
+				break;
+			end
+			if (FlatIdent_347D3 == 1) then
+				v877 = nil;
+				v878 = nil;
+				FlatIdent_347D3 = 2;
+			end
+			if (FlatIdent_347D3 == 0) then
+				v875 = 0 + 0;
+				v876 = nil;
+				FlatIdent_347D3 = 1;
+			end
+		end
+	end
+end
+local function v170(v827)
+	if v166 then
+		local FlatIdent_72C32 = 0;
+		local v881;
+		local v882;
+		local v883;
+		local v884;
+		local v885;
+		local v886;
+		while true do
+			if (FlatIdent_72C32 == 3) then
+				while true do
+					if (v881 == (1306 - (913 + 393))) then
+						local FlatIdent_3176A = 0;
+						local v1161;
+						while true do
+							if (FlatIdent_3176A == 0) then
+								v1161 = 0;
+								while true do
+									if (v1161 == 0) then
+										local FlatIdent_5D3C0 = 0;
+										while true do
+											if (FlatIdent_5D3C0 == 0) then
+												v882 = v827.Position - v167;
+												v883 = workspace.CurrentCamera.ViewportSize;
+												FlatIdent_5D3C0 = 1;
+											end
+											if (FlatIdent_5D3C0 == 1) then
+												v1161 = 2 - 1;
+												break;
+											end
+										end
+									end
+									if (v1161 == (1 - 0)) then
+										v881 = 1;
+										break;
+									end
+								end
+								break;
+							end
+						end
+					end
+					if (v881 == (411 - (269 + 141))) then
+						local FlatIdent_21608 = 0;
+						while true do
+							if (FlatIdent_21608 == 0) then
+								v884 = v74.AbsoluteSize;
+								v885 = math.clamp(v168.X + v882.X, 0 - 0, v883.X - v884.X);
+								FlatIdent_21608 = 1;
+							end
+							if (FlatIdent_21608 == 1) then
+								v881 = 1983 - (362 + 1619);
+								break;
+							end
+						end
+					end
+					if (v881 == 2) then
+						v886 = math.clamp(v168.Y + v882.Y, 0, v883.Y - v884.Y);
+						v74.Position = UDim2.new(1625 - (950 + 675), v885, 0 + 0, v886);
+						break;
+					end
+				end
+				break;
+			end
+			if (FlatIdent_72C32 == 0) then
+				v881 = 0 - 0;
+				v882 = nil;
+				FlatIdent_72C32 = 1;
+			end
+			if (FlatIdent_72C32 == 2) then
+				v885 = nil;
+				v886 = nil;
+				FlatIdent_72C32 = 3;
+			end
+			if (FlatIdent_72C32 == 1) then
+				v883 = nil;
+				v884 = nil;
+				FlatIdent_72C32 = 2;
+			end
+		end
+	end
+end
+v48.InputBegan:Connect(function(v828)
+	if ((v828.UserInputType == Enum.UserInputType.MouseButton1) or (v828.UserInputType == Enum.UserInputType.Touch)) then
+		local FlatIdent_89852 = 0;
+		local v887;
+		while true do
+			if (FlatIdent_89852 == 0) then
+				v887 = 1179 - (216 + 963);
+				while true do
+					if (v887 == 1) then
+						v165 = Vector2.new(v13.Position.X.Offset, v13.Position.Y.Offset);
+						break;
+					end
+					if (v887 == 0) then
+						local FlatIdent_96D1F = 0;
+						while true do
+							if (FlatIdent_96D1F == 0) then
+								v163 = true;
+								v164 = v828.Position;
+								FlatIdent_96D1F = 1;
+							end
+							if (FlatIdent_96D1F == 1) then
+								v887 = 1288 - (485 + 802);
+								break;
+							end
+						end
+					end
+				end
+				break;
+			end
+		end
+	end
+end);
+v48.InputEnded:Connect(function(v829)
+	if ((v829.UserInputType == Enum.UserInputType.MouseButton1) or (v829.UserInputType == Enum.UserInputType.Touch)) then
+		v163 = false;
+	end
+end);
+v74.InputBegan:Connect(function(v830)
+	if ((v830.UserInputType == Enum.UserInputType.MouseButton1) or (v830.UserInputType == Enum.UserInputType.Touch)) then
+		local FlatIdent_8D07A = 0;
+		local v888;
+		while true do
+			if (FlatIdent_8D07A == 0) then
+				v888 = 559 - (432 + 127);
+				while true do
+					if (v888 == 1) then
+						v168 = Vector2.new(v74.Position.X.Offset, v74.Position.Y.Offset);
+						break;
+					end
+					if (v888 == 0) then
+						local FlatIdent_722D2 = 0;
+						while true do
+							if (FlatIdent_722D2 == 1) then
+								v888 = 1074 - (1065 + 8);
+								break;
+							end
+							if (FlatIdent_722D2 == 0) then
+								v166 = true;
+								v167 = v830.Position;
+								FlatIdent_722D2 = 1;
+							end
+						end
+					end
+				end
+				break;
+			end
+		end
+	end
+end);
+v74.InputEnded:Connect(function(v831)
+	if ((v831.UserInputType == Enum.UserInputType.MouseButton1) or (v831.UserInputType == Enum.UserInputType.Touch)) then
+		local FlatIdent_11EF5 = 0;
+		local v889;
+		while true do
+			if (FlatIdent_11EF5 == 0) then
+				v889 = 0 + 0;
+				while true do
+					if (v889 == (1601 - (635 + 966))) then
+						if v166 then
+							local FlatIdent_F5A6 = 0;
+							local v1315;
+							local v1316;
+							while true do
+								if (FlatIdent_F5A6 == 1) then
 									while true do
-										if (((0 - 0) - (0 + 0)) == v1144) then
-											v1145 = (v599.Position - v161).Magnitude;
-											if (v1145 < ((1245 - (712 + 520)) - (19 - 11))) then
-												local v1319 = 1346 - (565 + 781);
-												local v1320;
-												local v1321;
+										if (v1315 == (0 + 0)) then
+											v1316 = (v831.Position - v167).Magnitude;
+											if (v1316 < (47 - (5 + 37))) then
+												local FlatIdent_60372 = 0;
+												local v1448;
+												local v1449;
 												while true do
-													if (v1319 == (565 - (35 + 530))) then
-														v1320 = 0;
-														v1321 = nil;
-														v1319 = 1;
+													if (FlatIdent_60372 == 0) then
+														v1448 = 0;
+														v1449 = nil;
+														FlatIdent_60372 = 1;
 													end
-													if (v1319 == (1 + 0)) then
+													if (FlatIdent_60372 == 1) then
 														while true do
-															if (v1320 == ((0 - 0) - (1378 - (1330 + 48)))) then
-																v1321 = 0;
+															if (v1448 == (0 - 0)) then
+																v1449 = 0;
 																while true do
-																	if (v1321 == 0) then
-																		v156 = not v156;
-																		v13.Visible = v156;
+																	if (0 == v1449) then
+																		v162 = not v162;
+																		v13.Visible = v162;
 																		break;
 																	end
 																end
@@ -4225,9 +5044,14 @@ v74.InputEnded:Connect(function(v599)
 									end
 									break;
 								end
+								if (FlatIdent_F5A6 == 0) then
+									v1315 = 0;
+									v1316 = nil;
+									FlatIdent_F5A6 = 1;
+								end
 							end
 						end
-						v160 = false;
+						v166 = false;
 						break;
 					end
 				end
@@ -4236,67 +5060,76 @@ v74.InputEnded:Connect(function(v599)
 		end
 	end
 end);
-v3.InputChanged:Connect(function(v600)
-	if ((v600.UserInputType == Enum.UserInputType.MouseMovement) or (v600.UserInputType == Enum.UserInputType.Touch)) then
-		if v157 then
-			v163(v600);
-		elseif v160 then
-			v164(v600);
+v3.InputChanged:Connect(function(v832)
+	if ((v832.UserInputType == Enum.UserInputType.MouseMovement) or (v832.UserInputType == Enum.UserInputType.Touch)) then
+		if v163 then
+			v169(v832);
+		elseif v166 then
+			v170(v832);
 		end
 	end
 end);
 v74.MouseEnter:Connect(function()
-	v74.BackgroundColor3 = Color3.fromRGB(90, 109 + 45 + 3 + 13, 444 - 189);
+	v74.BackgroundColor3 = Color3.fromRGB(38 + 52, 269 - 99, 255);
 end);
 v74.MouseLeave:Connect(function()
-	v74.BackgroundColor3 = Color3.fromRGB((175 - 135) + (1199 - (854 + 315)), 464 - 319, 77 + 178);
+	v74.BackgroundColor3 = Color3.fromRGB(33 + 37, 145, 529 - 274);
 end);
-local v165 = {Color3.fromRGB((198 - (31 + 13)) + (143 - 42), 100, 10 + (208 - 118)),Color3.fromRGB(83 + 172, (895 + 304) - ((1392 - (281 + 282)) + (532 - 342)), 51 + 49),Color3.fromRGB((2169 - (137 + 1710)) - 67, 352 - (269 - 172), (786 - (100 + 438)) - (1513 - (205 + 1160))),Color3.fromRGB(31 + 28 + (1426 - (535 + 770)), (51 + 722) - (285 + 233), 2094 - (211 + 1783)),Color3.fromRGB((1524 - (1236 + 193)) + 5, 220, (1778 - (793 + 117)) - ((2412 - (1607 + 285)) + (953 - (747 + 113)))),Color3.fromRGB(11 + 169, (173 - 137) + (112 - 48), (809 + 54) - (1432 - 824)),Color3.fromRGB(739 - (256 + 228), 1861 - ((1300 - 860) + 771 + 550), (624 + 1425) - ((2531 - 1472) + (1224 - (246 + 208))))};
-local v166 = 1893 - (614 + 1278);
-v4.RenderStepped:Connect(function(v603)
-	local v604 = 0 + 0;
-	local v605;
-	local v606;
-	local v607;
-	local v608;
+local v171 = {Color3.fromRGB(255, 188 - 88, 100),Color3.fromRGB(184 + 71, 709 - (318 + 211), 492 - 392),Color3.fromRGB(1842 - (963 + 624), 109 + 146, 946 - (518 + 328)),Color3.fromRGB(419 - 239, 407 - 152, 417 - (301 + 16)),Color3.fromRGB(280 - 180, 574 - 354, 231 + 24),Color3.fromRGB(384 - 204, 61 + 39, 25 + 230),Color3.fromRGB(83 + 172, 1119 - (829 + 190), 220)};
+local v172 = 1;
+v4.RenderStepped:Connect(function(v835)
+	local FlatIdent_2DF26 = 0;
+	local v836;
+	local v837;
+	local v838;
+	local v839;
 	while true do
-		if (0 == v604) then
-			v605 = (314 - (249 + 65)) - (0 - 0);
-			v606 = nil;
-			v604 = 1;
-		end
-		if (v604 == (1276 - (726 + 549))) then
-			v607 = nil;
-			v608 = nil;
-			v604 = 2 + 0;
-		end
-		if (v604 == 2) then
+		if (FlatIdent_2DF26 == 2) then
 			while true do
-				if (v605 == ((1970 - (916 + 508)) - ((1427 - 1003) + 78 + 43))) then
-					local v1000 = 323 - (140 + 183);
+				if (v836 == 0) then
+					local FlatIdent_73A64 = 0;
 					while true do
-						if (v1000 == (0 + 0)) then
-							v607 = v165[((math.floor(v166) + (565 - (297 + 267))) % #v165) + 1 + 0];
-							v608 = v166 % (1 + 0);
-							v1000 = 343 - (37 + 305);
+						if (0 == FlatIdent_73A64) then
+							v172 = (v172 + (v835 * (2 - 0))) % #v171;
+							v837 = v171[math.floor(v172) + (1 - 0)];
+							FlatIdent_73A64 = 1;
 						end
-						if (v1000 == (1267 - (323 + 943))) then
-							v605 = 1349 - (256 + 385 + (923 - 217));
+						if (FlatIdent_73A64 == 1) then
+							v836 = 1;
 							break;
 						end
 					end
 				end
-				if (v605 == (0 + (1535 - (394 + 1141)))) then
-					v166 = (v166 + (v603 * 2)) % #v165;
-					v606 = v165[math.floor(v166) + ((276 + 165) - (71 + 178 + 191))];
-					v605 = (1 + 3) - (3 - 0);
-				end
-				if (v605 == 2) then
-					v61.TextColor3 = v606:Lerp(v607, v608);
+				if (v836 == (4 - 2)) then
+					v61.TextColor3 = v837:Lerp(v838, v839);
 					break;
+				end
+				if (1 == v836) then
+					local FlatIdent_1C72A = 0;
+					while true do
+						if (1 == FlatIdent_1C72A) then
+							v836 = 5 - 3;
+							break;
+						end
+						if (FlatIdent_1C72A == 0) then
+							v838 = v171[((math.floor(v172) + 1) % #v171) + 1 + 0];
+							v839 = v172 % (1 + 0);
+							FlatIdent_1C72A = 1;
+						end
+					end
 				end
 			end
 			break;
+		end
+		if (FlatIdent_2DF26 == 0) then
+			v836 = 0 - 0;
+			v837 = nil;
+			FlatIdent_2DF26 = 1;
+		end
+		if (FlatIdent_2DF26 == 1) then
+			v838 = nil;
+			v839 = nil;
+			FlatIdent_2DF26 = 2;
 		end
 	end
 end);
