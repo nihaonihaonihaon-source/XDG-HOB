@@ -33,8 +33,8 @@ local executorName = detectExecutor()
 
 local function getBeijingTime()
     local timeData = os.date("!*t")
-    local beijingOffset = 8 * 3600
     local totalSeconds = os.time(timeData)
+    local beijingOffset = 8 * 3600
     
     local beijingTime = os.date("*t", totalSeconds + beijingOffset)
     return string.format("%04d年%02d月%02d日 %02d:%02d:%02d", 
@@ -286,8 +286,7 @@ local WallWalkModule = {
     LastUpdate = 0,
     NoClipParts = {},
     CharacterAddedConnection = nil,
-    JumpConnection = nil,
-    DescendantAddedConnection = nil
+    JumpConnection = nil
 }
 
 function WallWalkModule:Toggle()
@@ -350,11 +349,6 @@ function WallWalkModule:SetupCharacter(char)
         self.JumpConnection = nil
     end
     
-    if self.DescendantAddedConnection then
-        self.DescendantAddedConnection:Disconnect()
-        self.DescendantAddedConnection = nil
-    end
-    
     for _, part in pairs(char:GetDescendants()) do
         if part:IsA("BasePart") then
             part.CanCollide = not self.Enabled
@@ -362,7 +356,7 @@ function WallWalkModule:SetupCharacter(char)
         end
     end
     
-    self.DescendantAddedConnection = char.DescendantAdded:Connect(function(descendant)
+    char.DescendantAdded:Connect(function(descendant)
         if descendant:IsA("BasePart") then
             task.wait(0.1)
             descendant.CanCollide = not self.Enabled
@@ -377,6 +371,15 @@ function WallWalkModule:SetupCharacter(char)
             for _, part in pairs(char:GetDescendants()) do
                 if part:IsA("BasePart") then
                     part.CanCollide = not self.Enabled
+                end
+            end
+        elseif newState == Enum.HumanoidStateType.Landed then
+            if not self.Enabled then
+                task.wait(0.1)
+                for _, part in pairs(char:GetDescendants()) do
+                    if part:IsA("BasePart") then
+                        part.CanCollide = true
+                    end
                 end
             end
         end
@@ -399,15 +402,10 @@ function WallWalkModule:Stop()
         self.JumpConnection = nil
     end
     
-    if self.DescendantAddedConnection then
-        self.DescendantAddedConnection:Disconnect()
-        self.DescendantAddedConnection = nil
-    end
-    
     local plr = game:GetService("Players").LocalPlayer
     if plr.Character then
-        for _, part in pairs(self.NoClipParts) do
-            if part and part.Parent then
+        for _, part in pairs(plr.Character:GetDescendants()) do
+            if part:IsA("BasePart") then
                 part.CanCollide = true
             end
         end
@@ -423,7 +421,6 @@ do
     local TargetJumpHeight = 7.2
     local JumpConnection = nil
     local CharacterAddedConnection = nil
-    local HumanoidChangedConnection = nil
     
     local function updateJumpHeight()
         if JumpConnection then
@@ -447,18 +444,6 @@ do
         if character then
             task.wait(1)
             
-            if HumanoidChangedConnection then
-                HumanoidChangedConnection:Disconnect()
-            end
-            
-            HumanoidChangedConnection = character.ChildAdded:Connect(function(child)
-                if child:IsA("Humanoid") then
-                    task.wait(0.5)
-                    child.JumpHeight = TargetJumpHeight
-                    updateJumpHeight()
-                end
-            end)
-            
             local humanoids = character:GetDescendants()
             for _, obj in pairs(humanoids) do
                 if obj:IsA("Humanoid") then
@@ -470,11 +455,6 @@ do
             local mainHumanoid = character:FindFirstChildOfClass("Humanoid")
             if mainHumanoid then
                 mainHumanoid.JumpHeight = TargetJumpHeight
-                
-                mainHumanoid.Died:Connect(function()
-                    task.wait(3)
-                    updateJumpHeight()
-                end)
             end
         end
     end
@@ -529,11 +509,6 @@ do
         if CharacterAddedConnection then
             CharacterAddedConnection:Disconnect()
             CharacterAddedConnection = nil
-        end
-        
-        if HumanoidChangedConnection then
-            HumanoidChangedConnection:Disconnect()
-            HumanoidChangedConnection = nil
         end
         
         local character = Player.Character
