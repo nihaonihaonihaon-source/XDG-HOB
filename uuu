@@ -34,9 +34,9 @@ local executorName = detectExecutor()
 local function getBeijingTime()
     local timeData = os.date("!*t")
     local beijingOffset = 8 * 3600
-    local totalSeconds = os.time(timeData) + beijingOffset
+    local totalSeconds = os.time(timeData)
     
-    local beijingTime = os.date("*t", totalSeconds)
+    local beijingTime = os.date("*t", totalSeconds + beijingOffset)
     return string.format("%04d年%02d月%02d日 %02d:%02d:%02d", 
         beijingTime.year, beijingTime.month, beijingTime.day,
         beijingTime.hour, beijingTime.min, beijingTime.sec)
@@ -285,7 +285,9 @@ local WallWalkModule = {
     Speed = 26,
     LastUpdate = 0,
     NoClipParts = {},
-    CharacterAddedConnection = nil
+    CharacterAddedConnection = nil,
+    JumpConnection = nil,
+    DescendantAddedConnection = nil
 }
 
 function WallWalkModule:Toggle()
@@ -343,28 +345,38 @@ end
 function WallWalkModule:SetupCharacter(char)
     task.wait(0.2)
     
+    if self.JumpConnection then
+        self.JumpConnection:Disconnect()
+        self.JumpConnection = nil
+    end
+    
+    if self.DescendantAddedConnection then
+        self.DescendantAddedConnection:Disconnect()
+        self.DescendantAddedConnection = nil
+    end
+    
     for _, part in pairs(char:GetDescendants()) do
         if part:IsA("BasePart") then
-            part.CanCollide = false
+            part.CanCollide = not self.Enabled
             table.insert(self.NoClipParts, part)
         end
     end
     
-    char.DescendantAdded:Connect(function(descendant)
+    self.DescendantAddedConnection = char.DescendantAdded:Connect(function(descendant)
         if descendant:IsA("BasePart") then
             task.wait(0.1)
-            descendant.CanCollide = false
+            descendant.CanCollide = not self.Enabled
             table.insert(self.NoClipParts, descendant)
         end
     end)
     
     local humanoid = char:WaitForChild("Humanoid")
-    humanoid.StateChanged:Connect(function(oldState, newState)
+    self.JumpConnection = humanoid.StateChanged:Connect(function(oldState, newState)
         if newState == Enum.HumanoidStateType.Jumping then
             task.wait(0.05)
             for _, part in pairs(char:GetDescendants()) do
                 if part:IsA("BasePart") then
-                    part.CanCollide = false
+                    part.CanCollide = not self.Enabled
                 end
             end
         end
@@ -380,6 +392,16 @@ function WallWalkModule:Stop()
     if self.CharacterAddedConnection then
         self.CharacterAddedConnection:Disconnect()
         self.CharacterAddedConnection = nil
+    end
+    
+    if self.JumpConnection then
+        self.JumpConnection:Disconnect()
+        self.JumpConnection = nil
+    end
+    
+    if self.DescendantAddedConnection then
+        self.DescendantAddedConnection:Disconnect()
+        self.DescendantAddedConnection = nil
     end
     
     local plr = game:GetService("Players").LocalPlayer
