@@ -48,14 +48,12 @@ end
 local executorName = detectExecutor()
 
 local function getBeijingTime()
-    local timeData = os.date("!*t")
-    local totalSeconds = os.time(timeData)
-    local beijingOffset = 8 * 3600
-    
-    local beijingTime = os.date("*t", totalSeconds + beijingOffset)
+    local currentTime = os.time()
+    local adjustedTime = currentTime - (8 * 3600)
+    local timeData = os.date("*t", adjustedTime)
     return string.format("%04d年%02d月%02d日 %02d:%02d:%02d", 
-        beijingTime.year, beijingTime.month, beijingTime.day,
-        beijingTime.hour, beijingTime.min, beijingTime.sec)
+        timeData.year, timeData.month, timeData.day,
+        timeData.hour, timeData.min, timeData.sec)
 end
 
 local AntiDetectSpeedModule = {}
@@ -1078,7 +1076,7 @@ local function createFunctionContainer()
     scrollContainer.BackgroundTransparency = 1
     scrollContainer.ScrollBarThickness = 6
     scrollContainer.ScrollBarImageColor3 = Color3.fromRGB(100, 100, 110)
-    scrollContainer.CanvasSize = UDim2.new(0, 0, 0, 780) -- 增加高度以容纳重力调整
+    scrollContainer.CanvasSize = UDim2.new(0, 0, 0, 780)
     scrollContainer.Parent = container
     
     local functionLayout = Instance.new("UIListLayout")
@@ -1086,7 +1084,6 @@ local function createFunctionContainer()
     functionLayout.Padding = UDim.new(0, 12)
     functionLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
     
-    -- 速度调整模块
     local speedFrame = Instance.new("Frame")
     speedFrame.Name = "SpeedFrame"
     speedFrame.Size = UDim2.new(0.9, 0, 0, 120)
@@ -1244,7 +1241,6 @@ local function createFunctionContainer()
     
     speedFrame.Parent = scrollContainer
     
-    -- 跳跃高度调整模块
     local jumpPowerFrame = Instance.new("Frame")
     jumpPowerFrame.Name = "JumpPowerFrame"
     jumpPowerFrame.Size = UDim2.new(0.9, 0, 0, 120)
@@ -1403,7 +1399,6 @@ local function createFunctionContainer()
     applyJumpBtn.Parent = jumpPowerFrame
     jumpPowerFrame.Parent = scrollContainer
     
-    -- 新增重力调整模块
     local gravityFrame = Instance.new("Frame")
     gravityFrame.Name = "GravityFrame"
     gravityFrame.Size = UDim2.new(0.9, 0, 0, 120)
@@ -1551,7 +1546,6 @@ local function createFunctionContainer()
     currentGravityLabel.Text = "当前重力: 196.2"
     currentGravityLabel.Parent = gravityFrame
     
-    -- 更新当前重力显示
     spawn(function()
         while true do
             currentGravityLabel.Text = "当前重力: " .. string.format("%.1f", workspace.Gravity)
@@ -1561,7 +1555,6 @@ local function createFunctionContainer()
     
     gravityFrame.Parent = scrollContainer
     
-    -- 夜视模式模块
     local nightVisionFrame = Instance.new("Frame")
     nightVisionFrame.Name = "NightVisionFrame"
     nightVisionFrame.Size = UDim2.new(0.9, 0, 0, 140)
