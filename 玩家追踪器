@@ -1,185 +1,10 @@
 local Players = game:GetService("Players")
 local TeleportService = game:GetService("TeleportService")
 local HttpService = game:GetService("HttpService")
-local RunService = game:GetService("RunService")
 local TweenService = game:GetService("TweenService")
 
-local CONFIG_FILE = "PlayerTrackerConfig.json"
-
-local ScreenGui = Instance.new("ScreenGui")
-ScreenGui.Name = "PlayerTracker"
-ScreenGui.ResetOnSpawn = false
-ScreenGui.Parent = Players.LocalPlayer:WaitForChild("PlayerGui")
-
-local MainFrame = Instance.new("Frame")
-MainFrame.Name = "MainFrame"
-MainFrame.Size = UDim2.new(0, 300, 0, 400)
-MainFrame.Position = UDim2.new(0.5, -150, 0.5, -200)
-MainFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 40)
-MainFrame.BorderSizePixel = 0
-MainFrame.Parent = ScreenGui
-
-local UICorner = Instance.new("UICorner")
-UICorner.CornerRadius = UDim.new(0, 8)
-UICorner.Parent = MainFrame
-
-local TitleBar = Instance.new("Frame")
-TitleBar.Name = "TitleBar"
-TitleBar.Size = UDim2.new(1, 0, 0, 30)
-TitleBar.BackgroundColor3 = Color3.fromRGB(45, 45, 55)
-TitleBar.Parent = MainFrame
-
-local TitleLabel = Instance.new("TextLabel")
-TitleLabel.Name = "TitleLabel"
-TitleLabel.Size = UDim2.new(0.7, 0, 1, 0)
-TitleLabel.Position = UDim2.new(0, 10, 0, 0)
-TitleLabel.BackgroundTransparency = 1
-TitleLabel.Text = "玩家追踪器"
-TitleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
-TitleLabel.TextXAlignment = Enum.TextXAlignment.Left
-TitleLabel.Font = Enum.Font.GothamSemibold
-TitleLabel.TextSize = 14
-TitleLabel.Parent = TitleBar
-
-local MinimizeButton = Instance.new("TextButton")
-MinimizeButton.Name = "MinimizeButton"
-MinimizeButton.Size = UDim2.new(0, 20, 0, 20)
-MinimizeButton.Position = UDim2.new(1, -50, 0.5, -10)
-MinimizeButton.BackgroundColor3 = Color3.fromRGB(60, 60, 75)
-MinimizeButton.Text = "_"
-MinimizeButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-MinimizeButton.Font = Enum.Font.GothamBold
-MinimizeButton.TextSize = 14
-MinimizeButton.Parent = TitleBar
-
-local CloseButton = Instance.new("TextButton")
-CloseButton.Name = "CloseButton"
-CloseButton.Size = UDim2.new(0, 20, 0, 20)
-CloseButton.Position = UDim2.new(1, -25, 0.5, -10)
-CloseButton.BackgroundColor3 = Color3.fromRGB(200, 60, 60)
-CloseButton.Text = "X"
-CloseButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-CloseButton.Font = Enum.Font.GothamBold
-CloseButton.TextSize = 12
-CloseButton.Parent = TitleBar
-
-local ContentFrame = Instance.new("Frame")
-ContentFrame.Name = "ContentFrame"
-ContentFrame.Size = UDim2.new(1, 0, 1, -30)
-ContentFrame.Position = UDim2.new(0, 0, 0, 30)
-ContentFrame.BackgroundTransparency = 1
-ContentFrame.Parent = MainFrame
-
-local InputScrollingFrame = Instance.new("ScrollingFrame")
-InputScrollingFrame.Name = "InputScrollingFrame"
-InputScrollingFrame.Size = UDim2.new(1, -20, 0, 200)
-InputScrollingFrame.Position = UDim2.new(0, 10, 0, 10)
-InputScrollingFrame.BackgroundColor3 = Color3.fromRGB(40, 40, 50)
-InputScrollingFrame.BorderSizePixel = 0
-InputScrollingFrame.ScrollBarThickness = 4
-InputScrollingFrame.CanvasSize = UDim2.new(0, 0, 0, 0)
-InputScrollingFrame.Parent = ContentFrame
-
-local InputScrollingFrameUICorner = Instance.new("UICorner")
-InputScrollingFrameUICorner.CornerRadius = UDim.new(0, 6)
-InputScrollingFrameUICorner.Parent = InputScrollingFrame
-
-local AddInputButton = Instance.new("TextButton")
-AddInputButton.Name = "AddInputButton"
-AddInputButton.Size = UDim2.new(1, -20, 0, 30)
-AddInputButton.Position = UDim2.new(0, 10, 0, 220)
-AddInputButton.BackgroundColor3 = Color3.fromRGB(60, 140, 200)
-AddInputButton.Text = "+ 添加玩家名称"
-AddInputButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-AddInputButton.Font = Enum.Font.GothamSemibold
-AddInputButton.TextSize = 14
-AddInputButton.Parent = ContentFrame
-
-local AddInputButtonUICorner = Instance.new("UICorner")
-AddInputButtonUICorner.CornerRadius = UDim.new(0, 6)
-AddInputButtonUICorner.Parent = AddInputButton
-
-local TrackButton = Instance.new("TextButton")
-TrackButton.Name = "TrackButton"
-TrackButton.Size = UDim2.new(1, -20, 0, 40)
-TrackButton.Position = UDim2.new(0, 10, 1, -60)
-TrackButton.BackgroundColor3 = Color3.fromRGB(70, 160, 70)
-TrackButton.Text = "开始追踪"
-TrackButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-TrackButton.Font = Enum.Font.GothamBold
-TrackButton.TextSize = 16
-TrackButton.Parent = ContentFrame
-
-local TrackButtonUICorner = Instance.new("UICorner")
-TrackButtonUICorner.CornerRadius = UDim.new(0, 8)
-TrackButtonUICorner.Parent = TrackButton
-
-local MiniFrame = Instance.new("Frame")
-MiniFrame.Name = "MiniFrame"
-MiniFrame.Size = UDim2.new(0, 80, 0, 30)
-MiniFrame.Position = UDim2.new(1, -90, 0.5, -15)
-MiniFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 40)
-MiniFrame.Visible = false
-MiniFrame.Parent = ScreenGui
-
-local MiniFrameUICorner = Instance.new("UICorner")
-MiniFrameUICorner.CornerRadius = UDim.new(0, 6)
-MiniFrameUICorner.Parent = MiniFrame
-
-local MiniLabel = Instance.new("TextLabel")
-MiniLabel.Name = "MiniLabel"
-MiniLabel.Size = UDim2.new(0, 50, 1, 0)
-MiniLabel.Position = UDim2.new(0, 5, 0, 0)
-MiniLabel.BackgroundTransparency = 1
-MiniLabel.Text = "追踪中"
-MiniLabel.TextColor3 = Color3.fromRGB(100, 200, 100)
-MiniLabel.TextXAlignment = Enum.TextXAlignment.Left
-MiniLabel.Font = Enum.Font.GothamSemibold
-MiniLabel.TextSize = 12
-MiniLabel.Parent = MiniFrame
-
-local ExpandButton = Instance.new("TextButton")
-ExpandButton.Name = "ExpandButton"
-ExpandButton.Size = UDim2.new(0, 20, 0, 20)
-ExpandButton.Position = UDim2.new(1, -25, 0.5, -10)
-ExpandButton.BackgroundColor3 = Color3.fromRGB(60, 60, 75)
-ExpandButton.Text = "+"
-ExpandButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-ExpandButton.Font = Enum.Font.GothamBold
-ExpandButton.TextSize = 14
-ExpandButton.Parent = MiniFrame
-
-local NotificationGui = Instance.new("ScreenGui")
-NotificationGui.Name = "TrackerNotifications"
-NotificationGui.ResetOnSpawn = false
-NotificationGui.Parent = Players.LocalPlayer:WaitForChild("PlayerGui")
-
-local LoadingFrame = Instance.new("Frame")
-LoadingFrame.Name = "LoadingFrame"
-LoadingFrame.Size = UDim2.new(1, 0, 1, 0)
-LoadingFrame.Position = UDim2.new(0, 0, 0, 0)
-LoadingFrame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-LoadingFrame.BackgroundTransparency = 0.5
-LoadingFrame.Visible = false
-LoadingFrame.ZIndex = 100
-LoadingFrame.Parent = ScreenGui
-
-local LoadingLabel = Instance.new("TextLabel")
-LoadingLabel.Name = "LoadingLabel"
-LoadingLabel.Size = UDim2.new(0, 300, 0, 50)
-LoadingLabel.Position = UDim2.new(0.5, -150, 0.5, -25)
-LoadingLabel.BackgroundColor3 = Color3.fromRGB(40, 40, 50)
-LoadingLabel.Text = "正在跳转到玩家服务器..."
-LoadingLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
-LoadingLabel.Font = Enum.Font.GothamBold
-LoadingLabel.TextSize = 16
-LoadingLabel.Visible = false
-LoadingLabel.ZIndex = 101
-LoadingLabel.Parent = ScreenGui
-
-local LoadingLabelUICorner = Instance.new("UICorner")
-LoadingLabelUICorner.CornerRadius = UDim.new(0, 8)
-LoadingLabelUICorner.Parent = LoadingLabel
+local CONFIG_FOLDER = "jk"
+local CONFIG_FILE = CONFIG_FOLDER .. "/PlayerTrackerData.json"
 
 local localPlayer = Players.LocalPlayer
 local trackingData = {}
@@ -187,170 +12,670 @@ local isTracking = false
 local isMinimized = false
 local trackedPlayers = {}
 local inputBoxes = {}
+local trackingThread = nil
+local ScreenGui = nil
+local MainFrame = nil
+local MiniFrame = nil
+local NotificationGui = nil
 
-local function saveConfig()
-local dataToSave = {
-trackedPlayers = trackedPlayers,
-windowPosition = {
-x = MainFrame.Position.X.Scale,
-y = MainFrame.Position.Y.Scale,
-offsetX = MainFrame.Position.X.Offset,
-offsetY = MainFrame.Position.Y.Offset
-},
-isMinimized = isMinimized
-}
-
+local function ensureConfigFolder()
+    pcall(function()
+        if not isfolder(CONFIG_FOLDER) then
+            makefolder(CONFIG_FOLDER)
+        end
+    end)
 end
 
-local function loadConfig()
-local success, data = pcall(function()
-if readfile and isfile and isfile(CONFIG_FILE) then
-return HttpService:JSONDecode(readfile(CONFIG_FILE))
+local function saveTrackingData()
+    local currentTrackedPlayers = {}
+    for _, inputBoxFrame in ipairs(inputBoxes) do
+        local textBox = inputBoxFrame:FindFirstChild("PlayerNameBox")
+        if textBox and textBox.Text ~= "" then
+            table.insert(currentTrackedPlayers, textBox.Text)
+        end
+    end
+    
+    local dataToSave = {
+        trackedPlayers = currentTrackedPlayers,
+        isMinimized = isMinimized,
+        lastUpdate = os.time()
+    }
+    
+    ensureConfigFolder()
+    
+    local success, err = pcall(function()
+        writefile(CONFIG_FILE, HttpService:JSONEncode(dataToSave))
+    end)
+    
+    if not success then
+        warn("保存失败:", err)
+    end
 end
-end)
 
-end
-
-local function createInputBox(playerName)
-local inputBoxFrame = Instance.new("Frame")
-inputBoxFrame.Name = "InputBoxFrame"
-inputBoxFrame.Size = UDim2.new(1, -10, 0, 35)
-inputBoxFrame.BackgroundColor3 = Color3.fromRGB(50, 50, 60)
-inputBoxFrame.Parent = InputScrollingFrame
-
-end
-
-local function updateScrollingFrame()
-local totalHeight = 0
-for _, inputBox in ipairs(inputBoxes) do
-totalHeight = totalHeight + inputBox.Size.Y.Offset + 5
-end
-InputScrollingFrame.CanvasSize = UDim2.new(0, 0, 0, totalHeight)
-
+local function loadTrackingData()
+    local success, data = pcall(function()
+        if isfile(CONFIG_FILE) then
+            local content = readfile(CONFIG_FILE)
+            return HttpService:JSONDecode(content)
+        end
+        return nil
+    end)
+    
+    if success and data then
+        trackedPlayers = data.trackedPlayers or {}
+        isMinimized = data.isMinimized or false
+        return true
+    end
+    
+    trackedPlayers = {}
+    isMinimized = false
+    return false
 end
 
 local function teleportToPlayer(playerName)
-LoadingFrame.Visible = true
-LoadingLabel.Visible = true
-
+    if ScreenGui and ScreenGui:FindFirstChild("LoadingFrame") then
+        ScreenGui.LoadingFrame.Visible = true
+        if ScreenGui:FindFirstChild("LoadingLabel") then
+            ScreenGui.LoadingLabel.Visible = true
+            ScreenGui.LoadingLabel.Text = "跳转到 " .. playerName .. "..."
+        end
+    end
+    
+    local success, result = pcall(function()
+        local userId = Players:GetUserIdFromNameAsync(playerName)
+        if userId then
+            local player = Players:GetPlayerByUserId(userId)
+            if player then
+                local placeId = game.PlaceId
+                local jobId = game.JobId
+                TeleportService:TeleportToPlaceInstance(placeId, jobId, localPlayer)
+                return true
+            end
+        end
+        return false
+    end)
+    
+    if not success then
+        if ScreenGui and ScreenGui:FindFirstChild("LoadingFrame") then
+            ScreenGui.LoadingFrame.Visible = false
+            if ScreenGui:FindFirstChild("LoadingLabel") then
+                ScreenGui.LoadingLabel.Visible = false
+            end
+        end
+    end
 end
 
 local function showNotification(title, message, playerName)
-local notificationFrame = Instance.new("Frame")
-notificationFrame.Name = "Notification"
-notificationFrame.Size = UDim2.new(0, 300, 0, 120)
-notificationFrame.Position = UDim2.new(1, 10, 0, 10)
-notificationFrame.BackgroundColor3 = Color3.fromRGB(40, 40, 50)
-notificationFrame.Parent = NotificationGui
-
+    if not NotificationGui then return end
+    
+    local notificationFrame = Instance.new("Frame")
+    notificationFrame.Name = "Notification_" .. playerName
+    notificationFrame.Size = UDim2.new(0, 250, 0, 100)
+    notificationFrame.Position = UDim2.new(1, 10, 0, 10)
+    notificationFrame.BackgroundColor3 = Color3.fromRGB(40, 40, 50)
+    notificationFrame.Parent = NotificationGui
+    
+    local notificationUICorner = Instance.new("UICorner")
+    notificationUICorner.CornerRadius = UDim.new(0, 8)
+    notificationUICorner.Parent = notificationFrame
+    
+    local titleLabel = Instance.new("TextLabel")
+    titleLabel.Size = UDim2.new(1, -20, 0, 25)
+    titleLabel.Position = UDim2.new(0, 10, 0, 10)
+    titleLabel.BackgroundTransparency = 1
+    titleLabel.Text = title
+    titleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+    titleLabel.Font = Enum.Font.GothamBold
+    titleLabel.TextSize = 14
+    titleLabel.Parent = notificationFrame
+    
+    local messageLabel = Instance.new("TextLabel")
+    messageLabel.Size = UDim2.new(1, -20, 0, 30)
+    messageLabel.Position = UDim2.new(0, 10, 0, 35)
+    messageLabel.BackgroundTransparency = 1
+    messageLabel.Text = message
+    messageLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
+    messageLabel.Font = Enum.Font.Gotham
+    messageLabel.TextSize = 12
+    messageLabel.TextWrapped = true
+    messageLabel.Parent = notificationFrame
+    
+    local buttonFrame = Instance.new("Frame")
+    buttonFrame.Size = UDim2.new(1, 0, 0, 25)
+    buttonFrame.Position = UDim2.new(0, 0, 1, -25)
+    buttonFrame.BackgroundTransparency = 1
+    buttonFrame.Parent = notificationFrame
+    
+    local trackButton = Instance.new("TextButton")
+    trackButton.Name = "TrackNowButton"
+    trackButton.Size = UDim2.new(0, 100, 0, 20)
+    trackButton.Position = UDim2.new(0.5, -110, 0, 0)
+    trackButton.BackgroundColor3 = Color3.fromRGB(70, 160, 70)
+    trackButton.Text = "立即追踪"
+    trackButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+    trackButton.Font = Enum.Font.GothamBold
+    trackButton.TextSize = 12
+    trackButton.Parent = buttonFrame
+    
+    local ignoreButton = Instance.new("TextButton")
+    ignoreButton.Name = "IgnoreButton"
+    ignoreButton.Size = UDim2.new(0, 100, 0, 20)
+    ignoreButton.Position = UDim2.new(0.5, 10, 0, 0)
+    ignoreButton.BackgroundColor3 = Color3.fromRGB(120, 120, 120)
+    ignoreButton.Text = "忽略"
+    ignoreButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+    ignoreButton.Font = Enum.Font.GothamSemibold
+    ignoreButton.TextSize = 12
+    ignoreButton.Parent = buttonFrame
+    
+    local trackButtonUICorner = Instance.new("UICorner")
+    trackButtonUICorner.CornerRadius = UDim.new(0, 6)
+    trackButtonUICorner.Parent = trackButton
+    
+    local ignoreButtonUICorner = Instance.new("UICorner")
+    ignoreButtonUICorner.CornerRadius = UDim.new(0, 6)
+    ignoreButtonUICorner.Parent = ignoreButton
+    
+    local slideIn = TweenService:Create(
+        notificationFrame,
+        TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+        {Position = UDim2.new(1, -260, 0, 10)}
+    )
+    slideIn:Play()
+    
+    trackButton.MouseButton1Click:Connect(function()
+        trackingData[playerName] = true
+        notificationFrame:Destroy()
+        teleportToPlayer(playerName)
+    end)
+    
+    ignoreButton.MouseButton1Click:Connect(function()
+        trackingData[playerName] = true
+        notificationFrame:Destroy()
+    end)
+    
+    local destroyTime = tick() + 5
+    
+    local connection
+    connection = game:GetService("RunService").Heartbeat:Connect(function()
+        if tick() >= destroyTime then
+            connection:Disconnect()
+            if notificationFrame and notificationFrame.Parent then
+                local slideOut = TweenService:Create(
+                    notificationFrame,
+                    TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.In),
+                    {Position = UDim2.new(1, 10, 0, 10)}
+                )
+                slideOut:Play()
+                task.wait(0.3)
+                notificationFrame:Destroy()
+            end
+        end
+    end)
 end
 
 local function checkPlayerOnline(playerName)
-local success, userId = pcall(function()
-return Players:GetUserIdFromNameAsync(playerName)
-end)
-
+    local success, userId = pcall(function()
+        return Players:GetUserIdFromNameAsync(playerName)
+    end)
+    
+    if success and userId then
+        for _, player in pairs(Players:GetPlayers()) do
+            if player.UserId == userId then
+                return true, userId
+            end
+        end
+    end
+    
+    return false, nil
 end
 
 local function startTracking()
-if isTracking then return end
-
+    if isTracking then return end
+    
+    isTracking = true
+    
+    trackedPlayers = {}
+    for _, inputBoxFrame in ipairs(inputBoxes) do
+        local textBox = inputBoxFrame:FindFirstChild("PlayerNameBox")
+        if textBox and textBox.Text ~= "" then
+            table.insert(trackedPlayers, textBox.Text)
+        end
+    end
+    
+    saveTrackingData()
+    
+    if trackingThread then
+        trackingThread = nil
+    end
+    
+    trackingThread = task.spawn(function()
+        while isTracking do
+            for _, playerName in ipairs(trackedPlayers) do
+                if playerName and playerName ~= "" then
+                    local isOnline, userId = checkPlayerOnline(playerName)
+                    
+                    if isOnline and userId and not trackingData[playerName] then
+                        trackingData[playerName] = true
+                        showNotification("玩家上线", playerName .. " 已上线", playerName)
+                    elseif not isOnline then
+                        trackingData[playerName] = false
+                    end
+                end
+            end
+            task.wait(5)
+        end
+    end)
 end
 
 local function stopTracking()
-isTracking = false
-TrackButton.Text = "开始追踪"
-TrackButton.BackgroundColor3 = Color3.fromRGB(70, 160, 70)
-MiniLabel.Text = "已暂停"
-MiniLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
+    isTracking = false
+    if trackingThread then
+        trackingThread = nil
+    end
+    saveTrackingData()
 end
 
-AddInputButton.MouseButton1Click:Connect(function()
-local textBox = createInputBox("")
-updateScrollingFrame()
-textBox:CaptureFocus()
-saveConfig()
-end)
-
-TrackButton.MouseButton1Click:Connect(function()
-if isTracking then
-stopTracking()
-else
-startTracking()
-if isMinimized then
-MiniLabel.Text = "追踪中"
-MiniLabel.TextColor3 = Color3.fromRGB(100, 200, 100)
-end
-end
-end)
-
-MinimizeButton.MouseButton1Click:Connect(function()
-isMinimized = true
-MainFrame.Visible = false
-MiniFrame.Visible = true
-saveConfig()
-end)
-
-CloseButton.MouseButton1Click:Connect(function()
-if isTracking then
-isMinimized = true
-MainFrame.Visible = false
-MiniFrame.Visible = true
-saveConfig()
-else
-ScreenGui:Destroy()
-end
-end)
-
-ExpandButton.MouseButton1Click:Connect(function()
-isMinimized = false
-MainFrame.Visible = true
-MiniFrame.Visible = false
-saveConfig()
-end)
-
-local dragging
-local dragInput
-local dragStart
-local startPos
-
-local function update(input)
-local delta = input.Position - dragStart
-MainFrame.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
-end
-
-TitleBar.InputBegan:Connect(function(input)
-if input.UserInputType == Enum.UserInputType.MouseButton1 then
-dragging = true
-dragStart = input.Position
-startPos = MainFrame.Position
-
-end)
-
-TitleBar.InputChanged:Connect(function(input)
-if input.UserInputType == Enum.UserInputType.MouseMovement then
-dragInput = input
-end
-end)
-
-game:GetService("UserInputService").InputChanged:Connect(function(input)
-if input == dragInput and dragging then
-update(input)
-end
-end)
-
-loadConfig()
-
-for _, playerName in ipairs(trackedPlayers) do
-createInputBox(playerName)
+local function createInputBox(playerName)
+    if not ScreenGui or not ScreenGui:FindFirstChild("MainFrame") then return end
+    
+    local contentFrame = ScreenGui.MainFrame:FindFirstChild("ContentFrame")
+    if not contentFrame then return end
+    
+    local scrollingFrame = contentFrame:FindFirstChild("InputScrollingFrame")
+    if not scrollingFrame then return end
+    
+    local inputBoxFrame = Instance.new("Frame")
+    inputBoxFrame.Name = "InputBoxFrame_" .. #inputBoxes + 1
+    inputBoxFrame.Size = UDim2.new(1, -10, 0, 30)
+    inputBoxFrame.BackgroundColor3 = Color3.fromRGB(50, 50, 60)
+    inputBoxFrame.Parent = scrollingFrame
+    
+    local inputBoxUICorner = Instance.new("UICorner")
+    inputBoxUICorner.CornerRadius = UDim.new(0, 4)
+    inputBoxUICorner.Parent = inputBoxFrame
+    
+    local textBox = Instance.new("TextBox")
+    textBox.Name = "PlayerNameBox"
+    textBox.Size = UDim2.new(0.65, 0, 1, 0)
+    textBox.Position = UDim2.new(0, 5, 0, 0)
+    textBox.BackgroundTransparency = 1
+    textBox.Text = playerName or ""
+    textBox.PlaceholderText = "玩家名称"
+    textBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+    textBox.Font = Enum.Font.Gotham
+    textBox.TextSize = 12
+    textBox.TextXAlignment = Enum.TextXAlignment.Left
+    textBox.Parent = inputBoxFrame
+    
+    local removeButton = Instance.new("TextButton")
+    removeButton.Name = "RemoveButton"
+    removeButton.Size = UDim2.new(0, 50, 0, 20)
+    removeButton.Position = UDim2.new(1, -55, 0.5, -10)
+    removeButton.BackgroundColor3 = Color3.fromRGB(180, 60, 60)
+    removeButton.Text = "移除"
+    removeButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+    removeButton.Font = Enum.Font.GothamSemibold
+    removeButton.TextSize = 10
+    removeButton.Parent = inputBoxFrame
+    
+    local removeButtonUICorner = Instance.new("UICorner")
+    removeButtonUICorner.CornerRadius = UDim.new(0, 4)
+    removeButtonUICorner.Parent = removeButton
+    
+    removeButton.MouseButton1Click:Connect(function()
+        inputBoxFrame:Destroy()
+        for i, box in ipairs(inputBoxes) do
+            if box == inputBoxFrame then
+                table.remove(inputBoxes, i)
+                break
+            end
+        end
+        saveTrackingData()
+    end)
+    
+    textBox.FocusLost:Connect(function()
+        saveTrackingData()
+    end)
+    
+    table.insert(inputBoxes, inputBoxFrame)
+    return textBox
 end
 
-updateScrollingFrame()
-
-if isMinimized then
-MainFrame.Visible = false
-MiniFrame.Visible = true
-else
-MainFrame.Visible = true
-MiniFrame.Visible = false
+local function updateScrollingFrame()
+    if not ScreenGui or not ScreenGui:FindFirstChild("MainFrame") then return end
+    
+    local contentFrame = ScreenGui.MainFrame:FindFirstChild("ContentFrame")
+    if not contentFrame then return end
+    
+    local scrollingFrame = contentFrame:FindFirstChild("InputScrollingFrame")
+    if not scrollingFrame then return end
+    
+    local totalHeight = 0
+    for _, inputBox in ipairs(inputBoxes) do
+        if inputBox and inputBox.Parent then
+            totalHeight = totalHeight + inputBox.Size.Y.Offset + 5
+        end
+    end
+    scrollingFrame.CanvasSize = UDim2.new(0, 0, 0, totalHeight + 5)
+    
+    local currentY = 5
+    for _, inputBox in ipairs(inputBoxes) do
+        if inputBox and inputBox.Parent then
+            inputBox.Position = UDim2.new(0.5, -112, 0, currentY)
+            currentY = currentY + inputBox.Size.Y.Offset + 5
+        end
+    end
 end
+
+local function createUI()
+    if localPlayer.PlayerGui:FindFirstChild("PlayerTracker") then
+        localPlayer.PlayerGui:FindFirstChild("PlayerTracker"):Destroy()
+    end
+    
+    if localPlayer.PlayerGui:FindFirstChild("TrackerNotifications") then
+        localPlayer.PlayerGui:FindFirstChild("TrackerNotifications"):Destroy()
+    end
+    
+    ScreenGui = Instance.new("ScreenGui")
+    ScreenGui.Name = "PlayerTracker"
+    ScreenGui.ResetOnSpawn = false
+    ScreenGui.Parent = localPlayer:WaitForChild("PlayerGui")
+    
+    MainFrame = Instance.new("Frame")
+    MainFrame.Name = "MainFrame"
+    MainFrame.Size = UDim2.new(0, 250, 0, 300)
+    MainFrame.Position = UDim2.new(0.5, -125, 0.5, -150)
+    MainFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 40)
+    MainFrame.BorderSizePixel = 0
+    MainFrame.Parent = ScreenGui
+    
+    local UICorner = Instance.new("UICorner")
+    UICorner.CornerRadius = UDim.new(0, 8)
+    UICorner.Parent = MainFrame
+    
+    local TitleBar = Instance.new("Frame")
+    TitleBar.Name = "TitleBar"
+    TitleBar.Size = UDim2.new(1, 0, 0, 25)
+    TitleBar.BackgroundColor3 = Color3.fromRGB(45, 45, 55)
+    TitleBar.Parent = MainFrame
+    
+    local TitleLabel = Instance.new("TextLabel")
+    TitleLabel.Name = "TitleLabel"
+    TitleLabel.Size = UDim2.new(0.6, 0, 1, 0)
+    TitleLabel.Position = UDim2.new(0, 8, 0, 0)
+    TitleLabel.BackgroundTransparency = 1
+    TitleLabel.Text = "XDG-HOB独家追踪功能"
+    TitleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+    TitleLabel.TextXAlignment = Enum.TextXAlignment.Left
+    TitleLabel.Font = Enum.Font.GothamSemibold
+    TitleLabel.TextSize = 12
+    TitleLabel.Parent = TitleBar
+    
+    local MinimizeButton = Instance.new("TextButton")
+    MinimizeButton.Name = "MinimizeButton"
+    MinimizeButton.Size = UDim2.new(0, 18, 0, 18)
+    MinimizeButton.Position = UDim2.new(1, -45, 0.5, -9)
+    MinimizeButton.BackgroundColor3 = Color3.fromRGB(60, 60, 75)
+    MinimizeButton.Text = "_"
+    MinimizeButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+    MinimizeButton.Font = Enum.Font.GothamBold
+    MinimizeButton.TextSize = 12
+    MinimizeButton.Parent = TitleBar
+    
+    local CloseButton = Instance.new("TextButton")
+    CloseButton.Name = "CloseButton"
+    CloseButton.Size = UDim2.new(0, 18, 0, 18)
+    CloseButton.Position = UDim2.new(1, -22, 0.5, -9)
+    CloseButton.BackgroundColor3 = Color3.fromRGB(200, 60, 60)
+    CloseButton.Text = "X"
+    CloseButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+    CloseButton.Font = Enum.Font.GothamBold
+    CloseButton.TextSize = 10
+    CloseButton.Parent = TitleBar
+    
+    local ContentFrame = Instance.new("Frame")
+    ContentFrame.Name = "ContentFrame"
+    ContentFrame.Size = UDim2.new(1, 0, 1, -25)
+    ContentFrame.Position = UDim2.new(0, 0, 0, 25)
+    ContentFrame.BackgroundTransparency = 1
+    ContentFrame.Parent = MainFrame
+    
+    local InputScrollingFrame = Instance.new("ScrollingFrame")
+    InputScrollingFrame.Name = "InputScrollingFrame"
+    InputScrollingFrame.Size = UDim2.new(1, -16, 0, 180)
+    InputScrollingFrame.Position = UDim2.new(0, 8, 0, 8)
+    InputScrollingFrame.BackgroundColor3 = Color3.fromRGB(40, 40, 50)
+    InputScrollingFrame.BorderSizePixel = 0
+    InputScrollingFrame.ScrollBarThickness = 3
+    InputScrollingFrame.CanvasSize = UDim2.new(0, 0, 0, 0)
+    InputScrollingFrame.Parent = ContentFrame
+    
+    local InputScrollingFrameUICorner = Instance.new("UICorner")
+    InputScrollingFrameUICorner.CornerRadius = UDim.new(0, 6)
+    InputScrollingFrameUICorner.Parent = InputScrollingFrame
+    
+    local AddInputButton = Instance.new("TextButton")
+    AddInputButton.Name = "AddInputButton"
+    AddInputButton.Size = UDim2.new(1, -16, 0, 25)
+    AddInputButton.Position = UDim2.new(0, 8, 0, 195)
+    AddInputButton.BackgroundColor3 = Color3.fromRGB(60, 140, 200)
+    AddInputButton.Text = "+ 添加玩家"
+    AddInputButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+    AddInputButton.Font = Enum.Font.GothamSemibold
+    AddInputButton.TextSize = 12
+    AddInputButton.Parent = ContentFrame
+    
+    local AddInputButtonUICorner = Instance.new("UICorner")
+    AddInputButtonUICorner.CornerRadius = UDim.new(0, 6)
+    AddInputButtonUICorner.Parent = AddInputButton
+    
+    local TrackButton = Instance.new("TextButton")
+    TrackButton.Name = "TrackButton"
+    TrackButton.Size = UDim2.new(1, -16, 0, 35)
+    TrackButton.Position = UDim2.new(0, 8, 1, -45)
+    TrackButton.BackgroundColor3 = Color3.fromRGB(70, 160, 70)
+    TrackButton.Text = "开始追踪"
+    TrackButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+    TrackButton.Font = Enum.Font.GothamBold
+    TrackButton.TextSize = 14
+    TrackButton.Parent = ContentFrame
+    
+    local TrackButtonUICorner = Instance.new("UICorner")
+    TrackButtonUICorner.CornerRadius = UDim.new(0, 6)
+    TrackButtonUICorner.Parent = TrackButton
+    
+    MiniFrame = Instance.new("Frame")
+    MiniFrame.Name = "MiniFrame"
+    MiniFrame.Size = UDim2.new(0, 70, 0, 25)
+    MiniFrame.Position = UDim2.new(1, -75, 0.5, -12.5)
+    MiniFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 40)
+    MiniFrame.Visible = false
+    MiniFrame.Parent = ScreenGui
+    
+    local MiniFrameUICorner = Instance.new("UICorner")
+    MiniFrameUICorner.CornerRadius = UDim.new(0, 6)
+    MiniFrameUICorner.Parent = MiniFrame
+    
+    local MiniLabel = Instance.new("TextLabel")
+    MiniLabel.Name = "MiniLabel"
+    MiniLabel.Size = UDim2.new(0, 40, 1, 0)
+    MiniLabel.Position = UDim2.new(0, 5, 0, 0)
+    MiniLabel.BackgroundTransparency = 1
+    MiniLabel.Text = "已暂停"
+    MiniLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
+    MiniLabel.TextXAlignment = Enum.TextXAlignment.Left
+    MiniLabel.Font = Enum.Font.GothamSemibold
+    MiniLabel.TextSize = 10
+    MiniLabel.Parent = MiniFrame
+    
+    local ExpandButton = Instance.new("TextButton")
+    ExpandButton.Name = "ExpandButton"
+    ExpandButton.Size = UDim2.new(0, 16, 0, 16)
+    ExpandButton.Position = UDim2.new(1, -20, 0.5, -8)
+    ExpandButton.BackgroundColor3 = Color3.fromRGB(60, 60, 75)
+    ExpandButton.Text = "+"
+    ExpandButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+    ExpandButton.Font = Enum.Font.GothamBold
+    ExpandButton.TextSize = 12
+    ExpandButton.Parent = MiniFrame
+    
+    NotificationGui = Instance.new("ScreenGui")
+    NotificationGui.Name = "TrackerNotifications"
+    NotificationGui.ResetOnSpawn = false
+    NotificationGui.Parent = localPlayer:WaitForChild("PlayerGui")
+    
+    local LoadingFrame = Instance.new("Frame")
+    LoadingFrame.Name = "LoadingFrame"
+    LoadingFrame.Size = UDim2.new(1, 0, 1, 0)
+    LoadingFrame.Position = UDim2.new(0, 0, 0, 0)
+    LoadingFrame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+    LoadingFrame.BackgroundTransparency = 0.5
+    LoadingFrame.Visible = false
+    LoadingFrame.ZIndex = 100
+    LoadingFrame.Parent = ScreenGui
+    
+    local LoadingLabel = Instance.new("TextLabel")
+    LoadingLabel.Name = "LoadingLabel"
+    LoadingLabel.Size = UDim2.new(0, 250, 0, 40)
+    LoadingLabel.Position = UDim2.new(0.5, -125, 0.5, -20)
+    LoadingLabel.BackgroundColor3 = Color3.fromRGB(40, 40, 50)
+    LoadingLabel.Text = "正在跳转..."
+    LoadingLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+    LoadingLabel.Font = Enum.Font.GothamBold
+    LoadingLabel.TextSize = 14
+    LoadingLabel.Visible = false
+    LoadingLabel.ZIndex = 101
+    LoadingLabel.Parent = ScreenGui
+    
+    local LoadingLabelUICorner = Instance.new("UICorner")
+    LoadingLabelUICorner.CornerRadius = UDim.new(0, 8)
+    LoadingLabelUICorner.Parent = LoadingLabel
+    
+    AddInputButton.MouseButton1Click:Connect(function()
+        local textBox = createInputBox("")
+        updateScrollingFrame()
+        if textBox then
+            textBox:CaptureFocus()
+        end
+        saveTrackingData()
+    end)
+    
+    TrackButton.MouseButton1Click:Connect(function()
+        if isTracking then
+            stopTracking()
+            TrackButton.Text = "开始追踪"
+            TrackButton.BackgroundColor3 = Color3.fromRGB(70, 160, 70)
+            if MiniFrame and MiniFrame:FindFirstChild("MiniLabel") then
+                MiniFrame.MiniLabel.Text = "已暂停"
+                MiniFrame.MiniLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
+            end
+        else
+            startTracking()
+            TrackButton.Text = "停止追踪"
+            TrackButton.BackgroundColor3 = Color3.fromRGB(200, 60, 60)
+            if MiniFrame and MiniFrame:FindFirstChild("MiniLabel") then
+                MiniFrame.MiniLabel.Text = "追踪中"
+                MiniFrame.MiniLabel.TextColor3 = Color3.fromRGB(100, 200, 100)
+            end
+        end
+        saveTrackingData()
+    end)
+    
+    MinimizeButton.MouseButton1Click:Connect(function()
+        isMinimized = true
+        MainFrame.Visible = false
+        MiniFrame.Visible = true
+        saveTrackingData()
+    end)
+    
+    CloseButton.MouseButton1Click:Connect(function()
+        if isTracking then
+            isMinimized = true
+            MainFrame.Visible = false
+            MiniFrame.Visible = true
+            saveTrackingData()
+        else
+            ScreenGui:Destroy()
+        end
+    end)
+    
+    ExpandButton.MouseButton1Click:Connect(function()
+        isMinimized = false
+        MainFrame.Visible = true
+        MiniFrame.Visible = false
+        saveTrackingData()
+    end)
+    
+    local dragging
+    local dragInput
+    local dragStart
+    local startPos
+    
+    local function update(input)
+        local delta = input.Position - dragStart
+        MainFrame.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+    end
+    
+    TitleBar.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 then
+            dragging = true
+            dragStart = input.Position
+            startPos = MainFrame.Position
+            
+            input.Changed:Connect(function()
+                if input.UserInputState == Enum.UserInputState.End then
+                    dragging = false
+                end
+            end)
+        end
+    end)
+    
+    TitleBar.InputChanged:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseMovement then
+            dragInput = input
+        end
+    end)
+    
+    game:GetService("UserInputService").InputChanged:Connect(function(input)
+        if input == dragInput and dragging then
+            update(input)
+        end
+    end)
+    
+    inputBoxes = {}
+    for _, playerName in ipairs(trackedPlayers) do
+        createInputBox(playerName)
+    end
+    
+    updateScrollingFrame()
+    
+    if isMinimized then
+        MainFrame.Visible = false
+        MiniFrame.Visible = true
+    else
+        MainFrame.Visible = true
+        MiniFrame.Visible = false
+    end
+    
+    if isTracking then
+        TrackButton.Text = "停止追踪"
+        TrackButton.BackgroundColor3 = Color3.fromRGB(200, 60, 60)
+        if MiniFrame and MiniFrame:FindFirstChild("MiniLabel") then
+            MiniFrame.MiniLabel.Text = "追踪中"
+            MiniFrame.MiniLabel.TextColor3 = Color3.fromRGB(100, 200, 100)
+        end
+    end
+end
+
+local function initialize()
+    loadTrackingData()
+    createUI()
+    
+    localPlayer.CharacterAdded:Connect(function()
+        task.wait(1)
+        createUI()
+    end)
+end
+
+initialize()
