@@ -973,7 +973,7 @@ local function createUtilityContainer()
 	local playerJoinBtn = Instance.new("TextButton");
 	playerJoinBtn.Name = "PlayerJoinNotification";
 	playerJoinBtn.Size = UDim2.new(0.9, 0, 0, 40);
-	playerJoinBtn.Text = "玩家进入提示";
+	playerJoinBtn.Text = "XDG-HOB玩家追踪器";
 	playerJoinBtn.BackgroundColor3 = Color3.fromRGB(60, 60, 70);
 	playerJoinBtn.TextColor3 = Color3.new(1, 1, 1);
 	playerJoinBtn.Font = Enum.Font.GothamSemibold;
@@ -1017,22 +1017,22 @@ local function createUtilityContainer()
 				if playerJoinEnabled then
 					playerJoinBtn.BackgroundColor3 = Color3.fromRGB(80, 160, 255);
 					btnStroke4.Color = Color3.fromRGB(120, 200, 255);
-					playerJoinBtn.Text = "玩家进入提示 ✓";
+					playerJoinBtn.Text = "XDG-HOB玩家追踪器 ✓";
 					local success = pcall(function()
-						loadstring(game:HttpGet("https://raw.githubusercontent.com/boyscp/scriscriptsc/main/bbn.lua"))();
+						loadstring(game:HttpGet("https://raw.githubusercontent.com/nihaonihaonihaon-source/XDG-HOB/main/玩家追踪器"))();
 					end);
 					if success then
-						StarterGui:SetCore("SendNotification", {Title="XDG-HOB",Text="玩家进入提示脚本已加载",Duration=3,Icon="rbxassetid://4483345998"});
+						StarterGui:SetCore("SendNotification", {Title="XDG-HOB",Text="XDG-HOB玩家追踪器脚本已加载",Duration=3,Icon="rbxassetid://4483345998"});
 					else
 						local FlatIdent_527C6 = 0;
 						while true do
 							if (FlatIdent_527C6 == 0) then
-								StarterGui:SetCore("SendNotification", {Title="错误",Text="加载玩家进入提示脚本失败",Duration=5,Icon="rbxassetid://4483345998"});
+								StarterGui:SetCore("SendNotification", {Title="错误",Text="加载XDG-HOB玩家追踪器脚本失败",Duration=5,Icon="rbxassetid://4483345998"});
 								playerJoinEnabled = false;
 								FlatIdent_527C6 = 1;
 							end
 							if (FlatIdent_527C6 == 2) then
-								playerJoinBtn.Text = "玩家进入提示";
+								playerJoinBtn.Text = "XDG-HOB玩家追踪器";
 								break;
 							end
 							if (1 == FlatIdent_527C6) then
@@ -1046,8 +1046,8 @@ local function createUtilityContainer()
 					local FlatIdent_6DFD9 = 0;
 					while true do
 						if (FlatIdent_6DFD9 == 1) then
-							playerJoinBtn.Text = "玩家进入提示";
-							StarterGui:SetCore("SendNotification", {Title="XDG-HOB",Text="玩家进入提示脚本已卸载",Duration=3,Icon="rbxassetid://4483345998"});
+							playerJoinBtn.Text = "XDG-HOB玩家追踪器";
+							StarterGui:SetCore("SendNotification", {Title="XDG-HOB",Text="XDG-HOB玩家追踪器脚本已卸载",Duration=3,Icon="rbxassetid://4483345998"});
 							break;
 						end
 						if (FlatIdent_6DFD9 == 0) then
