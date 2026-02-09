@@ -132,7 +132,7 @@ local CodeIntegrityChecker = {
             "local WallWalkModule = {",
             "local AntiDetectJumpModule = {}",
             "local sg = Instance.new(\"ScreenGui\")",
-            "✨ XDG-HOB ✨"
+            "✨ XDG横杠HOB ✨"
         }
         
         local sourceCode = debug.getinfo(1, "S").source
