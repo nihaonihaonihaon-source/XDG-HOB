@@ -1661,7 +1661,7 @@ local function createFunctionContainer()
 	gravityTitle.Size = UDim2.new(1, -50, 0, 20);
 	gravityTitle.Position = UDim2.new(0, 50, 0, 2);
 	gravityTitle.BackgroundTransparency = 1;
-	gravityTitle.Text = "重力调整";
+	gravityTitle.Text = "防检测重力调整";
 	gravityTitle.TextColor3 = Color3.fromRGB(180, 200, 255);
 	gravityTitle.Font = Enum.Font.GothamBold;
 	gravityTitle.TextSize = 12;
